@@ -69,6 +69,55 @@ class Word2VecLoader:
         print(f"Loaded model with {len(self.model)} words")
         return self.model
 
+    def load_fasttext_ja(
+        self, path: str = os.path.expanduser("~/gensim-data/cc.ja.300.vec.gz"),
+        limit: int = 200000,
+    ) -> KeyedVectors:
+        """
+        Load Japanese fastText model (cc.ja.300).
+
+        Args:
+            path: Path to cc.ja.300.vec.gz file.
+            limit: Maximum number of word vectors to load (default 200K).
+
+        Returns:
+            KeyedVectors model.
+        """
+        print(f"Loading Japanese fastText model from {path} (limit={limit})...")
+        self.model = KeyedVectors.load_word2vec_format(
+            path, binary=False, limit=limit,
+        )
+        self.model_name = "cc.ja.300"
+        print(f"Loaded model with {len(self.model)} words, "
+              f"dimension={self.model.vector_size}")
+        return self.model
+
+    def load_ja_dict(
+        self, path: str = os.path.expanduser("~/gensim-data/ja-dict-w2v-300.kv"),
+    ) -> KeyedVectors:
+        """
+        Load Japanese Word2Vec model trained on EPWING dictionary text.
+
+        Falls back to fastText cc.ja.300 if available, otherwise uses dict model.
+
+        Args:
+            path: Path to saved KeyedVectors file.
+
+        Returns:
+            KeyedVectors model.
+        """
+        # Try fastText first if available
+        fasttext_path = os.path.expanduser("~/gensim-data/cc.ja.300.vec.gz")
+        if os.path.exists(fasttext_path) and os.path.getsize(fasttext_path) > 100_000_000:
+            return self.load_fasttext_ja(fasttext_path)
+
+        print(f"Loading Japanese dict-trained model from {path}...")
+        self.model = KeyedVectors.load(path)
+        self.model_name = "ja-dict-w2v-300"
+        print(f"Loaded model with {len(self.model)} words, "
+              f"dimension={self.model.vector_size}")
+        return self.model
+
     def load_from_file(self, filepath: str, binary: bool = True) -> KeyedVectors:
         """
         Load a Word2Vec model from a file.

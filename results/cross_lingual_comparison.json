@@ -1,0 +1,165 @@
+{
+  "svd_comparison": {
+    "en_dims_90pct": 76,
+    "ja_dims_90pct": 220,
+    "en_dims_95pct": 86,
+    "ja_dims_95pct": 250,
+    "en_total_directions": 2352,
+    "ja_total_directions": 1911,
+    "ks_statistic": 0.04666666666666667,
+    "ks_pvalue": 0.9957640709770186
+  },
+  "accuracy_comparison": {
+    "en_accuracy_at_1": 0.8902439024390244,
+    "ja_accuracy_at_1": 0.8671875,
+    "en_accuracy_at_5": 0.9878048780487805,
+    "ja_accuracy_at_5": 1.0,
+    "en_accuracy_at_10": 0.9878048780487805,
+    "ja_accuracy_at_10": 1.0,
+    "en_sample_size": 82,
+    "ja_sample_size": 128
+  },
+  "score_comparison": {
+    "en_mean_score": 0.9999999811774806,
+    "ja_mean_score": 0.9999998713794508,
+    "en_median_score": 1.0,
+    "ja_median_score": 0.9999998211860657,
+    "mann_whitney_u": 232.5,
+    "mann_whitney_pvalue": 0.130280762407227
+  },
+  "translation_pairs": {
+    "correspondences": [
+      {
+        "en_pair": "good/bad",
+        "ja_pair": "良い/悪い",
+        "en_score": 0.9999997615814209,
+        "ja_score": null,
+        "en_rank": 2,
+        "ja_rank": null
+      },
+      {
+        "en_pair": "big/small",
+        "ja_pair": "大きい/小さい",
+        "en_score": 0.9999998807907104,
+        "ja_score": 0.9999999403953552,
+        "en_rank": 2,
+        "ja_rank": 2
+      },
+      {
+        "en_pair": "long/short",
+        "ja_pair": "長い/短い",
+        "en_score": 1.0000001192092896,
+        "ja_score": 0.9999998211860657,
+        "en_rank": 1,
+        "ja_rank": 1
+      },
+      {
+        "en_pair": "strong/weak",
+        "ja_pair": "強い/弱い",
+        "en_score": 1.000000238418579,
+        "ja_score": 0.9999998807907104,
+        "en_rank": 1,
+        "ja_rank": 1
+      },
+      {
+        "en_pair": "hot/cold",
+        "ja_pair": "暑い/寒い",
+        "en_score": 1.0000001192092896,
+        "ja_score": 1.0000001192092896,
+        "en_rank": 1,
+        "ja_rank": 1
+      },
+      {
+        "en_pair": "light/dark",
+        "ja_pair": "明るい/暗い",
+        "en_score": 0.9999997615814209,
+        "ja_score": 0.9999998211860657,
+        "en_rank": 2,
+        "ja_rank": 2
+      },
+      {
+        "en_pair": "rich/poor",
+        "ja_pair": "豊か/貧しい",
+        "en_score": 1.0000003576278687,
+        "ja_score": null,
+        "en_rank": 1,
+        "ja_rank": null
+      },
+      {
+        "en_pair": "deep/shallow",
+        "ja_pair": "深い/浅い",
+        "en_score": 0.9999998807907104,
+        "ja_score": null,
+        "en_rank": 1,
+        "ja_rank": null
+      },
+      {
+        "en_pair": "buy/sell",
+        "ja_pair": "買う/売る",
+        "en_score": 0.9999996423721313,
+        "ja_score": 1.0,
+        "en_rank": 1,
+        "ja_rank": 2
+      },
+      {
+        "en_pair": "win/lose",
+        "ja_pair": "勝つ/負ける",
+        "en_score": 1.0000003576278687,
+        "ja_score": 0.9999997615814209,
+        "en_rank": 1,
+        "ja_rank": 2
+      },
+      {
+        "en_pair": "open/close",
+        "ja_pair": "開く/閉じる",
+        "en_score": 0.9999998807907104,
+        "ja_score": null,
+        "en_rank": 3,
+        "ja_rank": null
+      },
+      {
+        "en_pair": "increase/decrease",
+        "ja_pair": "増える/減る",
+        "en_score": 1.0000001192092896,
+        "ja_score": 1.000000238418579,
+        "en_rank": 1,
+        "ja_rank": 1
+      },
+      {
+        "en_pair": "male/female",
+        "ja_pair": "男/女",
+        "en_score": 0.9999994039535522,
+        "ja_score": 0.9999997019767761,
+        "en_rank": 1,
+        "ja_rank": 3
+      },
+      {
+        "en_pair": "peace/war",
+        "ja_pair": "平和/戦争",
+        "en_score": 0.9999999403953552,
+        "ja_score": null,
+        "en_rank": 1,
+        "ja_rank": null
+      },
+      {
+        "en_pair": "life/death",
+        "ja_pair": "生/死",
+        "en_score": null,
+        "ja_score": 1.0000001192092896,
+        "en_rank": null,
+        "ja_rank": 1
+      },
+      {
+        "en_pair": "heaven/earth",
+        "ja_pair": "天/地",
+        "en_score": null,
+        "ja_score": 0.9999997019767761,
+        "en_rank": null,
+        "ja_rank": 2
+      }
+    ],
+    "n_comparable": 9,
+    "spearman_r": 0.09362465057662689,
+    "spearman_pvalue": 0.8106571575207403
+  }
+}

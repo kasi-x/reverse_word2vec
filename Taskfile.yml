@@ -1,0 +1,63 @@
+version: '3'
+
+vars:
+  PYTHON: pixi run python
+
+tasks:
+  default:
+    cmds: [task --list]
+
+  setup:
+    desc: Install dependencies via pixi
+    cmds:
+      - pixi install
+
+  download-models:en:
+    desc: Download English GloVe-100 word vectors
+    cmds:
+      - '{{.PYTHON}} -c "import gensim.downloader as api; api.load(''glove-wiki-gigaword-100'')"'
+
+  download-models:ja:
+    desc: Download Japanese fastText cc.ja.300 model (1.3GB compressed)
+    cmds:
+      - |
+        {{.PYTHON}} -c "
+        import urllib.request, os
+        url='https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.ja.300.vec.gz'
+        dest=os.path.expanduser('~/gensim-data/cc.ja.300.vec.gz')
+        os.makedirs(os.path.dirname(dest), exist_ok=True)
+        print(f'Downloading to {dest}...')
+        urllib.request.urlretrieve(url, dest)
+        print('Done')"
+
+  extract:ja:
+    desc: Extract Japanese antonym pairs from EPWING dictionaries
+    cmds:
+      - '{{.PYTHON}} src/japanese_antonym_loader.py'
+
+  run:en:
+    desc: Run English antonym analysis (exports JSON)
+    cmds:
+      - '{{.PYTHON}} src/english_analysis_export.py'
+
+  run:ja:
+    desc: Run Japanese antonym analysis
+    cmds:
+      - '{{.PYTHON}} src/japanese_analysis.py'
+
+  run:compare:
+    desc: Run cross-lingual comparison
+    cmds:
+      - '{{.PYTHON}} src/cross_lingual_comparison.py'
+
+  run:all:
+    desc: Run full analysis pipeline (EN + JA + comparison)
+    cmds:
+      - task run:en
+      - task run:ja
+      - task run:compare
+
+  paper:generate:
+    desc: Generate academic paper with latest results
+    cmds:
+      - '{{.PYTHON}} src/generate_paper.py'
