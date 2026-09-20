@@ -4,10 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This project explores Word2Vec semantic spaces through antonym relationships. The core idea is to use known antonym pairs to define semantic directions, then analyze:
-1. Which words lie near the zero vector (semantically "neutral" words)
-2. Whether new antonym relationships can be discovered for words without known antonyms
-3. Cross-lingual comparison of antonym vector spaces (English vs Japanese)
+This project decomposes word embedding spaces (GloVe) using ICA (Independent Component Analysis) to discover interpretable semantic axes. Each ICA component corresponds to an independent semantic dimension (e.g., gender, sentiment, size). By inverting a word's score on a specific axis, we perform targeted semantic inversion (e.g., king -> queen on the gender axis).
 
 ## Commands
 
@@ -20,105 +17,90 @@ task --list
 
 # Download models
 task download-models:en   # GloVe-100 (~130MB)
-task download-models:ja   # fastText cc.ja.300 (~1.3GB)
 
-# Extract Japanese antonym pairs from EPWING dictionaries
-task extract:ja
+# Download Google Analogy Dataset
+task download-analogy
 
-# Train Japanese Word2Vec from dictionary text (alternative to fastText)
-pixi run python src/train_japanese_w2v.py
+# Run phases individually
+task run:ica           # Phase 1: ICA decomposition + axis labeling
+task run:qualitative   # Phase 2: Qualitative eval (canonical test cases)
+task run:quantitative  # Phase 3: Quantitative eval (5-fold CV + analogy)
+task run:analysis      # Phase 4: Analysis & visualization
+task paper:generate    # Phase 5: Generate paper from results
 
-# Run English analysis (exports JSON for comparison)
-task run:en
-
-# Run Japanese analysis
-task run:ja
-
-# Run cross-lingual comparison (requires EN + JA results)
-task run:compare
-
-# Run full pipeline (EN + JA + comparison)
+# Run full pipeline (all phases)
 task run:all
 
-# Generate academic paper from results
-task paper:generate
+# CLI options
+pixi run python run_pipeline.py --model glove-300 --components 100 --phase 1
+pixi run python run_pipeline.py --load-space  # use cached ICA space
 ```
 
 ## Architecture
 
-### Three Analysis Approaches (in order of effectiveness)
+### ICA-based Semantic Axis Approach
 
-**1. Advanced Method** (`src/advanced_analysis.py`) - **Best Results**
-- Clusters antonym directions into 12 semantic categories (valence, size, etc.)
-- Bidirectional verification: requires A→B AND B→A
-- Semantic relatedness filter: antonyms must be conceptually related
-- Shows which semantic dimensions differ between words
-- Achieves perfect scores (1.000) on known pairs like begin/end, import/export
+**Core idea**: ICA decomposes embedding space into statistically independent components.
+Unlike PCA (which maximizes variance), ICA maximizes statistical independence, yielding
+more interpretable semantic axes.
 
-**2. Vector Difference Method** (`src/improved_analysis.py`)
-- For each antonym pair (w+, w-), computes direction d = v(w+) - v(w-)
-- To find antonyms for word w, searches for candidates c where (w - c) aligns with known antonym directions
-- Successfully finds known antonyms at rank 1 (happy→unhappy, good→bad, love→hate, etc.)
+### Modules
 
-**3. Orthogonal Basis Method** (`src/antonym_space.py`)
-- Builds orthonormal basis from antonym directions via Gram-Schmidt or SVD
-- Projects words onto this basis
-- Less effective for discovering new antonyms (prioritizes orthogonality over semantics)
+| Module | Description |
+|--------|-------------|
+| `src/ica_transformer.py` | ICA decomposition core: fit, transform, reconstruct, save/load |
+| `src/axis_labeler.py` | Automatic axis labeling using WordNet antonym pairs |
+| `src/semantic_operations.py` | Axis inversion, sliding, nearest-neighbor search |
+| `src/qualitative_eval.py` | Canonical test cases (king->queen, hot->cold, etc.) |
+| `src/quantitative_eval.py` | 5-fold CV antonym retrieval + Google Analogy eval |
+| `src/analysis_report.py` | Visualizations, bias analysis, reconstruction quality |
+| `src/generate_paper.py` | Generate paper.md from results JSON |
+| `run_pipeline.py` | CLI pipeline orchestrating all phases |
 
-### Key Algorithm (Vector Difference Method)
+### Infrastructure (kept from previous work)
+
+| Module | Description |
+|--------|-------------|
+| `src/word2vec_loader.py` | GloVe/fastText/Google News model loading via gensim |
+| `src/antonym_loader.py` | WordNet antonym pair extraction |
+| `src/japanese_antonym_loader.py` | EPWING dictionary antonym extraction (future use) |
+
+### Key Algorithm
 
 ```
-1. Build matrix D of all normalized antonym difference vectors
-2. Use SVD to find principal antonym directions (76 directions explain 90% variance for EN)
-3. For antonym discovery: find word c that maximizes max(|D · normalize(w - c)|)
-4. For neutral words: find words with minimal ||projection onto principal directions||
+Phase 1 - ICA Decomposition:
+  1. Load GloVe-100 (400K words, 100d)
+  2. Filter to valid English words (top 50K)
+  3. Center and apply FastICA -> 100 independent components
+  4. Auto-label axes using WordNet antonym pair alignment
+
+Phase 2 - Semantic Inversion:
+  For word w, axis k:
+    1. s = ICA_transform(w)
+    2. s[k] = -s[k]
+    3. v' = ICA_reconstruct(s)
+    4. Find nearest neighbor to v'
+
+Phase 3 - Evaluation:
+  - Qualitative: 15 canonical cases (king->queen, hot->cold, etc.)
+  - Quantitative: 5-fold CV on ~2000 WordNet antonym pairs
+  - Comparison: ICA inversion vs traditional vector analogy (b-a+c)
 ```
 
 ### Data Flow
 
 ```
-English:
-  WordNet (via NLTK) → antonym_loader.py → 3,556 pairs → 2,352 valid in GloVe
-  gensim API → word2vec_loader.py → 400K word vectors (GloVe-100)
-  → english_analysis_export.py → results/english_analysis.json
-
-Japanese:
-  EPWING辞書 (大辞林+明鏡) → japanese_antonym_loader.py → 5,100 pairs → 1,911 valid in fastText
-  fastText cc.ja.300 → word2vec_loader.py → 200K word vectors (300d)
-  → japanese_analysis.py → results/japanese_analysis.json
-
-Cross-lingual:
-  english_analysis.json + japanese_analysis.json
-  → cross_lingual_comparison.py → results/cross_lingual_comparison.json + paper/figures/
-
-Paper:
-  results/*.json → generate_paper.py → paper/paper.md
+GloVe-100 (gensim) -> ica_transformer.py -> ICA space (results/ica_space.{npz,json})
+WordNet (NLTK)      -> antonym_loader.py  -> antonym pairs
+                    -> axis_labeler.py    -> axis profiles (results/axis_profiles.json)
+                    -> semantic_operations.py -> inversion results
+                    -> qualitative_eval.py   -> results/qualitative_eval.json
+                    -> quantitative_eval.py  -> results/antonym_retrieval.json
+                                             -> results/analogy_eval.json
+                    -> analysis_report.py    -> results/analysis_report.json
+                                             -> paper/figures/*.png
+                    -> generate_paper.py     -> paper/paper.md
 ```
-
-### Japanese Antonym Extraction
-
-`src/japanese_antonym_loader.py` extracts antonym pairs from EPWING dictionary JSON files:
-- **大辞林** (daijirin.json): ~4,000 pairs from `<begin_reference>⇔WORD<end_reference>` tags
-- **明鏡国語辞典** (meikyo.json): ~2,700 pairs from inline `⇔WORD` markers
-- Total: ~5,100 unique pairs after deduplication
-- EPWING data at `/home/user/dev/shinar-backup-20260119/epwing_parser/data/`
-
-### Key Findings
-
-**English** (GloVe-100, 2,352 pairs):
-- Hits@1: 89.0%, Hits@10: 98.8%
-- 76 SVD components for 90% variance
-- Perfect scores on: begin/end, import/export, male/female, buy/sell
-
-**Japanese** (fastText-300, 1,911 pairs):
-- Hits@1: 86.7%, Hits@10: 100%
-- 220 SVD components for 90% variance
-- Perfect scores on: 上/下, 善/悪, 強い/弱い, 自然/人工, 真実/虚偽
-
-**Cross-lingual**:
-- Both languages achieve ~87-89% Hits@1 accuracy
-- KS test on SVD variance curves: p=0.996 (no significant structural difference)
-- Translation pairs show consistent detection across languages
 
 ## Model Options
 
@@ -129,14 +111,12 @@ Paper:
 | glove-200 | 200 | 400K | ~250MB |
 | glove-300 | 300 | 400K | ~380MB |
 | google-news | 300 | 3M | ~1.5GB |
-| cc.ja.300 | 300 | 2M | ~1.3GB |
 
-GloVe models download automatically via gensim. fastText cc.ja.300 downloads from Facebook AI.
+GloVe models download automatically via gensim.
 
 ## Dependencies
 
 Managed via `pixi.toml`. Key packages:
-- gensim, numpy, scipy, scikit-learn (analysis)
+- gensim, numpy, scipy, scikit-learn (analysis + ICA)
 - nltk (WordNet antonyms)
 - matplotlib, pandas (visualization)
-- vibrato, zstandard (Japanese tokenization for W2V training)

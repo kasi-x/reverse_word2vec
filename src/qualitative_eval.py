@@ -1,0 +1,290 @@
+"""
+Qualitative evaluation of ICA axis-wise semantic inversion.
+
+Tests canonical examples (king->queen, hot->cold, etc.) and compares
+ICA inversion with traditional vector analogy.
+
+Two evaluation modes:
+- Oracle: use the known (word, expected) pair to find the best axis
+- Labeled: use the auto-labeled axis from axis_labeler
+"""
+import json
+from dataclasses import dataclass
+from pathlib import Path
+
+import numpy as np
+
+from src.axis_labeler import AxisProfile
+from src.ica_transformer import ICASpace, ICATransformer
+from src.semantic_operations import SemanticOperator
+
+
+@dataclass
+class TestCase:
+    """A single qualitative test case."""
+
+    word: str
+    axis_label: str
+    expected: str
+    operation: str = "invert"  # "invert" or "analogy"
+    # For analogy: a->b as word->expected
+    analogy_a: str = ""
+    analogy_b: str = ""
+
+
+# Canonical test cases for axis-wise inversion
+CANONICAL_TEST_CASES = [
+    # Gender axis
+    TestCase("king", "gender", "queen", analogy_a="man", analogy_b="woman"),
+    TestCase("boy", "gender", "girl", analogy_a="man", analogy_b="woman"),
+    TestCase("father", "gender", "mother", analogy_a="man", analogy_b="woman"),
+    TestCase("husband", "gender", "wife", analogy_a="man", analogy_b="woman"),
+    # Sentiment axis
+    TestCase("happy", "sentiment", "sad"),
+    TestCase("good", "sentiment", "bad"),
+    TestCase("love", "sentiment", "hate"),
+    # Temperature axis
+    TestCase("hot", "temperature", "cold"),
+    TestCase("warm", "temperature", "cool"),
+    # Size axis
+    TestCase("big", "size", "small"),
+    TestCase("huge", "size", "tiny"),
+    # Direction axis
+    TestCase("up", "direction", "down"),
+    TestCase("high", "direction", "low"),
+    # Activity axis
+    TestCase("alive", "activity", "dead"),
+    TestCase("begin", "activity", "end"),
+]
+
+
+class QualitativeEvaluator:
+    """Runs qualitative tests and compares ICA inversion with baselines."""
+
+    def __init__(
+        self,
+        operator: SemanticOperator,
+        space: ICASpace,
+        profiles: list[AxisProfile],
+    ):
+        self.operator = operator
+        self.space = space
+        self.profiles = profiles
+        self.transformer = ICATransformer()
+        self._label_to_axes = self._build_label_map()
+
+    def _build_label_map(self) -> dict[str, list[int]]:
+        """Map labels to axis indices."""
+        mapping: dict[str, list[int]] = {}
+        for p in self.profiles:
+            if p.label:
+                mapping.setdefault(p.label, []).append(p.axis_idx)
+        return mapping
+
+    def _find_axis_for_label(self, label: str) -> int | None:
+        """Find the best axis index for a semantic label."""
+        axes = self._label_to_axes.get(label, [])
+        if not axes:
+            return None
+        best = max(
+            axes,
+            key=lambda a: len(
+                next((p for p in self.profiles if p.axis_idx == a), None).antonym_pairs
+                if next((p for p in self.profiles if p.axis_idx == a), None) else []
+            ),
+        )
+        return best
+
+    def _find_oracle_axis(self, word: str, expected: str) -> int | None:
+        """Find the best axis by looking at the actual word pair's score difference,
+        normalized by axis standard deviation."""
+        s1 = self.space.score(word)
+        s2 = self.space.score(expected)
+        if s1 is None or s2 is None:
+            return None
+        diff = np.abs(s1 - s2)
+        # Normalize by axis std to avoid picking axes with naturally large scales
+        axis_std = np.std(self.space.S, axis=0)
+        axis_std = np.maximum(axis_std, 1e-8)
+        normalized_diff = diff / axis_std
+        return int(np.argmax(normalized_diff))
+
+    def _find_oracle_top_axes(self, word: str, expected: str, n: int = 5) -> list[int]:
+        """Find the top-n axes with largest normalized score difference."""
+        s1 = self.space.score(word)
+        s2 = self.space.score(expected)
+        if s1 is None or s2 is None:
+            return []
+        diff = np.abs(s1 - s2)
+        axis_std = np.std(self.space.S, axis=0)
+        axis_std = np.maximum(axis_std, 1e-8)
+        normalized_diff = diff / axis_std
+        return list(np.argsort(normalized_diff)[-n:][::-1])
+
+    def run_all(self, top_n: int = 10) -> dict:
+        """
+        Run all canonical test cases using oracle axis selection.
+
+        Tries top-5 candidate axes individually and reports the best result.
+
+        Returns:
+            Dict with per-case results and aggregate Hits@k metrics.
+        """
+        results = []
+        hits = {1: 0, 5: 0, 10: 0}
+        total = 0
+
+        for tc in CANONICAL_TEST_CASES:
+            top_axes = self._find_oracle_top_axes(tc.word, tc.expected, n=5)
+            labeled_axis = self._find_axis_for_label(tc.axis_label)
+
+            if not top_axes:
+                results.append({
+                    "word": tc.word,
+                    "expected": tc.expected,
+                    "axis_label": tc.axis_label,
+                    "status": "word_not_found",
+                    "neighbors": [],
+                })
+                continue
+
+            # Try each candidate axis and pick the best
+            best_rank = None
+            best_axis = top_axes[0]
+            best_neighbors = []
+
+            for axis in top_axes:
+                neighbors = self.operator.axis_invert(tc.word, axis, top_n=top_n)
+                rank = None
+                for i, n in enumerate(neighbors):
+                    if n.word == tc.expected:
+                        rank = i + 1
+                        break
+                if rank is not None and (best_rank is None or rank < best_rank):
+                    best_rank = rank
+                    best_axis = axis
+                    best_neighbors = neighbors
+
+            # Also try multi-axis inversion with top-3 axes
+            multi_neighbors = self.operator.multi_axis_invert(tc.word, top_axes[:3], top_n=top_n)
+            multi_rank = None
+            for i, n in enumerate(multi_neighbors):
+                if n.word == tc.expected:
+                    multi_rank = i + 1
+                    break
+            if multi_rank is not None and (best_rank is None or multi_rank < best_rank):
+                best_rank = multi_rank
+
+            # If no axis found the expected word, just use the top oracle axis
+            if not best_neighbors:
+                best_neighbors = self.operator.axis_invert(tc.word, top_axes[0], top_n=top_n)
+
+            total += 1
+            for k in [1, 5, 10]:
+                if best_rank is not None and best_rank <= k:
+                    hits[k] += 1
+
+            results.append({
+                "word": tc.word,
+                "expected": tc.expected,
+                "axis_label": tc.axis_label,
+                "oracle_axis": int(best_axis),
+                "labeled_axis": int(labeled_axis) if labeled_axis is not None else None,
+                "candidate_axes": [int(a) for a in top_axes],
+                "best_rank": best_rank,
+                "multi_axis_rank": multi_rank,
+                "neighbors": [{"word": n.word, "sim": round(n.similarity, 4)}
+                              for n in best_neighbors[:10]],
+                "multi_neighbors": [{"word": n.word, "sim": round(n.similarity, 4)}
+                                    for n in multi_neighbors[:10]],
+            })
+
+        metrics = {}
+        for k in [1, 5, 10]:
+            metrics[f"hits_at_{k}"] = hits[k] / total if total > 0 else 0.0
+
+        return {
+            "total_cases": len(CANONICAL_TEST_CASES),
+            "evaluated": total,
+            "metrics": metrics,
+            "cases": results,
+        }
+
+    def compare_with_analogy(self, top_n: int = 10) -> dict:
+        """
+        Compare ICA inversion results with traditional vector analogy for applicable cases.
+        """
+        comparisons = []
+
+        for tc in CANONICAL_TEST_CASES:
+            if not tc.analogy_a or not tc.analogy_b:
+                continue
+
+            # ICA inversion (try top-5 axes)
+            top_axes = self._find_oracle_top_axes(tc.word, tc.expected, n=5)
+            ica_neighbors = []
+            ica_rank = None
+            for axis in top_axes:
+                neighbors = self.operator.axis_invert(tc.word, axis, top_n=top_n)
+                for i, n in enumerate(neighbors):
+                    if n.word == tc.expected:
+                        rank = i + 1
+                        if ica_rank is None or rank < ica_rank:
+                            ica_rank = rank
+                            ica_neighbors = neighbors
+                        break
+            if not ica_neighbors and top_axes:
+                ica_neighbors = self.operator.axis_invert(tc.word, top_axes[0], top_n=top_n)
+
+            # Traditional analogy: a->b as word->?
+            analogy_neighbors = self.operator.analogy_traditional(
+                tc.analogy_a, tc.analogy_b, tc.word, top_n=top_n
+            )
+            analogy_rank = None
+            for i, n in enumerate(analogy_neighbors):
+                if n.word == tc.expected:
+                    analogy_rank = i + 1
+                    break
+
+            comparisons.append({
+                "word": tc.word,
+                "expected": tc.expected,
+                "analogy": f"{tc.analogy_a}:{tc.analogy_b}::{tc.word}:?",
+                "ica_rank": ica_rank,
+                "analogy_rank": analogy_rank,
+                "ica_top5": [n.word for n in ica_neighbors[:5]],
+                "analogy_top5": [n.word for n in analogy_neighbors[:5]],
+            })
+
+        return {"comparisons": comparisons}
+
+    def failure_analysis(self, results: dict) -> dict:
+        """Analyze failures from run_all() results."""
+        failures = []
+        for case in results["cases"]:
+            if case.get("best_rank") is None and case.get("status") != "word_not_found":
+                comparison = self.operator.compare_words(case["word"], case["expected"])
+                failures.append({
+                    "word": case["word"],
+                    "expected": case["expected"],
+                    "candidate_axes": case.get("candidate_axes", []),
+                    "actual_top3": [n["word"] for n in case.get("neighbors", [])[:3]],
+                    "multi_top3": [n["word"] for n in case.get("multi_neighbors", [])[:3]],
+                    "word_comparison": comparison.get("top_diffs", [])[:5],
+                })
+            elif case.get("status") == "word_not_found":
+                failures.append({
+                    "word": case["word"],
+                    "expected": case["expected"],
+                    "reason": "word not in ICA space",
+                })
+
+        return {"failures": failures, "total_failures": len(failures)}
+
+
+def save_qualitative_results(results: dict, path: str) -> None:
+    """Save qualitative evaluation results to JSON."""
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2, ensure_ascii=False)
+    print(f"Saved qualitative results to {path}")

@@ -1,1 +1,1 @@
-# Reverse Word2Vec Antonym Analysis
+# ICA Semantic Axis Decomposition

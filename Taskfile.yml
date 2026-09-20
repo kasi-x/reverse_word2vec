@@ -17,47 +17,48 @@ tasks:
     cmds:
       - '{{.PYTHON}} -c "import gensim.downloader as api; api.load(''glove-wiki-gigaword-100'')"'
 
-  download-models:ja:
-    desc: Download Japanese fastText cc.ja.300 model (1.3GB compressed)
+  download-analogy:
+    desc: Download Google Analogy Dataset (questions-words.txt)
     cmds:
-      - |
-        {{.PYTHON}} -c "
-        import urllib.request, os
-        url='https://dl.fbaipublicfiles.com/fasttext/vectors-crawl/cc.ja.300.vec.gz'
-        dest=os.path.expanduser('~/gensim-data/cc.ja.300.vec.gz')
-        os.makedirs(os.path.dirname(dest), exist_ok=True)
-        print(f'Downloading to {dest}...')
-        urllib.request.urlretrieve(url, dest)
-        print('Done')"
+      - mkdir -p data
+      - 'curl -L -o data/questions-words.txt https://raw.githubusercontent.com/nicholas-leonard/word2vec/master/questions-words.txt'
 
-  extract:ja:
-    desc: Extract Japanese antonym pairs from EPWING dictionaries
+  run:ica:
+    desc: "Phase 1: ICA decomposition + axis labeling"
     cmds:
-      - '{{.PYTHON}} src/japanese_antonym_loader.py'
+      - '{{.PYTHON}} run_pipeline.py --phase 1'
 
-  run:en:
-    desc: Run English antonym analysis (exports JSON)
+  run:qualitative:
+    desc: "Phase 2: Qualitative evaluation (canonical test cases)"
     cmds:
-      - '{{.PYTHON}} src/english_analysis_export.py'
+      - '{{.PYTHON}} run_pipeline.py --phase 2'
 
-  run:ja:
-    desc: Run Japanese antonym analysis
+  run:quantitative:
+    desc: "Phase 3: Quantitative evaluation (antonym retrieval CV + analogy)"
     cmds:
-      - '{{.PYTHON}} src/japanese_analysis.py'
+      - '{{.PYTHON}} run_pipeline.py --phase 3'
 
-  run:compare:
-    desc: Run cross-lingual comparison
+  run:analysis:
+    desc: "Phase 4: Analysis & visualization"
     cmds:
-      - '{{.PYTHON}} src/cross_lingual_comparison.py'
+      - '{{.PYTHON}} run_pipeline.py --phase 4'
 
   run:all:
-    desc: Run full analysis pipeline (EN + JA + comparison)
+    desc: Run full pipeline (all phases)
     cmds:
-      - task run:en
-      - task run:ja
-      - task run:compare
+      - '{{.PYTHON}} run_pipeline.py'
+
+  run:cf:
+    desc: "Run full pipeline with counter-fitting"
+    cmds:
+      - '{{.PYTHON}} run_pipeline.py --counter-fit'
+
+  run:cf:ica:
+    desc: "Phase 1 with counter-fitting (refit ICA)"
+    cmds:
+      - '{{.PYTHON}} run_pipeline.py --phase 1 --counter-fit'
 
   paper:generate:
-    desc: Generate academic paper with latest results
+    desc: "Phase 5: Generate academic paper from results"
     cmds:
-      - '{{.PYTHON}} src/generate_paper.py'
+      - '{{.PYTHON}} run_pipeline.py --phase 5'
