@@ -1,5 +1,9 @@
 version: '3'
 
+env:
+  # Use only the pixi environment; never leak in ~/.local user site-packages
+  PYTHONNOUSERSITE: '1'
+
 vars:
   PYTHON: pixi run python
 
