@@ -10,7 +10,7 @@ axes (gender, sentiment, temperature, ...). Two retrieval approaches are studied
 
 1. **Axis inversion** — negate a word's score on a semantic axis, reconstruct, and
    take the nearest neighbour (weak on its own; see paper).
-2. **MLP + reranker (headline)** — an MLP classifier scores antonymy from axis-wise
+2. **MLP + reranker (deployable pipeline)** — an MLP classifier scores antonymy from axis-wise
    pair features `(|s1−s2| ∥ s1⊙s2)`; a logistic reranker re-orders the top-10
    using ICA cosine, word frequency, and MLP rank signals.
 
@@ -106,7 +106,7 @@ Phase 2/3 - Evaluation:
     oracle protocol kept as a stated non-deployable reference
   - Quantitative: oracle axis-inversion 5-fold CV; Google analogy dataset
 
-Headline (scripts/eval_reranker.py):
+Retrieval eval (scripts/eval_reranker.py):
   GloVe-100 -> ICA scores -> MLP on (|s1-s2|, s1*s2) -> top-10 candidates
   -> logistic reranker (mlp_score, ica_cosine, mlp_rank, freq_ratio,
      interaction, inv_rank) -> Hits@{1,5,10}

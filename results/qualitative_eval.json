@@ -1,0 +1,3411 @@
+{
+  "blind": {
+    "label": {
+      "total_cases": 15,
+      "evaluated": 15,
+      "metrics": {
+        "hits_at_1": 0.0,
+        "hits_at_5": 0.26666666666666666,
+        "hits_at_10": 0.3333333333333333
+      },
+      "cases": [
+        {
+          "word": "king",
+          "expected": "queen",
+          "axis_label": "gender",
+          "axes": [
+            42,
+            86
+          ],
+          "rank": 2,
+          "neighbors": [
+            {
+              "word": "prince",
+              "sim": 0.7596
+            },
+            {
+              "word": "queen",
+              "sim": 0.757
+            },
+            {
+              "word": "brother",
+              "sim": 0.6974
+            },
+            {
+              "word": "son",
+              "sim": 0.6965
+            },
+            {
+              "word": "throne",
+              "sim": 0.6885
+            },
+            {
+              "word": "monarch",
+              "sim": 0.6756
+            },
+            {
+              "word": "emperor",
+              "sim": 0.6724
+            },
+            {
+              "word": "father",
+              "sim": 0.6724
+            },
+            {
+              "word": "henry",
+              "sim": 0.6695
+            },
+            {
+              "word": "kingdom",
+              "sim": 0.6637
+            }
+          ]
+        },
+        {
+          "word": "boy",
+          "expected": "girl",
+          "axis_label": "gender",
+          "axes": [
+            42,
+            86
+          ],
+          "rank": 3,
+          "neighbors": [
+            {
+              "word": "kid",
+              "sim": 0.7596
+            },
+            {
+              "word": "man",
+              "sim": 0.7547
+            },
+            {
+              "word": "girl",
+              "sim": 0.7305
+            },
+            {
+              "word": "boys",
+              "sim": 0.6897
+            },
+            {
+              "word": "dog",
+              "sim": 0.6499
+            },
+            {
+              "word": "baby",
+              "sim": 0.6363
+            },
+            {
+              "word": "him",
+              "sim": 0.6246
+            },
+            {
+              "word": "child",
+              "sim": 0.6149
+            },
+            {
+              "word": "kids",
+              "sim": 0.6097
+            },
+            {
+              "word": "he",
+              "sim": 0.6034
+            }
+          ]
+        },
+        {
+          "word": "father",
+          "expected": "mother",
+          "axis_label": "gender",
+          "axes": [
+            42,
+            86
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "brother",
+              "sim": 0.8178
+            },
+            {
+              "word": "son",
+              "sim": 0.807
+            },
+            {
+              "word": "grandfather",
+              "sim": 0.7791
+            },
+            {
+              "word": "his",
+              "sim": 0.7732
+            },
+            {
+              "word": "uncle",
+              "sim": 0.7624
+            },
+            {
+              "word": "he",
+              "sim": 0.7475
+            },
+            {
+              "word": "himself",
+              "sim": 0.7456
+            },
+            {
+              "word": "him",
+              "sim": 0.7327
+            },
+            {
+              "word": "friend",
+              "sim": 0.7057
+            },
+            {
+              "word": "death",
+              "sim": 0.6935
+            }
+          ]
+        },
+        {
+          "word": "husband",
+          "expected": "wife",
+          "axis_label": "gender",
+          "axes": [
+            42,
+            86
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "himself",
+              "sim": 0.6758
+            },
+            {
+              "word": "him",
+              "sim": 0.674
+            },
+            {
+              "word": "his",
+              "sim": 0.6563
+            },
+            {
+              "word": "he",
+              "sim": 0.6533
+            },
+            {
+              "word": "someone",
+              "sim": 0.6444
+            },
+            {
+              "word": "turned",
+              "sim": 0.6342
+            },
+            {
+              "word": "once",
+              "sim": 0.6234
+            },
+            {
+              "word": "father",
+              "sim": 0.6193
+            },
+            {
+              "word": "even",
+              "sim": 0.6041
+            },
+            {
+              "word": "ago",
+              "sim": 0.6038
+            }
+          ]
+        },
+        {
+          "word": "happy",
+          "expected": "sad",
+          "axis_label": "sentiment",
+          "axes": [
+            20,
+            59
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "feel",
+              "sim": 0.7833
+            },
+            {
+              "word": "i",
+              "sim": 0.7816
+            },
+            {
+              "word": "glad",
+              "sim": 0.7745
+            },
+            {
+              "word": "really",
+              "sim": 0.7663
+            },
+            {
+              "word": "sure",
+              "sim": 0.7601
+            },
+            {
+              "word": "we",
+              "sim": 0.7583
+            },
+            {
+              "word": "know",
+              "sim": 0.7549
+            },
+            {
+              "word": "everyone",
+              "sim": 0.7548
+            },
+            {
+              "word": "pretty",
+              "sim": 0.7537
+            },
+            {
+              "word": "lucky",
+              "sim": 0.7537
+            }
+          ]
+        },
+        {
+          "word": "good",
+          "expected": "bad",
+          "axis_label": "sentiment",
+          "axes": [
+            20,
+            59
+          ],
+          "rank": 8,
+          "neighbors": [
+            {
+              "word": "n't",
+              "sim": 0.7899
+            },
+            {
+              "word": "going",
+              "sim": 0.7815
+            },
+            {
+              "word": "just",
+              "sim": 0.777
+            },
+            {
+              "word": "make",
+              "sim": 0.7696
+            },
+            {
+              "word": "get",
+              "sim": 0.7659
+            },
+            {
+              "word": "big",
+              "sim": 0.7638
+            },
+            {
+              "word": "you",
+              "sim": 0.759
+            },
+            {
+              "word": "bad",
+              "sim": 0.7578
+            },
+            {
+              "word": "little",
+              "sim": 0.7577
+            },
+            {
+              "word": "sure",
+              "sim": 0.7569
+            }
+          ]
+        },
+        {
+          "word": "love",
+          "expected": "hate",
+          "axis_label": "sentiment",
+          "axes": [
+            20,
+            59
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "song",
+              "sim": 0.6891
+            },
+            {
+              "word": "me",
+              "sim": 0.6809
+            },
+            {
+              "word": "crazy",
+              "sim": 0.6805
+            },
+            {
+              "word": "couple",
+              "sim": 0.6664
+            },
+            {
+              "word": "she",
+              "sim": 0.6661
+            },
+            {
+              "word": "girl",
+              "sim": 0.6639
+            },
+            {
+              "word": "wonder",
+              "sim": 0.663
+            },
+            {
+              "word": "mother",
+              "sim": 0.6627
+            },
+            {
+              "word": "like",
+              "sim": 0.6626
+            },
+            {
+              "word": "you",
+              "sim": 0.6594
+            }
+          ]
+        },
+        {
+          "word": "hot",
+          "expected": "cold",
+          "axis_label": "temperature",
+          "axes": [
+            6,
+            50,
+            56,
+            96
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "night",
+              "sim": 0.5296
+            },
+            {
+              "word": "days",
+              "sim": 0.521
+            },
+            {
+              "word": "weather",
+              "sim": 0.5208
+            },
+            {
+              "word": "seen",
+              "sim": 0.5163
+            },
+            {
+              "word": "day",
+              "sim": 0.5158
+            },
+            {
+              "word": "weekend",
+              "sim": 0.5127
+            },
+            {
+              "word": "next",
+              "sim": 0.5053
+            },
+            {
+              "word": "far",
+              "sim": 0.5042
+            },
+            {
+              "word": "week",
+              "sim": 0.5009
+            },
+            {
+              "word": "last",
+              "sim": 0.4946
+            }
+          ]
+        },
+        {
+          "word": "warm",
+          "expected": "cool",
+          "axis_label": "temperature",
+          "axes": [
+            6,
+            50,
+            56,
+            96
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "warmer",
+              "sim": 0.6081
+            },
+            {
+              "word": "chilly",
+              "sim": 0.6029
+            },
+            {
+              "word": "sunny",
+              "sim": 0.5586
+            },
+            {
+              "word": "humid",
+              "sim": 0.5429
+            },
+            {
+              "word": "strong",
+              "sim": 0.5312
+            },
+            {
+              "word": "winters",
+              "sim": 0.5219
+            },
+            {
+              "word": "comfortable",
+              "sim": 0.5184
+            },
+            {
+              "word": "weather",
+              "sim": 0.5076
+            },
+            {
+              "word": "supportive",
+              "sim": 0.5037
+            },
+            {
+              "word": "friendly",
+              "sim": 0.5015
+            }
+          ]
+        },
+        {
+          "word": "big",
+          "expected": "small",
+          "axis_label": "size",
+          "axes": [
+            7,
+            35,
+            62,
+            66,
+            76
+          ],
+          "rank": 2,
+          "neighbors": [
+            {
+              "word": "huge",
+              "sim": 0.7176
+            },
+            {
+              "word": "small",
+              "sim": 0.7149
+            },
+            {
+              "word": "large",
+              "sim": 0.7071
+            },
+            {
+              "word": "little",
+              "sim": 0.6384
+            },
+            {
+              "word": "biggest",
+              "sim": 0.6375
+            },
+            {
+              "word": "like",
+              "sim": 0.6343
+            },
+            {
+              "word": "major",
+              "sim": 0.6333
+            },
+            {
+              "word": "with",
+              "sim": 0.6318
+            },
+            {
+              "word": "into",
+              "sim": 0.6258
+            },
+            {
+              "word": "massive",
+              "sim": 0.6256
+            }
+          ]
+        },
+        {
+          "word": "huge",
+          "expected": "tiny",
+          "axis_label": "size",
+          "axes": [
+            7,
+            35,
+            62,
+            66,
+            76
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "massive",
+              "sim": 0.8376
+            },
+            {
+              "word": "enormous",
+              "sim": 0.8261
+            },
+            {
+              "word": "large",
+              "sim": 0.7256
+            },
+            {
+              "word": "immense",
+              "sim": 0.71
+            },
+            {
+              "word": "vast",
+              "sim": 0.6849
+            },
+            {
+              "word": "considerable",
+              "sim": 0.6752
+            },
+            {
+              "word": "big",
+              "sim": 0.6651
+            },
+            {
+              "word": "substantial",
+              "sim": 0.6541
+            },
+            {
+              "word": "tremendous",
+              "sim": 0.6497
+            },
+            {
+              "word": "biggest",
+              "sim": 0.6487
+            }
+          ]
+        },
+        {
+          "word": "up",
+          "expected": "down",
+          "axis_label": "direction",
+          "axes": [
+            9,
+            23,
+            25,
+            30
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "prowl",
+              "sim": 0.413
+            },
+            {
+              "word": "roughed",
+              "sim": 0.3909
+            },
+            {
+              "word": "druh",
+              "sim": 0.3845
+            },
+            {
+              "word": "squashed",
+              "sim": 0.3702
+            },
+            {
+              "word": "drapes",
+              "sim": 0.3658
+            },
+            {
+              "word": "stinking",
+              "sim": 0.3623
+            },
+            {
+              "word": "patching",
+              "sim": 0.3609
+            },
+            {
+              "word": "madly",
+              "sim": 0.3605
+            },
+            {
+              "word": "skidding",
+              "sim": 0.3596
+            },
+            {
+              "word": "springing",
+              "sim": 0.3582
+            }
+          ]
+        },
+        {
+          "word": "high",
+          "expected": "low",
+          "axis_label": "direction",
+          "axes": [
+            9,
+            23,
+            25,
+            30
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "englewood",
+              "sim": 0.4689
+            },
+            {
+              "word": "chaparral",
+              "sim": 0.4605
+            },
+            {
+              "word": "glenwood",
+              "sim": 0.4487
+            },
+            {
+              "word": "avondale",
+              "sim": 0.4323
+            },
+            {
+              "word": "lakewood",
+              "sim": 0.421
+            },
+            {
+              "word": "cascade",
+              "sim": 0.4186
+            },
+            {
+              "word": "sycamore",
+              "sim": 0.4173
+            },
+            {
+              "word": "gresham",
+              "sim": 0.396
+            },
+            {
+              "word": "lakeview",
+              "sim": 0.396
+            },
+            {
+              "word": "chatsworth",
+              "sim": 0.3954
+            }
+          ]
+        },
+        {
+          "word": "alive",
+          "expected": "dead",
+          "axis_label": "activity",
+          "axes": [
+            8,
+            54,
+            63
+          ],
+          "rank": 2,
+          "neighbors": [
+            {
+              "word": "dying",
+              "sim": 0.7156
+            },
+            {
+              "word": "dead",
+              "sim": 0.7034
+            },
+            {
+              "word": "gone",
+              "sim": 0.6733
+            },
+            {
+              "word": "missing",
+              "sim": 0.667
+            },
+            {
+              "word": "still",
+              "sim": 0.6639
+            },
+            {
+              "word": "survive",
+              "sim": 0.6638
+            },
+            {
+              "word": "forever",
+              "sim": 0.6614
+            },
+            {
+              "word": "loved",
+              "sim": 0.6571
+            },
+            {
+              "word": "hope",
+              "sim": 0.6571
+            },
+            {
+              "word": "remains",
+              "sim": 0.6452
+            }
+          ]
+        },
+        {
+          "word": "begin",
+          "expected": "end",
+          "axis_label": "activity",
+          "axes": [
+            8,
+            54,
+            63
+          ],
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "continue",
+              "sim": 0.8035
+            },
+            {
+              "word": "begun",
+              "sim": 0.7413
+            },
+            {
+              "word": "start",
+              "sim": 0.7321
+            },
+            {
+              "word": "preparing",
+              "sim": 0.7163
+            },
+            {
+              "word": "will",
+              "sim": 0.697
+            },
+            {
+              "word": "resume",
+              "sim": 0.6894
+            },
+            {
+              "word": "wait",
+              "sim": 0.6864
+            },
+            {
+              "word": "take",
+              "sim": 0.6857
+            },
+            {
+              "word": "decided",
+              "sim": 0.6849
+            },
+            {
+              "word": "consider",
+              "sim": 0.6786
+            }
+          ]
+        }
+      ]
+    },
+    "auto": {
+      "total_cases": 15,
+      "evaluated": 15,
+      "metrics": {
+        "hits_at_1": 0.06666666666666667,
+        "hits_at_5": 0.06666666666666667,
+        "hits_at_10": 0.06666666666666667
+      },
+      "cases": [
+        {
+          "word": "king",
+          "expected": "queen",
+          "axis": 5,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "monarch",
+              "sim": 0.6507
+            },
+            {
+              "word": "kamehameha",
+              "sim": 0.6478
+            },
+            {
+              "word": "birendra",
+              "sim": 0.6314
+            },
+            {
+              "word": "throne",
+              "sim": 0.6193
+            },
+            {
+              "word": "charlemagne",
+              "sim": 0.603
+            },
+            {
+              "word": "pharaoh",
+              "sim": 0.6008
+            },
+            {
+              "word": "bhumibol",
+              "sim": 0.6005
+            },
+            {
+              "word": "sihanouk",
+              "sim": 0.5982
+            },
+            {
+              "word": "mswati",
+              "sim": 0.5966
+            },
+            {
+              "word": "ruler",
+              "sim": 0.5921
+            }
+          ]
+        },
+        {
+          "word": "boy",
+          "expected": "girl",
+          "axis": 12,
+          "rank": 1,
+          "neighbors": [
+            {
+              "word": "girl",
+              "sim": 0.76
+            },
+            {
+              "word": "mother",
+              "sim": 0.6823
+            },
+            {
+              "word": "child",
+              "sim": 0.6788
+            },
+            {
+              "word": "boys",
+              "sim": 0.6695
+            },
+            {
+              "word": "woman",
+              "sim": 0.6679
+            },
+            {
+              "word": "father",
+              "sim": 0.6545
+            },
+            {
+              "word": "daughter",
+              "sim": 0.6542
+            },
+            {
+              "word": "girls",
+              "sim": 0.6516
+            },
+            {
+              "word": "friend",
+              "sim": 0.6406
+            },
+            {
+              "word": "son",
+              "sim": 0.6404
+            }
+          ]
+        },
+        {
+          "word": "father",
+          "expected": "mother",
+          "axis": 25,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "grandfather",
+              "sim": 0.753
+            },
+            {
+              "word": "nephew",
+              "sim": 0.7389
+            },
+            {
+              "word": "brother-in-law",
+              "sim": 0.7364
+            },
+            {
+              "word": "stepfather",
+              "sim": 0.7283
+            },
+            {
+              "word": "uncle",
+              "sim": 0.7251
+            },
+            {
+              "word": "grandson",
+              "sim": 0.7238
+            },
+            {
+              "word": "niece",
+              "sim": 0.7193
+            },
+            {
+              "word": "father-in-law",
+              "sim": 0.7178
+            },
+            {
+              "word": "son",
+              "sim": 0.7141
+            },
+            {
+              "word": "cousin",
+              "sim": 0.706
+            }
+          ]
+        },
+        {
+          "word": "husband",
+          "expected": "wife",
+          "axis": 42,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "himself",
+              "sim": 0.6734
+            },
+            {
+              "word": "his",
+              "sim": 0.6683
+            },
+            {
+              "word": "him",
+              "sim": 0.6675
+            },
+            {
+              "word": "father",
+              "sim": 0.6584
+            },
+            {
+              "word": "he",
+              "sim": 0.6552
+            },
+            {
+              "word": "turned",
+              "sim": 0.6514
+            },
+            {
+              "word": "someone",
+              "sim": 0.6368
+            },
+            {
+              "word": "once",
+              "sim": 0.6277
+            },
+            {
+              "word": "ago",
+              "sim": 0.6231
+            },
+            {
+              "word": "another",
+              "sim": 0.6139
+            }
+          ]
+        },
+        {
+          "word": "happy",
+          "expected": "sad",
+          "axis": 7,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "celebrated",
+              "sim": 0.4562
+            },
+            {
+              "word": "friendly",
+              "sim": 0.4553
+            },
+            {
+              "word": "successful",
+              "sim": 0.4544
+            },
+            {
+              "word": "energetic",
+              "sim": 0.4525
+            },
+            {
+              "word": "lively",
+              "sim": 0.4449
+            },
+            {
+              "word": "opening",
+              "sim": 0.4269
+            },
+            {
+              "word": "holiday",
+              "sim": 0.4216
+            },
+            {
+              "word": "unusually",
+              "sim": 0.4213
+            },
+            {
+              "word": "exuberant",
+              "sim": 0.4208
+            },
+            {
+              "word": "debut",
+              "sim": 0.4204
+            }
+          ]
+        },
+        {
+          "word": "good",
+          "expected": "bad",
+          "axis": 7,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "excellent",
+              "sim": 0.7604
+            },
+            {
+              "word": "best",
+              "sim": 0.7322
+            },
+            {
+              "word": "strong",
+              "sim": 0.729
+            },
+            {
+              "word": "well",
+              "sim": 0.7253
+            },
+            {
+              "word": "solid",
+              "sim": 0.6991
+            },
+            {
+              "word": "quality",
+              "sim": 0.6936
+            },
+            {
+              "word": "with",
+              "sim": 0.6931
+            },
+            {
+              "word": "as",
+              "sim": 0.6923
+            },
+            {
+              "word": "better",
+              "sim": 0.6908
+            },
+            {
+              "word": "for",
+              "sim": 0.6863
+            }
+          ]
+        },
+        {
+          "word": "love",
+          "expected": "hate",
+          "axis": 7,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "romantic",
+              "sim": 0.6782
+            },
+            {
+              "word": "passion",
+              "sim": 0.6629
+            },
+            {
+              "word": "romance",
+              "sim": 0.6617
+            },
+            {
+              "word": "her",
+              "sim": 0.6438
+            },
+            {
+              "word": "spirit",
+              "sim": 0.6279
+            },
+            {
+              "word": "soul",
+              "sim": 0.6252
+            },
+            {
+              "word": "life",
+              "sim": 0.6232
+            },
+            {
+              "word": "character",
+              "sim": 0.6196
+            },
+            {
+              "word": "musical",
+              "sim": 0.6185
+            },
+            {
+              "word": "song",
+              "sim": 0.6074
+            }
+          ]
+        },
+        {
+          "word": "hot",
+          "expected": "cold",
+          "axis": 56,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "hottest",
+              "sim": 0.6165
+            },
+            {
+              "word": "night",
+              "sim": 0.5412
+            },
+            {
+              "word": "seen",
+              "sim": 0.5385
+            },
+            {
+              "word": "ever",
+              "sim": 0.5296
+            },
+            {
+              "word": "track",
+              "sim": 0.5281
+            },
+            {
+              "word": "rock",
+              "sim": 0.5269
+            },
+            {
+              "word": "summer",
+              "sim": 0.5226
+            },
+            {
+              "word": "dangerous",
+              "sim": 0.5214
+            },
+            {
+              "word": "become",
+              "sim": 0.5199
+            },
+            {
+              "word": "most",
+              "sim": 0.5194
+            }
+          ]
+        },
+        {
+          "word": "warm",
+          "expected": "cool",
+          "axis": 18,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "dressing",
+              "sim": 0.585
+            },
+            {
+              "word": "nice",
+              "sim": 0.5634
+            },
+            {
+              "word": "taste",
+              "sim": 0.5594
+            },
+            {
+              "word": "comfortable",
+              "sim": 0.5547
+            },
+            {
+              "word": "dinner",
+              "sim": 0.5528
+            },
+            {
+              "word": "happy",
+              "sim": 0.5527
+            },
+            {
+              "word": "sweet",
+              "sim": 0.5499
+            },
+            {
+              "word": "hearty",
+              "sim": 0.5413
+            },
+            {
+              "word": "delicious",
+              "sim": 0.528
+            },
+            {
+              "word": "soft",
+              "sim": 0.5268
+            }
+          ]
+        },
+        {
+          "word": "big",
+          "expected": "small",
+          "axis": 25,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "bigger",
+              "sim": 0.65
+            },
+            {
+              "word": "huge",
+              "sim": 0.5977
+            },
+            {
+              "word": "gigantic",
+              "sim": 0.5809
+            },
+            {
+              "word": "bunch",
+              "sim": 0.5517
+            },
+            {
+              "word": "mighty",
+              "sim": 0.5411
+            },
+            {
+              "word": "biggest",
+              "sim": 0.5372
+            },
+            {
+              "word": "guys",
+              "sim": 0.5177
+            },
+            {
+              "word": "mega",
+              "sim": 0.5052
+            },
+            {
+              "word": "crazy",
+              "sim": 0.5029
+            },
+            {
+              "word": "terrific",
+              "sim": 0.5019
+            }
+          ]
+        },
+        {
+          "word": "huge",
+          "expected": "tiny",
+          "axis": 87,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "big",
+              "sim": 0.6435
+            },
+            {
+              "word": "massive",
+              "sim": 0.6257
+            },
+            {
+              "word": "large",
+              "sim": 0.5854
+            },
+            {
+              "word": "gigantic",
+              "sim": 0.5843
+            },
+            {
+              "word": "impact",
+              "sim": 0.579
+            },
+            {
+              "word": "filled",
+              "sim": 0.5726
+            },
+            {
+              "word": "into",
+              "sim": 0.5696
+            },
+            {
+              "word": "floating",
+              "sim": 0.5646
+            },
+            {
+              "word": "out",
+              "sim": 0.5536
+            },
+            {
+              "word": "away",
+              "sim": 0.5514
+            }
+          ]
+        },
+        {
+          "word": "up",
+          "expected": "down",
+          "axis": 25,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "zipped",
+              "sim": 0.4012
+            },
+            {
+              "word": "skidding",
+              "sim": 0.4006
+            },
+            {
+              "word": "scooping",
+              "sim": 0.3794
+            },
+            {
+              "word": "gobbled",
+              "sim": 0.3791
+            },
+            {
+              "word": "madly",
+              "sim": 0.3732
+            },
+            {
+              "word": "inched",
+              "sim": 0.3726
+            },
+            {
+              "word": "drapes",
+              "sim": 0.352
+            },
+            {
+              "word": "nudged",
+              "sim": 0.3492
+            },
+            {
+              "word": "tacked",
+              "sim": 0.3482
+            },
+            {
+              "word": "lapped",
+              "sim": 0.3474
+            }
+          ]
+        },
+        {
+          "word": "high",
+          "expected": "low",
+          "axis": 25,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "valedictorian",
+              "sim": 0.4323
+            },
+            {
+              "word": "lakeview",
+              "sim": 0.4253
+            },
+            {
+              "word": "glenwood",
+              "sim": 0.4211
+            },
+            {
+              "word": "abnormally",
+              "sim": 0.4173
+            },
+            {
+              "word": "chaparral",
+              "sim": 0.4071
+            },
+            {
+              "word": "grades",
+              "sim": 0.3987
+            },
+            {
+              "word": "voltages",
+              "sim": 0.3971
+            },
+            {
+              "word": "dropout",
+              "sim": 0.3927
+            },
+            {
+              "word": "northside",
+              "sim": 0.3914
+            },
+            {
+              "word": "rpi",
+              "sim": 0.3886
+            }
+          ]
+        },
+        {
+          "word": "alive",
+          "expected": "dead",
+          "axis": 12,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "still",
+              "sim": 0.6408
+            },
+            {
+              "word": "kept",
+              "sim": 0.5988
+            },
+            {
+              "word": "sure",
+              "sim": 0.5899
+            },
+            {
+              "word": "stayed",
+              "sim": 0.5806
+            },
+            {
+              "word": "remains",
+              "sim": 0.5805
+            },
+            {
+              "word": "chances",
+              "sim": 0.5726
+            },
+            {
+              "word": "nobody",
+              "sim": 0.5724
+            },
+            {
+              "word": "hope",
+              "sim": 0.5686
+            },
+            {
+              "word": "staying",
+              "sim": 0.5652
+            },
+            {
+              "word": "remain",
+              "sim": 0.5633
+            }
+          ]
+        },
+        {
+          "word": "begin",
+          "expected": "end",
+          "axis": 28,
+          "rank": null,
+          "neighbors": [
+            {
+              "word": "start",
+              "sim": 0.7666
+            },
+            {
+              "word": "beginning",
+              "sim": 0.7615
+            },
+            {
+              "word": "next",
+              "sim": 0.7442
+            },
+            {
+              "word": "prepare",
+              "sim": 0.7368
+            },
+            {
+              "word": "starting",
+              "sim": 0.7328
+            },
+            {
+              "word": "resume",
+              "sim": 0.7292
+            },
+            {
+              "word": "scheduled",
+              "sim": 0.7259
+            },
+            {
+              "word": "continue",
+              "sim": 0.7253
+            },
+            {
+              "word": "preparing",
+              "sim": 0.7222
+            },
+            {
+              "word": "begun",
+              "sim": 0.7111
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "oracle": {
+    "total_cases": 15,
+    "evaluated": 15,
+    "metrics": {
+      "hits_at_1": 0.6666666666666666,
+      "hits_at_5": 0.6666666666666666,
+      "hits_at_10": 0.6666666666666666
+    },
+    "cases": [
+      {
+        "word": "king",
+        "expected": "queen",
+        "axis_label": "gender",
+        "oracle_axis": 47,
+        "labeled_axis": 42,
+        "candidate_axes": [
+          42,
+          47,
+          37,
+          38,
+          5
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": 1,
+        "neighbors": [
+          {
+            "word": "queen",
+            "sim": 0.7575
+          },
+          {
+            "word": "monarch",
+            "sim": 0.7232
+          },
+          {
+            "word": "kingdom",
+            "sim": 0.7037
+          },
+          {
+            "word": "prince",
+            "sim": 0.6897
+          },
+          {
+            "word": "throne",
+            "sim": 0.6848
+          },
+          {
+            "word": "crown",
+            "sim": 0.6525
+          },
+          {
+            "word": "ruler",
+            "sim": 0.6504
+          },
+          {
+            "word": "reign",
+            "sim": 0.6431
+          },
+          {
+            "word": "ii",
+            "sim": 0.6231
+          },
+          {
+            "word": "emperor",
+            "sim": 0.6202
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "queen",
+            "sim": 0.7534
+          },
+          {
+            "word": "kingdom",
+            "sim": 0.6212
+          },
+          {
+            "word": "monarch",
+            "sim": 0.621
+          },
+          {
+            "word": "throne",
+            "sim": 0.6162
+          },
+          {
+            "word": "lady",
+            "sim": 0.6104
+          },
+          {
+            "word": "ii",
+            "sim": 0.6083
+          },
+          {
+            "word": "emperor",
+            "sim": 0.6054
+          },
+          {
+            "word": "princess",
+            "sim": 0.5959
+          },
+          {
+            "word": "royal",
+            "sim": 0.5929
+          },
+          {
+            "word": "family",
+            "sim": 0.5852
+          }
+        ]
+      },
+      {
+        "word": "boy",
+        "expected": "girl",
+        "axis_label": "gender",
+        "oracle_axis": 47,
+        "labeled_axis": 42,
+        "candidate_axes": [
+          42,
+          47,
+          45,
+          90,
+          80
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": 2,
+        "neighbors": [
+          {
+            "word": "girl",
+            "sim": 0.9212
+          },
+          {
+            "word": "man",
+            "sim": 0.7895
+          },
+          {
+            "word": "kid",
+            "sim": 0.7839
+          },
+          {
+            "word": "woman",
+            "sim": 0.7754
+          },
+          {
+            "word": "boys",
+            "sim": 0.7585
+          },
+          {
+            "word": "child",
+            "sim": 0.7516
+          },
+          {
+            "word": "baby",
+            "sim": 0.7509
+          },
+          {
+            "word": "mother",
+            "sim": 0.7452
+          },
+          {
+            "word": "girls",
+            "sim": 0.725
+          },
+          {
+            "word": "teenage",
+            "sim": 0.7181
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "man",
+            "sim": 0.7773
+          },
+          {
+            "word": "girl",
+            "sim": 0.7635
+          },
+          {
+            "word": "kid",
+            "sim": 0.7495
+          },
+          {
+            "word": "boys",
+            "sim": 0.7085
+          },
+          {
+            "word": "baby",
+            "sim": 0.6478
+          },
+          {
+            "word": "woman",
+            "sim": 0.6447
+          },
+          {
+            "word": "dog",
+            "sim": 0.643
+          },
+          {
+            "word": "child",
+            "sim": 0.6345
+          },
+          {
+            "word": "old",
+            "sim": 0.6254
+          },
+          {
+            "word": "dead",
+            "sim": 0.6218
+          }
+        ]
+      },
+      {
+        "word": "father",
+        "expected": "mother",
+        "axis_label": "gender",
+        "oracle_axis": 47,
+        "labeled_axis": 42,
+        "candidate_axes": [
+          42,
+          47,
+          73,
+          0,
+          37
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "mother",
+            "sim": 0.8869
+          },
+          {
+            "word": "son",
+            "sim": 0.8781
+          },
+          {
+            "word": "brother",
+            "sim": 0.8662
+          },
+          {
+            "word": "grandfather",
+            "sim": 0.8461
+          },
+          {
+            "word": "wife",
+            "sim": 0.8423
+          },
+          {
+            "word": "daughter",
+            "sim": 0.8327
+          },
+          {
+            "word": "husband",
+            "sim": 0.8323
+          },
+          {
+            "word": "uncle",
+            "sim": 0.8194
+          },
+          {
+            "word": "friend",
+            "sim": 0.8015
+          },
+          {
+            "word": "grandmother",
+            "sim": 0.8014
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "his",
+            "sim": 0.7603
+          },
+          {
+            "word": "brother",
+            "sim": 0.744
+          },
+          {
+            "word": "son",
+            "sim": 0.7426
+          },
+          {
+            "word": "he",
+            "sim": 0.7339
+          },
+          {
+            "word": "man",
+            "sim": 0.7266
+          },
+          {
+            "word": "him",
+            "sim": 0.7084
+          },
+          {
+            "word": "himself",
+            "sim": 0.7037
+          },
+          {
+            "word": "grandfather",
+            "sim": 0.6993
+          },
+          {
+            "word": "uncle",
+            "sim": 0.6874
+          },
+          {
+            "word": "family",
+            "sim": 0.6851
+          }
+        ]
+      },
+      {
+        "word": "husband",
+        "expected": "wife",
+        "axis_label": "gender",
+        "oracle_axis": 60,
+        "labeled_axis": 42,
+        "candidate_axes": [
+          42,
+          60,
+          74,
+          65,
+          35
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "wife",
+            "sim": 0.928
+          },
+          {
+            "word": "daughter",
+            "sim": 0.859
+          },
+          {
+            "word": "mother",
+            "sim": 0.8515
+          },
+          {
+            "word": "father",
+            "sim": 0.8466
+          },
+          {
+            "word": "friend",
+            "sim": 0.8248
+          },
+          {
+            "word": "son",
+            "sim": 0.8069
+          },
+          {
+            "word": "married",
+            "sim": 0.7961
+          },
+          {
+            "word": "brother",
+            "sim": 0.7939
+          },
+          {
+            "word": "girlfriend",
+            "sim": 0.7753
+          },
+          {
+            "word": "sister",
+            "sim": 0.7683
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "his",
+            "sim": 0.6813
+          },
+          {
+            "word": "himself",
+            "sim": 0.674
+          },
+          {
+            "word": "he",
+            "sim": 0.6668
+          },
+          {
+            "word": "father",
+            "sim": 0.6655
+          },
+          {
+            "word": "him",
+            "sim": 0.6601
+          },
+          {
+            "word": "turned",
+            "sim": 0.6447
+          },
+          {
+            "word": "ago",
+            "sim": 0.6313
+          },
+          {
+            "word": "son",
+            "sim": 0.6266
+          },
+          {
+            "word": "once",
+            "sim": 0.6222
+          },
+          {
+            "word": "brother",
+            "sim": 0.6189
+          }
+        ]
+      },
+      {
+        "word": "happy",
+        "expected": "sad",
+        "axis_label": "sentiment",
+        "oracle_axis": 53,
+        "labeled_axis": 20,
+        "candidate_axes": [
+          53,
+          26,
+          41,
+          10,
+          38
+        ],
+        "best_rank": null,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "i",
+            "sim": 0.7515
+          },
+          {
+            "word": "we",
+            "sim": 0.7388
+          },
+          {
+            "word": "want",
+            "sim": 0.7296
+          },
+          {
+            "word": "wish",
+            "sim": 0.7239
+          },
+          {
+            "word": "know",
+            "sim": 0.7215
+          },
+          {
+            "word": "everyone",
+            "sim": 0.7156
+          },
+          {
+            "word": "go",
+            "sim": 0.713
+          },
+          {
+            "word": "wo",
+            "sim": 0.7125
+          },
+          {
+            "word": "you",
+            "sim": 0.7113
+          },
+          {
+            "word": "n't",
+            "sim": 0.7092
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "i",
+            "sim": 0.7431
+          },
+          {
+            "word": "we",
+            "sim": 0.7386
+          },
+          {
+            "word": "know",
+            "sim": 0.7242
+          },
+          {
+            "word": "want",
+            "sim": 0.7217
+          },
+          {
+            "word": "wish",
+            "sim": 0.7141
+          },
+          {
+            "word": "everyone",
+            "sim": 0.7124
+          },
+          {
+            "word": "sure",
+            "sim": 0.7103
+          },
+          {
+            "word": "n't",
+            "sim": 0.71
+          },
+          {
+            "word": "wo",
+            "sim": 0.7099
+          },
+          {
+            "word": "everybody",
+            "sim": 0.7081
+          }
+        ]
+      },
+      {
+        "word": "good",
+        "expected": "bad",
+        "axis_label": "sentiment",
+        "oracle_axis": 20,
+        "labeled_axis": 20,
+        "candidate_axes": [
+          20,
+          39,
+          25,
+          64,
+          87
+        ],
+        "best_rank": null,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "n't",
+            "sim": 0.773
+          },
+          {
+            "word": "just",
+            "sim": 0.7627
+          },
+          {
+            "word": "get",
+            "sim": 0.7589
+          },
+          {
+            "word": "going",
+            "sim": 0.7589
+          },
+          {
+            "word": "you",
+            "sim": 0.7488
+          },
+          {
+            "word": "make",
+            "sim": 0.7474
+          },
+          {
+            "word": "got",
+            "sim": 0.7443
+          },
+          {
+            "word": "i",
+            "sim": 0.7412
+          },
+          {
+            "word": "so",
+            "sim": 0.7364
+          },
+          {
+            "word": "sure",
+            "sim": 0.7328
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "lousy",
+            "sim": 0.5997
+          },
+          {
+            "word": "stupid",
+            "sim": 0.5489
+          },
+          {
+            "word": "darn",
+            "sim": 0.5282
+          },
+          {
+            "word": "nice",
+            "sim": 0.5262
+          },
+          {
+            "word": "damn",
+            "sim": 0.4959
+          },
+          {
+            "word": "lucky",
+            "sim": 0.4956
+          },
+          {
+            "word": "funny",
+            "sim": 0.4886
+          },
+          {
+            "word": "boring",
+            "sim": 0.486
+          },
+          {
+            "word": "mediocre",
+            "sim": 0.4858
+          },
+          {
+            "word": "bunch",
+            "sim": 0.4826
+          }
+        ]
+      },
+      {
+        "word": "love",
+        "expected": "hate",
+        "axis_label": "sentiment",
+        "oracle_axis": 25,
+        "labeled_axis": 20,
+        "candidate_axes": [
+          25,
+          39,
+          20,
+          12,
+          1
+        ],
+        "best_rank": null,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "loves",
+            "sim": 0.6782
+          },
+          {
+            "word": "longing",
+            "sim": 0.6696
+          },
+          {
+            "word": "passion",
+            "sim": 0.6666
+          },
+          {
+            "word": "romance",
+            "sim": 0.6511
+          },
+          {
+            "word": "romantic",
+            "sim": 0.6482
+          },
+          {
+            "word": "lover",
+            "sim": 0.6355
+          },
+          {
+            "word": "happiness",
+            "sim": 0.6346
+          },
+          {
+            "word": "dreams",
+            "sim": 0.633
+          },
+          {
+            "word": "soul",
+            "sim": 0.6312
+          },
+          {
+            "word": "kiss",
+            "sim": 0.6299
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "kiss",
+            "sim": 0.5974
+          },
+          {
+            "word": "wanna",
+            "sim": 0.5866
+          },
+          {
+            "word": "daddy",
+            "sim": 0.5845
+          },
+          {
+            "word": "mom",
+            "sim": 0.5754
+          },
+          {
+            "word": "lover",
+            "sim": 0.5699
+          },
+          {
+            "word": "sings",
+            "sim": 0.5634
+          },
+          {
+            "word": "alice",
+            "sim": 0.5526
+          },
+          {
+            "word": "loves",
+            "sim": 0.5441
+          },
+          {
+            "word": "lucy",
+            "sim": 0.5323
+          },
+          {
+            "word": "girlfriend",
+            "sim": 0.5307
+          }
+        ]
+      },
+      {
+        "word": "hot",
+        "expected": "cold",
+        "axis_label": "temperature",
+        "oracle_axis": 50,
+        "labeled_axis": 56,
+        "candidate_axes": [
+          50,
+          65,
+          17,
+          75,
+          76
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": 1,
+        "neighbors": [
+          {
+            "word": "cold",
+            "sim": 0.7315
+          },
+          {
+            "word": "dry",
+            "sim": 0.6841
+          },
+          {
+            "word": "cool",
+            "sim": 0.6751
+          },
+          {
+            "word": "warm",
+            "sim": 0.6693
+          },
+          {
+            "word": "heat",
+            "sim": 0.6424
+          },
+          {
+            "word": "water",
+            "sim": 0.6422
+          },
+          {
+            "word": "fresh",
+            "sim": 0.6159
+          },
+          {
+            "word": "heated",
+            "sim": 0.5958
+          },
+          {
+            "word": "cooler",
+            "sim": 0.5804
+          },
+          {
+            "word": "weather",
+            "sim": 0.5796
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "cold",
+            "sim": 0.6902
+          },
+          {
+            "word": "cool",
+            "sim": 0.6415
+          },
+          {
+            "word": "water",
+            "sim": 0.6323
+          },
+          {
+            "word": "dry",
+            "sim": 0.6305
+          },
+          {
+            "word": "warm",
+            "sim": 0.6299
+          },
+          {
+            "word": "fresh",
+            "sim": 0.6082
+          },
+          {
+            "word": "heat",
+            "sim": 0.602
+          },
+          {
+            "word": "heated",
+            "sim": 0.5878
+          },
+          {
+            "word": "light",
+            "sim": 0.5871
+          },
+          {
+            "word": "coffee",
+            "sim": 0.5849
+          }
+        ]
+      },
+      {
+        "word": "warm",
+        "expected": "cool",
+        "axis_label": "temperature",
+        "oracle_axis": 96,
+        "labeled_axis": 56,
+        "candidate_axes": [
+          96,
+          91,
+          71,
+          82,
+          12
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": 2,
+        "neighbors": [
+          {
+            "word": "cool",
+            "sim": 0.7643
+          },
+          {
+            "word": "dry",
+            "sim": 0.7361
+          },
+          {
+            "word": "cold",
+            "sim": 0.7173
+          },
+          {
+            "word": "warmer",
+            "sim": 0.7004
+          },
+          {
+            "word": "hot",
+            "sim": 0.6853
+          },
+          {
+            "word": "cooler",
+            "sim": 0.666
+          },
+          {
+            "word": "chilly",
+            "sim": 0.6605
+          },
+          {
+            "word": "moist",
+            "sim": 0.6586
+          },
+          {
+            "word": "soft",
+            "sim": 0.6429
+          },
+          {
+            "word": "wet",
+            "sim": 0.6419
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "dry",
+            "sim": 0.7505
+          },
+          {
+            "word": "cool",
+            "sim": 0.7465
+          },
+          {
+            "word": "cold",
+            "sim": 0.6801
+          },
+          {
+            "word": "warmer",
+            "sim": 0.6688
+          },
+          {
+            "word": "moist",
+            "sim": 0.6537
+          },
+          {
+            "word": "hot",
+            "sim": 0.6448
+          },
+          {
+            "word": "cooler",
+            "sim": 0.6434
+          },
+          {
+            "word": "wet",
+            "sim": 0.6377
+          },
+          {
+            "word": "crisp",
+            "sim": 0.6186
+          },
+          {
+            "word": "soft",
+            "sim": 0.6118
+          }
+        ]
+      },
+      {
+        "word": "big",
+        "expected": "small",
+        "axis_label": "size",
+        "oracle_axis": 7,
+        "labeled_axis": 7,
+        "candidate_axes": [
+          7,
+          66,
+          76,
+          12,
+          15
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": 1,
+        "neighbors": [
+          {
+            "word": "huge",
+            "sim": 0.7693
+          },
+          {
+            "word": "biggest",
+            "sim": 0.7416
+          },
+          {
+            "word": "large",
+            "sim": 0.7219
+          },
+          {
+            "word": "major",
+            "sim": 0.7202
+          },
+          {
+            "word": "small",
+            "sim": 0.7046
+          },
+          {
+            "word": "bigger",
+            "sim": 0.6704
+          },
+          {
+            "word": "largest",
+            "sim": 0.6536
+          },
+          {
+            "word": "leading",
+            "sim": 0.6512
+          },
+          {
+            "word": "one",
+            "sim": 0.6487
+          },
+          {
+            "word": "like",
+            "sim": 0.6479
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "small",
+            "sim": 0.734
+          },
+          {
+            "word": "huge",
+            "sim": 0.7335
+          },
+          {
+            "word": "large",
+            "sim": 0.7263
+          },
+          {
+            "word": "little",
+            "sim": 0.6433
+          },
+          {
+            "word": "massive",
+            "sim": 0.6419
+          },
+          {
+            "word": "with",
+            "sim": 0.6394
+          },
+          {
+            "word": "like",
+            "sim": 0.6378
+          },
+          {
+            "word": "biggest",
+            "sim": 0.6367
+          },
+          {
+            "word": "into",
+            "sim": 0.6356
+          },
+          {
+            "word": "smaller",
+            "sim": 0.6328
+          }
+        ]
+      },
+      {
+        "word": "huge",
+        "expected": "tiny",
+        "axis_label": "size",
+        "oracle_axis": 87,
+        "labeled_axis": 7,
+        "candidate_axes": [
+          87,
+          42,
+          44,
+          41,
+          91
+        ],
+        "best_rank": null,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "big",
+            "sim": 0.6435
+          },
+          {
+            "word": "massive",
+            "sim": 0.6257
+          },
+          {
+            "word": "large",
+            "sim": 0.5854
+          },
+          {
+            "word": "gigantic",
+            "sim": 0.5843
+          },
+          {
+            "word": "impact",
+            "sim": 0.579
+          },
+          {
+            "word": "filled",
+            "sim": 0.5726
+          },
+          {
+            "word": "into",
+            "sim": 0.5696
+          },
+          {
+            "word": "floating",
+            "sim": 0.5646
+          },
+          {
+            "word": "out",
+            "sim": 0.5536
+          },
+          {
+            "word": "away",
+            "sim": 0.5514
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "shaking",
+            "sim": 0.5387
+          },
+          {
+            "word": "watching",
+            "sim": 0.5273
+          },
+          {
+            "word": "big",
+            "sim": 0.5195
+          },
+          {
+            "word": "gigantic",
+            "sim": 0.5143
+          },
+          {
+            "word": "crowd",
+            "sim": 0.5104
+          },
+          {
+            "word": "behind",
+            "sim": 0.4951
+          },
+          {
+            "word": "debris",
+            "sim": 0.4939
+          },
+          {
+            "word": "shook",
+            "sim": 0.4938
+          },
+          {
+            "word": "watched",
+            "sim": 0.4935
+          },
+          {
+            "word": "giant",
+            "sim": 0.4897
+          }
+        ]
+      },
+      {
+        "word": "up",
+        "expected": "down",
+        "axis_label": "direction",
+        "oracle_axis": 87,
+        "labeled_axis": 25,
+        "candidate_axes": [
+          25,
+          84,
+          87,
+          34,
+          21
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "down",
+            "sim": 0.9183
+          },
+          {
+            "word": "out",
+            "sim": 0.888
+          },
+          {
+            "word": "back",
+            "sim": 0.8417
+          },
+          {
+            "word": "put",
+            "sim": 0.8299
+          },
+          {
+            "word": "just",
+            "sim": 0.8294
+          },
+          {
+            "word": "off",
+            "sim": 0.8253
+          },
+          {
+            "word": "over",
+            "sim": 0.8079
+          },
+          {
+            "word": "away",
+            "sim": 0.8042
+          },
+          {
+            "word": "into",
+            "sim": 0.8026
+          },
+          {
+            "word": "them",
+            "sim": 0.8025
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "dlr",
+            "sim": 0.3293
+          },
+          {
+            "word": "asx",
+            "sim": 0.3193
+          },
+          {
+            "word": "markkaa",
+            "sim": 0.3165
+          },
+          {
+            "word": "bln",
+            "sim": 0.3144
+          },
+          {
+            "word": "refurbish",
+            "sim": 0.3141
+          },
+          {
+            "word": "patching",
+            "sim": 0.3125
+          },
+          {
+            "word": "schillings",
+            "sim": 0.3121
+          },
+          {
+            "word": "ordinaries",
+            "sim": 0.3028
+          },
+          {
+            "word": "pcl",
+            "sim": 0.3007
+          },
+          {
+            "word": "bushel",
+            "sim": 0.2947
+          }
+        ]
+      },
+      {
+        "word": "high",
+        "expected": "low",
+        "axis_label": "direction",
+        "oracle_axis": 65,
+        "labeled_axis": 25,
+        "candidate_axes": [
+          25,
+          65,
+          60,
+          48,
+          43
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "low",
+            "sim": 0.8201
+          },
+          {
+            "word": "higher",
+            "sim": 0.7616
+          },
+          {
+            "word": "school",
+            "sim": 0.7413
+          },
+          {
+            "word": "level",
+            "sim": 0.7271
+          },
+          {
+            "word": "highest",
+            "sim": 0.6882
+          },
+          {
+            "word": "at",
+            "sim": 0.6857
+          },
+          {
+            "word": "lower",
+            "sim": 0.6835
+          },
+          {
+            "word": "well",
+            "sim": 0.6828
+          },
+          {
+            "word": "as",
+            "sim": 0.6769
+          },
+          {
+            "word": "the",
+            "sim": 0.6766
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "octane",
+            "sim": 0.4149
+          },
+          {
+            "word": "spikes",
+            "sim": 0.407
+          },
+          {
+            "word": "spiking",
+            "sim": 0.4059
+          },
+          {
+            "word": "viscosity",
+            "sim": 0.3831
+          },
+          {
+            "word": "alarmingly",
+            "sim": 0.3826
+          },
+          {
+            "word": "saturation",
+            "sim": 0.381
+          },
+          {
+            "word": "soaring",
+            "sim": 0.3635
+          },
+          {
+            "word": "ceilings",
+            "sim": 0.3613
+          },
+          {
+            "word": "ratios",
+            "sim": 0.3577
+          },
+          {
+            "word": "multiples",
+            "sim": 0.357
+          }
+        ]
+      },
+      {
+        "word": "alive",
+        "expected": "dead",
+        "axis_label": "activity",
+        "oracle_axis": 9,
+        "labeled_axis": 63,
+        "candidate_axes": [
+          9,
+          86,
+          39,
+          21,
+          20
+        ],
+        "best_rank": 1,
+        "multi_axis_rank": 1,
+        "neighbors": [
+          {
+            "word": "dead",
+            "sim": 0.7247
+          },
+          {
+            "word": "dying",
+            "sim": 0.7214
+          },
+          {
+            "word": "missing",
+            "sim": 0.6755
+          },
+          {
+            "word": "gone",
+            "sim": 0.6739
+          },
+          {
+            "word": "still",
+            "sim": 0.6709
+          },
+          {
+            "word": "forever",
+            "sim": 0.6651
+          },
+          {
+            "word": "survive",
+            "sim": 0.6631
+          },
+          {
+            "word": "loved",
+            "sim": 0.6611
+          },
+          {
+            "word": "hope",
+            "sim": 0.6604
+          },
+          {
+            "word": "remains",
+            "sim": 0.6497
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "dead",
+            "sim": 0.7797
+          },
+          {
+            "word": "dying",
+            "sim": 0.7553
+          },
+          {
+            "word": "missing",
+            "sim": 0.6894
+          },
+          {
+            "word": "lives",
+            "sim": 0.6616
+          },
+          {
+            "word": "man",
+            "sim": 0.6569
+          },
+          {
+            "word": "gone",
+            "sim": 0.6541
+          },
+          {
+            "word": "trapped",
+            "sim": 0.64
+          },
+          {
+            "word": "survived",
+            "sim": 0.6378
+          },
+          {
+            "word": "survive",
+            "sim": 0.6344
+          },
+          {
+            "word": "forever",
+            "sim": 0.6339
+          }
+        ]
+      },
+      {
+        "word": "begin",
+        "expected": "end",
+        "axis_label": "activity",
+        "oracle_axis": 28,
+        "labeled_axis": 63,
+        "candidate_axes": [
+          28,
+          25,
+          73,
+          85,
+          88
+        ],
+        "best_rank": null,
+        "multi_axis_rank": null,
+        "neighbors": [
+          {
+            "word": "start",
+            "sim": 0.7666
+          },
+          {
+            "word": "beginning",
+            "sim": 0.7615
+          },
+          {
+            "word": "next",
+            "sim": 0.7442
+          },
+          {
+            "word": "prepare",
+            "sim": 0.7368
+          },
+          {
+            "word": "starting",
+            "sim": 0.7328
+          },
+          {
+            "word": "resume",
+            "sim": 0.7292
+          },
+          {
+            "word": "scheduled",
+            "sim": 0.7259
+          },
+          {
+            "word": "continue",
+            "sim": 0.7253
+          },
+          {
+            "word": "preparing",
+            "sim": 0.7222
+          },
+          {
+            "word": "begun",
+            "sim": 0.7111
+          }
+        ],
+        "multi_neighbors": [
+          {
+            "word": "commence",
+            "sim": 0.7052
+          },
+          {
+            "word": "prepare",
+            "sim": 0.6631
+          },
+          {
+            "word": "beginning",
+            "sim": 0.662
+          },
+          {
+            "word": "resume",
+            "sim": 0.6506
+          },
+          {
+            "word": "scheduled",
+            "sim": 0.6278
+          },
+          {
+            "word": "start",
+            "sim": 0.6257
+          },
+          {
+            "word": "preparing",
+            "sim": 0.6231
+          },
+          {
+            "word": "begun",
+            "sim": 0.6141
+          },
+          {
+            "word": "starting",
+            "sim": 0.6063
+          },
+          {
+            "word": "slated",
+            "sim": 0.5898
+          }
+        ]
+      }
+    ]
+  },
+  "analogy_comparison": {
+    "comparisons": [
+      {
+        "word": "king",
+        "expected": "queen",
+        "analogy": "man:woman::king:?",
+        "ica_rank": 2,
+        "analogy_rank": 1,
+        "ica_top5": [
+          "prince",
+          "queen",
+          "brother",
+          "son",
+          "throne"
+        ],
+        "analogy_top5": [
+          "queen",
+          "monarch",
+          "throne",
+          "daughter",
+          "prince"
+        ]
+      },
+      {
+        "word": "boy",
+        "expected": "girl",
+        "analogy": "man:woman::boy:?",
+        "ica_rank": 3,
+        "analogy_rank": 1,
+        "ica_top5": [
+          "kid",
+          "man",
+          "girl",
+          "boys",
+          "dog"
+        ],
+        "analogy_top5": [
+          "girl",
+          "mother",
+          "child",
+          "pregnant",
+          "girls"
+        ]
+      },
+      {
+        "word": "father",
+        "expected": "mother",
+        "analogy": "man:woman::father:?",
+        "ica_rank": null,
+        "analogy_rank": 1,
+        "ica_top5": [
+          "brother",
+          "son",
+          "grandfather",
+          "his",
+          "uncle"
+        ],
+        "analogy_top5": [
+          "mother",
+          "daughter",
+          "wife",
+          "husband",
+          "grandmother"
+        ]
+      },
+      {
+        "word": "husband",
+        "expected": "wife",
+        "analogy": "man:woman::husband:?",
+        "ica_rank": null,
+        "analogy_rank": 1,
+        "ica_top5": [
+          "himself",
+          "him",
+          "his",
+          "he",
+          "someone"
+        ],
+        "analogy_top5": [
+          "wife",
+          "mother",
+          "daughter",
+          "married",
+          "girlfriend"
+        ]
+      }
+    ]
+  },
+  "failure_analysis": {
+    "failures": [
+      {
+        "word": "happy",
+        "expected": "sad",
+        "candidate_axes": [
+          53,
+          26,
+          41,
+          10,
+          38
+        ],
+        "actual_top3": [
+          "i",
+          "we",
+          "want"
+        ],
+        "multi_top3": [
+          "i",
+          "we",
+          "know"
+        ],
+        "word_comparison": [
+          {
+            "axis": 53,
+            "score_w1": 2.4992336195528697,
+            "score_w2": 4.628929464388195,
+            "diff": -2.129695844835325
+          },
+          {
+            "axis": 26,
+            "score_w1": 0.7034396690566933,
+            "score_w2": -1.2793448410842823,
+            "diff": 1.9827845101409756
+          },
+          {
+            "axis": 41,
+            "score_w1": 0.12701109980703257,
+            "score_w2": 2.0706451616432124,
+            "diff": -1.9436340618361798
+          },
+          {
+            "axis": 10,
+            "score_w1": -0.39640509082414715,
+            "score_w2": -2.2234577400487003,
+            "diff": 1.8270526492245531
+          },
+          {
+            "axis": 38,
+            "score_w1": 0.04571366927608624,
+            "score_w2": -1.7505415518680052,
+            "diff": 1.7962552211440914
+          }
+        ]
+      },
+      {
+        "word": "good",
+        "expected": "bad",
+        "candidate_axes": [
+          20,
+          39,
+          25,
+          64,
+          87
+        ],
+        "actual_top3": [
+          "n't",
+          "just",
+          "get"
+        ],
+        "multi_top3": [
+          "lousy",
+          "stupid",
+          "darn"
+        ],
+        "word_comparison": [
+          {
+            "axis": 20,
+            "score_w1": -3.177653330943425,
+            "score_w2": -0.3423681087535254,
+            "diff": -2.8352852221898996
+          },
+          {
+            "axis": 39,
+            "score_w1": -0.7893382212413917,
+            "score_w2": 1.1841601901364038,
+            "diff": -1.9734984113777956
+          },
+          {
+            "axis": 25,
+            "score_w1": -3.3021415475173996,
+            "score_w2": -1.3393057754065372,
+            "diff": -1.9628357721108625
+          },
+          {
+            "axis": 64,
+            "score_w1": 1.1020202384959599,
+            "score_w2": -0.6345205555763959,
+            "diff": 1.7365407940723556
+          },
+          {
+            "axis": 87,
+            "score_w1": -0.7665714363991031,
+            "score_w2": 0.9577837256001379,
+            "diff": -1.724355161999241
+          }
+        ]
+      },
+      {
+        "word": "love",
+        "expected": "hate",
+        "candidate_axes": [
+          25,
+          39,
+          20,
+          12,
+          1
+        ],
+        "actual_top3": [
+          "loves",
+          "longing",
+          "passion"
+        ],
+        "multi_top3": [
+          "kiss",
+          "wanna",
+          "daddy"
+        ],
+        "word_comparison": [
+          {
+            "axis": 25,
+            "score_w1": -2.23369842874586,
+            "score_w2": 0.37526587563369485,
+            "diff": -2.6089643043795547
+          },
+          {
+            "axis": 39,
+            "score_w1": 0.9787468437951236,
+            "score_w2": 3.539918489815431,
+            "diff": -2.5611716460203073
+          },
+          {
+            "axis": 20,
+            "score_w1": -2.878366347638181,
+            "score_w2": -0.6400362936566044,
+            "diff": -2.238330053981577
+          },
+          {
+            "axis": 12,
+            "score_w1": 2.438172558026701,
+            "score_w2": 0.2004972909716777,
+            "diff": 2.2376752670550233
+          },
+          {
+            "axis": 1,
+            "score_w1": -0.3507868687612175,
+            "score_w2": 1.7953843894134724,
+            "diff": -2.14617125817469
+          }
+        ]
+      },
+      {
+        "word": "huge",
+        "expected": "tiny",
+        "candidate_axes": [
+          87,
+          42,
+          44,
+          41,
+          91
+        ],
+        "actual_top3": [
+          "big",
+          "massive",
+          "large"
+        ],
+        "multi_top3": [
+          "shaking",
+          "watching",
+          "big"
+        ],
+        "word_comparison": [
+          {
+            "axis": 87,
+            "score_w1": -5.1523185264363764,
+            "score_w2": -2.694325047684593,
+            "diff": -2.4579934787517836
+          },
+          {
+            "axis": 42,
+            "score_w1": -0.9202686964355118,
+            "score_w2": 1.4415170287843633,
+            "diff": -2.361785725219875
+          },
+          {
+            "axis": 44,
+            "score_w1": -1.9978159971400786,
+            "score_w2": 0.09783410015283206,
+            "diff": -2.0956500972929106
+          },
+          {
+            "axis": 41,
+            "score_w1": 0.0896048718534485,
+            "score_w2": 2.1515089914753203,
+            "diff": -2.0619041196218717
+          },
+          {
+            "axis": 91,
+            "score_w1": -1.5114616185036638,
+            "score_w2": 0.4826759343844655,
+            "diff": -1.9941375528881293
+          }
+        ]
+      },
+      {
+        "word": "begin",
+        "expected": "end",
+        "candidate_axes": [
+          28,
+          25,
+          73,
+          85,
+          88
+        ],
+        "actual_top3": [
+          "start",
+          "beginning",
+          "next"
+        ],
+        "multi_top3": [
+          "commence",
+          "prepare",
+          "beginning"
+        ],
+        "word_comparison": [
+          {
+            "axis": 28,
+            "score_w1": -3.1531822788905717,
+            "score_w2": 0.12495668227405524,
+            "diff": -3.2781389611646268
+          },
+          {
+            "axis": 25,
+            "score_w1": -1.4468576129297224,
+            "score_w2": -4.498430723807988,
+            "diff": 3.051573110878265
+          },
+          {
+            "axis": 73,
+            "score_w1": -0.70110273453198,
+            "score_w2": 1.8319702497442671,
+            "diff": -2.533072984276247
+          },
+          {
+            "axis": 85,
+            "score_w1": 2.187842728864018,
+            "score_w2": -0.03181392287792071,
+            "diff": 2.2196566517419387
+          },
+          {
+            "axis": 88,
+            "score_w1": 1.5633324891959488,
+            "score_w2": -0.6432360659334525,
+            "diff": 2.2065685551294014
+          }
+        ]
+      }
+    ],
+    "total_failures": 5
+  }
+}

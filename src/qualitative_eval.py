@@ -4,10 +4,14 @@ Qualitative evaluation of ICA axis-wise semantic inversion.
 Tests canonical examples (king->queen, hot->cold, etc.) and compares
 ICA inversion with traditional vector analogy.
 
-Two evaluation modes:
-- Oracle: use the known (word, expected) pair to find the best axis
-- Labeled: use the auto-labeled axis from axis_labeler
+Evaluation modes:
+- Blind (primary): invert the axes of the declared semantic label, without
+  ever consulting the expected target word for axis selection. Also reports
+  a fully automatic variant (flip the source word's highest-|z| axis).
+- Oracle (upper bound): use the known (word, expected) pair to find the
+  best axis. Not deployable; reported only as an upper bound.
 """
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
@@ -90,7 +94,8 @@ class QualitativeEvaluator:
             axes,
             key=lambda a: len(
                 next((p for p in self.profiles if p.axis_idx == a), None).antonym_pairs
-                if next((p for p in self.profiles if p.axis_idx == a), None) else []
+                if next((p for p in self.profiles if p.axis_idx == a), None)
+                else []
             ),
         )
         return best
@@ -121,14 +126,134 @@ class QualitativeEvaluator:
         normalized_diff = diff / axis_std
         return list(np.argsort(normalized_diff)[-n:][::-1])
 
-    def run_all(self, top_n: int = 10) -> dict:
-        """
-        Run all canonical test cases using oracle axis selection.
+    def _rank_of(self, neighbors, expected: str) -> int | None:
+        """1-based rank of `expected` in a neighbor list, or None."""
+        for i, n in enumerate(neighbors):
+            if n.word == expected:
+                return i + 1
+        return None
 
-        Tries top-5 candidate axes individually and reports the best result.
+    @staticmethod
+    def _hits_from(rank: int | None, hits: dict[int, int]) -> None:
+        if rank is not None:
+            for k in [1, 5, 10]:
+                if rank <= k:
+                    hits[k] += 1
+
+    def _label_group(self, label: str) -> list[int]:
+        """All axis indices carrying a semantic label."""
+        return self._label_to_axes.get(label, [])
+
+    def run_blind(self, top_n: int = 10) -> dict:
+        """
+        Blind evaluation (primary metric): never consults the expected word.
+
+        Two variants:
+          - label: flip all axes carrying the test case's declared semantic
+            label (e.g. "gender"). The label is part of the task spec.
+          - auto: flip only the single axis where the SOURCE word has the
+            highest |z-score|. No labels, no oracle.
 
         Returns:
-            Dict with per-case results and aggregate Hits@k metrics.
+            Dict with per-case results and aggregate Hits@k per variant.
+        """
+        label_results = []
+        auto_results = []
+        label_hits = {1: 0, 5: 0, 10: 0}
+        auto_hits = {1: 0, 5: 0, 10: 0}
+        label_total = 0
+        auto_total = 0
+
+        for tc in CANONICAL_TEST_CASES:
+            if self.space.score(tc.word) is None:
+                label_results.append(
+                    {
+                        "word": tc.word,
+                        "expected": tc.expected,
+                        "axis_label": tc.axis_label,
+                        "status": "word_not_found",
+                        "neighbors": [],
+                    }
+                )
+                continue
+
+            # Variant 1: declared-label group inversion
+            axes = self._label_group(tc.axis_label)
+            if axes:
+                neighbors = self.operator.multi_axis_invert(tc.word, axes, top_n=top_n)
+                rank = self._rank_of(neighbors, tc.expected)
+                self._hits_from(rank, label_hits)
+                label_total += 1
+                label_results.append(
+                    {
+                        "word": tc.word,
+                        "expected": tc.expected,
+                        "axis_label": tc.axis_label,
+                        "axes": [int(a) for a in axes],
+                        "rank": rank,
+                        "neighbors": [
+                            {"word": n.word, "sim": round(n.similarity, 4)} for n in neighbors[:10]
+                        ],
+                    }
+                )
+            else:
+                label_results.append(
+                    {
+                        "word": tc.word,
+                        "expected": tc.expected,
+                        "axis_label": tc.axis_label,
+                        "status": "no_labeled_axis",
+                        "neighbors": [],
+                    }
+                )
+
+            # Variant 2: fully automatic source-top-1 axis inversion
+            result = self.operator.invert_by_source_topk(tc.word, k=1, top_n=top_n)
+            if result.neighbors:
+                rank = self._rank_of(result.neighbors, tc.expected)
+                self._hits_from(rank, auto_hits)
+                auto_total += 1
+                auto_results.append(
+                    {
+                        "word": tc.word,
+                        "expected": tc.expected,
+                        "axis": int(result.axes_flipped[0]) if result.axes_flipped else None,
+                        "rank": rank,
+                        "neighbors": [
+                            {"word": n.word, "sim": round(n.similarity, 4)}
+                            for n in result.neighbors[:10]
+                        ],
+                    }
+                )
+
+        return {
+            "label": {
+                "total_cases": len(CANONICAL_TEST_CASES),
+                "evaluated": label_total,
+                "metrics": {
+                    f"hits_at_{k}": label_hits[k] / label_total if label_total > 0 else 0.0
+                    for k in [1, 5, 10]
+                },
+                "cases": label_results,
+            },
+            "auto": {
+                "total_cases": len(CANONICAL_TEST_CASES),
+                "evaluated": auto_total,
+                "metrics": {
+                    f"hits_at_{k}": auto_hits[k] / auto_total if auto_total > 0 else 0.0
+                    for k in [1, 5, 10]
+                },
+                "cases": auto_results,
+            },
+        }
+
+    def run_oracle(self, top_n: int = 10) -> dict:
+        """
+        Oracle evaluation (upper bound): use the known (word, expected) pair
+        to select the best axis among the top-5 candidates.
+
+        The target word is consulted, so these numbers are NOT deployable
+        performance; they bound what axis inversion can achieve.
         """
         results = []
         hits = {1: 0, 5: 0, 10: 0}
@@ -139,13 +264,15 @@ class QualitativeEvaluator:
             labeled_axis = self._find_axis_for_label(tc.axis_label)
 
             if not top_axes:
-                results.append({
-                    "word": tc.word,
-                    "expected": tc.expected,
-                    "axis_label": tc.axis_label,
-                    "status": "word_not_found",
-                    "neighbors": [],
-                })
+                results.append(
+                    {
+                        "word": tc.word,
+                        "expected": tc.expected,
+                        "axis_label": tc.axis_label,
+                        "status": "word_not_found",
+                        "neighbors": [],
+                    }
+                )
                 continue
 
             # Try each candidate axis and pick the best
@@ -155,11 +282,7 @@ class QualitativeEvaluator:
 
             for axis in top_axes:
                 neighbors = self.operator.axis_invert(tc.word, axis, top_n=top_n)
-                rank = None
-                for i, n in enumerate(neighbors):
-                    if n.word == tc.expected:
-                        rank = i + 1
-                        break
+                rank = self._rank_of(neighbors, tc.expected)
                 if rank is not None and (best_rank is None or rank < best_rank):
                     best_rank = rank
                     best_axis = axis
@@ -167,11 +290,7 @@ class QualitativeEvaluator:
 
             # Also try multi-axis inversion with top-3 axes
             multi_neighbors = self.operator.multi_axis_invert(tc.word, top_axes[:3], top_n=top_n)
-            multi_rank = None
-            for i, n in enumerate(multi_neighbors):
-                if n.word == tc.expected:
-                    multi_rank = i + 1
-                    break
+            multi_rank = self._rank_of(multi_neighbors, tc.expected)
             if multi_rank is not None and (best_rank is None or multi_rank < best_rank):
                 best_rank = multi_rank
 
@@ -180,24 +299,27 @@ class QualitativeEvaluator:
                 best_neighbors = self.operator.axis_invert(tc.word, top_axes[0], top_n=top_n)
 
             total += 1
-            for k in [1, 5, 10]:
-                if best_rank is not None and best_rank <= k:
-                    hits[k] += 1
+            self._hits_from(best_rank, hits)
 
-            results.append({
-                "word": tc.word,
-                "expected": tc.expected,
-                "axis_label": tc.axis_label,
-                "oracle_axis": int(best_axis),
-                "labeled_axis": int(labeled_axis) if labeled_axis is not None else None,
-                "candidate_axes": [int(a) for a in top_axes],
-                "best_rank": best_rank,
-                "multi_axis_rank": multi_rank,
-                "neighbors": [{"word": n.word, "sim": round(n.similarity, 4)}
-                              for n in best_neighbors[:10]],
-                "multi_neighbors": [{"word": n.word, "sim": round(n.similarity, 4)}
-                                    for n in multi_neighbors[:10]],
-            })
+            results.append(
+                {
+                    "word": tc.word,
+                    "expected": tc.expected,
+                    "axis_label": tc.axis_label,
+                    "oracle_axis": int(best_axis),
+                    "labeled_axis": int(labeled_axis) if labeled_axis is not None else None,
+                    "candidate_axes": [int(a) for a in top_axes],
+                    "best_rank": best_rank,
+                    "multi_axis_rank": multi_rank,
+                    "neighbors": [
+                        {"word": n.word, "sim": round(n.similarity, 4)} for n in best_neighbors[:10]
+                    ],
+                    "multi_neighbors": [
+                        {"word": n.word, "sim": round(n.similarity, 4)}
+                        for n in multi_neighbors[:10]
+                    ],
+                }
+            )
 
         metrics = {}
         for k in [1, 5, 10]:
@@ -210,9 +332,21 @@ class QualitativeEvaluator:
             "cases": results,
         }
 
+    def run_all(self, top_n: int = 10) -> dict:
+        """Run both blind (primary) and oracle (upper bound) evaluations."""
+        return {
+            "blind": self.run_blind(top_n),
+            "oracle": self.run_oracle(top_n),
+        }
+
     def compare_with_analogy(self, top_n: int = 10) -> dict:
         """
-        Compare ICA inversion results with traditional vector analogy for applicable cases.
+        Compare blind ICA inversion results with traditional vector analogy.
+
+        The ICA side inverts the axes of the declared semantic label (blind);
+        the analogy side uses a:b :: c:? with an unrelated word pair, so this
+        comparison illustrates the difference in task setup rather than a
+        like-for-like accuracy contest.
         """
         comparisons = []
 
@@ -220,64 +354,59 @@ class QualitativeEvaluator:
             if not tc.analogy_a or not tc.analogy_b:
                 continue
 
-            # ICA inversion (try top-5 axes)
-            top_axes = self._find_oracle_top_axes(tc.word, tc.expected, n=5)
+            # Blind ICA inversion: flip the declared label's axes
+            axes = self._label_group(tc.axis_label)
             ica_neighbors = []
             ica_rank = None
-            for axis in top_axes:
-                neighbors = self.operator.axis_invert(tc.word, axis, top_n=top_n)
-                for i, n in enumerate(neighbors):
-                    if n.word == tc.expected:
-                        rank = i + 1
-                        if ica_rank is None or rank < ica_rank:
-                            ica_rank = rank
-                            ica_neighbors = neighbors
-                        break
-            if not ica_neighbors and top_axes:
-                ica_neighbors = self.operator.axis_invert(tc.word, top_axes[0], top_n=top_n)
+            if axes:
+                ica_neighbors = self.operator.multi_axis_invert(tc.word, axes, top_n=top_n)
+                ica_rank = self._rank_of(ica_neighbors, tc.expected)
 
             # Traditional analogy: a->b as word->?
             analogy_neighbors = self.operator.analogy_traditional(
                 tc.analogy_a, tc.analogy_b, tc.word, top_n=top_n
             )
-            analogy_rank = None
-            for i, n in enumerate(analogy_neighbors):
-                if n.word == tc.expected:
-                    analogy_rank = i + 1
-                    break
+            analogy_rank = self._rank_of(analogy_neighbors, tc.expected)
 
-            comparisons.append({
-                "word": tc.word,
-                "expected": tc.expected,
-                "analogy": f"{tc.analogy_a}:{tc.analogy_b}::{tc.word}:?",
-                "ica_rank": ica_rank,
-                "analogy_rank": analogy_rank,
-                "ica_top5": [n.word for n in ica_neighbors[:5]],
-                "analogy_top5": [n.word for n in analogy_neighbors[:5]],
-            })
+            comparisons.append(
+                {
+                    "word": tc.word,
+                    "expected": tc.expected,
+                    "analogy": f"{tc.analogy_a}:{tc.analogy_b}::{tc.word}:?",
+                    "ica_rank": ica_rank,
+                    "analogy_rank": analogy_rank,
+                    "ica_top5": [n.word for n in ica_neighbors[:5]],
+                    "analogy_top5": [n.word for n in analogy_neighbors[:5]],
+                }
+            )
 
         return {"comparisons": comparisons}
 
-    def failure_analysis(self, results: dict) -> dict:
-        """Analyze failures from run_all() results."""
+    def failure_analysis(self, oracle_results: dict) -> dict:
+        """Analyze failures from run_oracle() results (informative for axis
+        coverage even though oracle numbers are an upper bound)."""
         failures = []
-        for case in results["cases"]:
+        for case in oracle_results["cases"]:
             if case.get("best_rank") is None and case.get("status") != "word_not_found":
                 comparison = self.operator.compare_words(case["word"], case["expected"])
-                failures.append({
-                    "word": case["word"],
-                    "expected": case["expected"],
-                    "candidate_axes": case.get("candidate_axes", []),
-                    "actual_top3": [n["word"] for n in case.get("neighbors", [])[:3]],
-                    "multi_top3": [n["word"] for n in case.get("multi_neighbors", [])[:3]],
-                    "word_comparison": comparison.get("top_diffs", [])[:5],
-                })
+                failures.append(
+                    {
+                        "word": case["word"],
+                        "expected": case["expected"],
+                        "candidate_axes": case.get("candidate_axes", []),
+                        "actual_top3": [n["word"] for n in case.get("neighbors", [])[:3]],
+                        "multi_top3": [n["word"] for n in case.get("multi_neighbors", [])[:3]],
+                        "word_comparison": comparison.get("top_diffs", [])[:5],
+                    }
+                )
             elif case.get("status") == "word_not_found":
-                failures.append({
-                    "word": case["word"],
-                    "expected": case["expected"],
-                    "reason": "word not in ICA space",
-                })
+                failures.append(
+                    {
+                        "word": case["word"],
+                        "expected": case["expected"],
+                        "reason": "word not in ICA space",
+                    }
+                )
 
         return {"failures": failures, "total_failures": len(failures)}
 

@@ -4,10 +4,12 @@ Analysis and visualization for ICA-decomposed embedding spaces.
 Generates figures, computes interpretability metrics, and performs
 bias analysis on ICA axes.
 """
+
 import json
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -65,8 +67,12 @@ class AnalysisReport:
                 "min": float(np.min(kurtosis_values)),
             },
             "labeled_axis_details": [
-                {"idx": p.axis_idx, "label": p.label, "kurtosis": p.kurtosis,
-                 "n_pairs": len(p.antonym_pairs)}
+                {
+                    "idx": p.axis_idx,
+                    "label": p.label,
+                    "kurtosis": p.kurtosis,
+                    "n_pairs": len(p.antonym_pairs),
+                }
                 for p in labeled
             ],
         }
@@ -74,8 +80,10 @@ class AnalysisReport:
         # Plot kurtosis distribution
         fig, ax = plt.subplots(figsize=(10, 4))
         sorted_kurt = sorted(kurtosis_values, reverse=True)
-        colors = ["#2196F3" if p.label else "#BDBDBD"
-                  for p in sorted(self.profiles, key=lambda p: p.kurtosis, reverse=True)]
+        colors = [
+            "#2196F3" if p.label else "#BDBDBD"
+            for p in sorted(self.profiles, key=lambda p: p.kurtosis, reverse=True)
+        ]
         ax.bar(range(len(sorted_kurt)), sorted_kurt, color=colors, width=1.0)
         ax.set_xlabel("Axis (sorted by kurtosis)")
         ax.set_ylabel("Kurtosis")
@@ -83,7 +91,7 @@ class AnalysisReport:
         fig.tight_layout()
         fig.savefig(self.fig_dir / "kurtosis_distribution.png", dpi=150)
         plt.close(fig)
-        print(f"Saved kurtosis distribution plot")
+        print("Saved kurtosis distribution plot")
 
         return result
 
@@ -128,8 +136,8 @@ class AnalysisReport:
         # Plot
         if axis_results:
             labels = list(axis_results.keys())
-            rates = [axis_results[l]["success_rate"] for l in labels]
-            counts = [axis_results[l]["tested"] for l in labels]
+            rates = [axis_results[label]["success_rate"] for label in labels]
+            counts = [axis_results[label]["tested"] for label in labels]
 
             fig, ax = plt.subplots(figsize=(12, 5))
             bars = ax.bar(range(len(labels)), rates, color="#4CAF50")
@@ -138,13 +146,19 @@ class AnalysisReport:
             ax.set_ylabel("Inversion Success Rate (Hits@10)")
             ax.set_title("Per-Axis Antonym Inversion Success")
             ax.set_ylim(0, 1.0)
-            for bar, count in zip(bars, counts):
-                ax.text(bar.get_x() + bar.get_width() / 2, bar.get_height() + 0.02,
-                        f"n={count}", ha="center", va="bottom", fontsize=8)
+            for bar, count in zip(bars, counts, strict=False):
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    bar.get_height() + 0.02,
+                    f"n={count}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=8,
+                )
             fig.tight_layout()
             fig.savefig(self.fig_dir / "per_axis_success.png", dpi=150)
             plt.close(fig)
-            print(f"Saved per-axis success plot")
+            print("Saved per-axis success plot")
 
         return axis_results
 
@@ -161,8 +175,7 @@ class AnalysisReport:
             abs_scores = np.abs(scores)
             neutral_indices = np.argsort(abs_scores)[:top_n]
             neutral_words = [
-                {"word": self.space.words[i], "score": float(scores[i])}
-                for i in neutral_indices
+                {"word": self.space.words[i], "score": float(scores[i])} for i in neutral_indices
             ]
 
             profile = next((p for p in self.profiles if p.axis_idx == axis_idx), None)
@@ -192,12 +205,36 @@ class AnalysisReport:
 
         # Common profession words
         professions = [
-            "doctor", "nurse", "engineer", "teacher", "scientist", "artist",
-            "lawyer", "chef", "pilot", "mechanic", "librarian", "programmer",
-            "professor", "athlete", "surgeon", "therapist", "architect",
-            "dentist", "pharmacist", "accountant", "journalist", "musician",
-            "carpenter", "electrician", "plumber", "secretary", "receptionist",
-            "manager", "director", "president",
+            "doctor",
+            "nurse",
+            "engineer",
+            "teacher",
+            "scientist",
+            "artist",
+            "lawyer",
+            "chef",
+            "pilot",
+            "mechanic",
+            "librarian",
+            "programmer",
+            "professor",
+            "athlete",
+            "surgeon",
+            "therapist",
+            "architect",
+            "dentist",
+            "pharmacist",
+            "accountant",
+            "journalist",
+            "musician",
+            "carpenter",
+            "electrician",
+            "plumber",
+            "secretary",
+            "receptionist",
+            "manager",
+            "director",
+            "president",
         ]
 
         scores = []
@@ -234,46 +271,86 @@ class AnalysisReport:
             "axis_label": axis_label,
             "axis_idx": axis_idx,
             "professions": [
-                {"word": p, "score": s}
-                for p, s in zip(sorted_profs, sorted_scores)
+                {"word": p, "score": s} for p, s in zip(sorted_profs, sorted_scores, strict=False)
             ],
         }
 
-    def reconstruction_quality(self, n_sample: int = 1000) -> dict:
-        """Measure quality of ICA reconstruction (roundtrip error)."""
+    def reconstruction_quality(
+        self,
+        n_sample: int = 1000,
+        component_grid: tuple[int, ...] = (5, 10, 25, 50, 75, 100),
+    ) -> dict:
+        """
+        Measure how much information each number of ICA components retains.
+
+        Keeping all k = d components is a lossless change of basis, so the
+        roundtrip error is float noise by construction. To make the metric
+        meaningful we reconstruct from only the k highest-energy components
+        (energy = contribution variance across the vocabulary) and report
+        the relative error for each k.
+        """
         rng = np.random.RandomState(42)
-        indices = rng.choice(len(self.space.words), size=min(n_sample, len(self.space.words)), replace=False)
+        indices = rng.choice(
+            len(self.space.words), size=min(n_sample, len(self.space.words)), replace=False
+        )
 
-        errors = []
-        for idx in indices:
-            word = self.space.words[idx]
-            original = self.model[word].astype(np.float64)
-            reconstructed = self.transformer.reconstruct(self.space.S[idx], self.space)
-            err = np.linalg.norm(original - reconstructed) / np.linalg.norm(original)
-            errors.append(err)
+        S = self.space.S[indices]  # (n_sample, n_components)
+        A = self.space.mixing_matrix  # (d, n_components)
+        mean_vec = self.space.mean_vector
+        originals = np.array([self.model[self.space.words[i]] for i in indices], dtype=np.float64)
+        orig_norms = np.maximum(np.linalg.norm(originals, axis=1), 1e-10)
 
-        errors = np.array(errors)
+        # Energy of each component = mean squared contribution over sampled words
+        energy = np.mean((S**2) * np.sum(A**2, axis=0)[None, :], axis=0)
+        order = np.argsort(energy)[::-1]
+
+        grid = [k for k in component_grid if k <= self.space.n_components]
+        by_kept = {}
+        for k in grid:
+            keep = order[:k]
+            S_k = np.zeros_like(S)
+            S_k[:, keep] = S[:, keep]
+            reconstructed = S_k @ A.T + mean_vec
+            errors = np.linalg.norm(originals - reconstructed, axis=1) / orig_norms
+            by_kept[k] = {
+                "mean_relative_error": float(np.mean(errors)),
+                "median_relative_error": float(np.median(errors)),
+                "p95_relative_error": float(np.percentile(errors, 95)),
+            }
+
         result = {
-            "n_samples": len(errors),
-            "mean_relative_error": float(np.mean(errors)),
-            "median_relative_error": float(np.median(errors)),
-            "max_relative_error": float(np.max(errors)),
-            "p95_relative_error": float(np.percentile(errors, 95)),
+            "n_samples": len(indices),
+            "n_components_total": self.space.n_components,
+            "note": (
+                "k = n_components_total is a lossless change of basis "
+                "(error is float noise by construction)"
+            ),
+            "by_kept_components": by_kept,
         }
 
-        # Plot
-        fig, ax = plt.subplots(figsize=(8, 4))
-        ax.hist(errors, bins=50, color="#FF9800", edgecolor="white")
-        ax.set_xlabel("Relative Reconstruction Error")
-        ax.set_ylabel("Count")
-        ax.set_title(f"ICA Reconstruction Quality (n={len(errors)})")
-        ax.axvline(np.mean(errors), color="red", linestyle="--",
-                    label=f"Mean: {np.mean(errors):.4f}")
+        # Plot the error curve
+        ks = sorted(by_kept.keys())
+        means = [by_kept[k]["mean_relative_error"] for k in ks]
+        medians = [by_kept[k]["median_relative_error"] for k in ks]
+
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(ks, means, "o-", color="#FF9800", label="Mean relative error")
+        ax.plot(ks, medians, "s--", color="#9C27B0", label="Median relative error")
+        ax.axhline(
+            by_kept[max(ks)]["mean_relative_error"],
+            color="red",
+            linestyle=":",
+            label="k = d baseline (≈0, lossless by construction)",
+        )
+        ax.set_xlabel("Number of ICA components kept")
+        ax.set_ylabel("Relative reconstruction error")
+        ax.set_title(f"Reconstruction Error vs Components Kept (n={len(indices)})")
+        ax.set_xticks(ks)
         ax.legend()
         fig.tight_layout()
         fig.savefig(self.fig_dir / "reconstruction_quality.png", dpi=150)
         plt.close(fig)
-        print(f"Saved reconstruction quality plot")
+        print("Saved reconstruction quality plot")
 
         return result
 

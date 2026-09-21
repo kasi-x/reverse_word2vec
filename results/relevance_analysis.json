@@ -1,0 +1,763 @@
+{
+  "confidence_stats": {
+    "total_pairs": 1121,
+    "by_confidence": {
+      "high": 1048,
+      "medium": 72,
+      "low": 1
+    },
+    "by_confidence_pct": {
+      "high": 0.9348795718108831,
+      "medium": 0.06422836752899197,
+      "low": 0.0008920606601248885
+    },
+    "z_score_stats": {
+      "mean": 3.3338344451516453,
+      "median": 3.213168811829235,
+      "std": 1.040609504695975,
+      "p25": 2.6169849880612412,
+      "p75": 3.921095235003251,
+      "p90": 4.646336829277318
+    }
+  },
+  "bias_profiles": {
+    "sentiment": [
+      {
+        "word": "carpenter",
+        "signed_z": -1.458
+      },
+      {
+        "word": "plumber",
+        "signed_z": -1.372
+      },
+      {
+        "word": "electrician",
+        "signed_z": -1.36
+      },
+      {
+        "word": "dentist",
+        "signed_z": -1.16
+      },
+      {
+        "word": "manager",
+        "signed_z": -1.138
+      },
+      {
+        "word": "accountant",
+        "signed_z": -0.716
+      },
+      {
+        "word": "artist",
+        "signed_z": -0.659
+      },
+      {
+        "word": "engineer",
+        "signed_z": -0.643
+      },
+      {
+        "word": "pharmacist",
+        "signed_z": -0.638
+      },
+      {
+        "word": "mechanic",
+        "signed_z": -0.594
+      },
+      {
+        "word": "therapist",
+        "signed_z": -0.578
+      },
+      {
+        "word": "doctor",
+        "signed_z": -0.365
+      },
+      {
+        "word": "receptionist",
+        "signed_z": -0.346
+      },
+      {
+        "word": "lawyer",
+        "signed_z": -0.272
+      },
+      {
+        "word": "pilot",
+        "signed_z": -0.147
+      },
+      {
+        "word": "musician",
+        "signed_z": -0.134
+      },
+      {
+        "word": "surgeon",
+        "signed_z": -0.061
+      },
+      {
+        "word": "chef",
+        "signed_z": 0.032
+      },
+      {
+        "word": "journalist",
+        "signed_z": 0.035
+      },
+      {
+        "word": "librarian",
+        "signed_z": 0.041
+      },
+      {
+        "word": "nurse",
+        "signed_z": 0.18
+      },
+      {
+        "word": "scientist",
+        "signed_z": 0.26
+      },
+      {
+        "word": "director",
+        "signed_z": 0.305
+      },
+      {
+        "word": "teacher",
+        "signed_z": 0.362
+      },
+      {
+        "word": "architect",
+        "signed_z": 0.383
+      },
+      {
+        "word": "president",
+        "signed_z": 0.389
+      },
+      {
+        "word": "professor",
+        "signed_z": 0.447
+      },
+      {
+        "word": "athlete",
+        "signed_z": 0.466
+      },
+      {
+        "word": "programmer",
+        "signed_z": 0.593
+      },
+      {
+        "word": "secretary",
+        "signed_z": 0.624
+      }
+    ],
+    "gender": [
+      {
+        "word": "mechanic",
+        "signed_z": -0.349
+      },
+      {
+        "word": "manager",
+        "signed_z": 0.206
+      },
+      {
+        "word": "secretary",
+        "signed_z": 0.25
+      },
+      {
+        "word": "pilot",
+        "signed_z": 0.303
+      },
+      {
+        "word": "receptionist",
+        "signed_z": 0.306
+      },
+      {
+        "word": "therapist",
+        "signed_z": 0.487
+      },
+      {
+        "word": "teacher",
+        "signed_z": 0.635
+      },
+      {
+        "word": "electrician",
+        "signed_z": 0.788
+      },
+      {
+        "word": "librarian",
+        "signed_z": 0.817
+      },
+      {
+        "word": "accountant",
+        "signed_z": 0.831
+      },
+      {
+        "word": "carpenter",
+        "signed_z": 0.863
+      },
+      {
+        "word": "professor",
+        "signed_z": 1.065
+      },
+      {
+        "word": "dentist",
+        "signed_z": 1.12
+      },
+      {
+        "word": "chef",
+        "signed_z": 1.194
+      },
+      {
+        "word": "artist",
+        "signed_z": 1.226
+      },
+      {
+        "word": "programmer",
+        "signed_z": 1.259
+      },
+      {
+        "word": "athlete",
+        "signed_z": 1.266
+      },
+      {
+        "word": "scientist",
+        "signed_z": 1.467
+      },
+      {
+        "word": "director",
+        "signed_z": 1.48
+      },
+      {
+        "word": "surgeon",
+        "signed_z": 1.495
+      },
+      {
+        "word": "engineer",
+        "signed_z": 1.514
+      },
+      {
+        "word": "nurse",
+        "signed_z": 1.598
+      },
+      {
+        "word": "doctor",
+        "signed_z": 1.602
+      },
+      {
+        "word": "journalist",
+        "signed_z": 1.68
+      },
+      {
+        "word": "lawyer",
+        "signed_z": 1.772
+      },
+      {
+        "word": "president",
+        "signed_z": 1.819
+      },
+      {
+        "word": "musician",
+        "signed_z": 1.859
+      },
+      {
+        "word": "architect",
+        "signed_z": 1.988
+      },
+      {
+        "word": "pharmacist",
+        "signed_z": 2.007
+      },
+      {
+        "word": "plumber",
+        "signed_z": 2.012
+      }
+    ],
+    "age": [
+      {
+        "word": "architect",
+        "signed_z": -0.815
+      },
+      {
+        "word": "artist",
+        "signed_z": -0.629
+      },
+      {
+        "word": "athlete",
+        "signed_z": -0.399
+      },
+      {
+        "word": "lawyer",
+        "signed_z": -0.282
+      },
+      {
+        "word": "musician",
+        "signed_z": -0.275
+      },
+      {
+        "word": "plumber",
+        "signed_z": -0.061
+      },
+      {
+        "word": "pharmacist",
+        "signed_z": -0.048
+      },
+      {
+        "word": "secretary",
+        "signed_z": -0.044
+      },
+      {
+        "word": "surgeon",
+        "signed_z": 0.032
+      },
+      {
+        "word": "pilot",
+        "signed_z": 0.108
+      },
+      {
+        "word": "carpenter",
+        "signed_z": 0.178
+      },
+      {
+        "word": "engineer",
+        "signed_z": 0.224
+      },
+      {
+        "word": "chef",
+        "signed_z": 0.352
+      },
+      {
+        "word": "journalist",
+        "signed_z": 0.358
+      },
+      {
+        "word": "receptionist",
+        "signed_z": 0.401
+      },
+      {
+        "word": "professor",
+        "signed_z": 0.452
+      },
+      {
+        "word": "scientist",
+        "signed_z": 0.469
+      },
+      {
+        "word": "president",
+        "signed_z": 0.512
+      },
+      {
+        "word": "electrician",
+        "signed_z": 0.642
+      },
+      {
+        "word": "doctor",
+        "signed_z": 0.694
+      },
+      {
+        "word": "accountant",
+        "signed_z": 1.005
+      },
+      {
+        "word": "director",
+        "signed_z": 1.323
+      },
+      {
+        "word": "manager",
+        "signed_z": 1.324
+      },
+      {
+        "word": "librarian",
+        "signed_z": 1.334
+      },
+      {
+        "word": "teacher",
+        "signed_z": 1.417
+      },
+      {
+        "word": "therapist",
+        "signed_z": 1.517
+      },
+      {
+        "word": "programmer",
+        "signed_z": 1.543
+      },
+      {
+        "word": "mechanic",
+        "signed_z": 1.556
+      },
+      {
+        "word": "dentist",
+        "signed_z": 1.648
+      },
+      {
+        "word": "nurse",
+        "signed_z": 1.795
+      }
+    ]
+  },
+  "word_profiles": {
+    "king": [
+      {
+        "axis": 5,
+        "label": "informed/uninformed",
+        "z_score": 2.867,
+        "raw_score": 2.867,
+        "pole": "positive"
+      },
+      {
+        "axis": 73,
+        "label": "quantity",
+        "z_score": 2.711,
+        "raw_score": 2.711,
+        "pole": "positive"
+      },
+      {
+        "axis": 54,
+        "label": "activity",
+        "z_score": 2.35,
+        "raw_score": 2.35,
+        "pole": "positive"
+      },
+      {
+        "axis": 37,
+        "label": "",
+        "z_score": 2.328,
+        "raw_score": -2.328,
+        "pole": "negative"
+      },
+      {
+        "axis": 26,
+        "label": "tied/untied",
+        "z_score": 2.129,
+        "raw_score": 2.129,
+        "pole": "positive"
+      }
+    ],
+    "queen": [
+      {
+        "axis": 42,
+        "label": "gender",
+        "z_score": 3.765,
+        "raw_score": 3.765,
+        "pole": "positive"
+      },
+      {
+        "axis": 27,
+        "label": "hit/miss",
+        "z_score": 2.28,
+        "raw_score": 2.28,
+        "pole": "positive"
+      },
+      {
+        "axis": 25,
+        "label": "direction",
+        "z_score": 1.957,
+        "raw_score": -1.957,
+        "pole": "negative"
+      },
+      {
+        "axis": 58,
+        "label": "documented/undocumented",
+        "z_score": 1.816,
+        "raw_score": -1.816,
+        "pole": "negative"
+      },
+      {
+        "axis": 10,
+        "label": "",
+        "z_score": 1.801,
+        "raw_score": -1.801,
+        "pole": "negative"
+      }
+    ],
+    "man": [
+      {
+        "axis": 25,
+        "label": "direction",
+        "z_score": 4.464,
+        "raw_score": -4.464,
+        "pole": "negative"
+      },
+      {
+        "axis": 4,
+        "label": "clergyman/layman",
+        "z_score": 2.782,
+        "raw_score": -2.782,
+        "pole": "negative"
+      },
+      {
+        "axis": 1,
+        "label": "defense/prosecution",
+        "z_score": 2.173,
+        "raw_score": 2.173,
+        "pole": "positive"
+      },
+      {
+        "axis": 12,
+        "label": "light",
+        "z_score": 2.045,
+        "raw_score": 2.045,
+        "pole": "positive"
+      },
+      {
+        "axis": 7,
+        "label": "size",
+        "z_score": 1.375,
+        "raw_score": -1.375,
+        "pole": "negative"
+      }
+    ],
+    "woman": [
+      {
+        "axis": 42,
+        "label": "gender",
+        "z_score": 3.396,
+        "raw_score": 3.396,
+        "pole": "positive"
+      },
+      {
+        "axis": 4,
+        "label": "clergyman/layman",
+        "z_score": 3.252,
+        "raw_score": -3.252,
+        "pole": "negative"
+      },
+      {
+        "axis": 25,
+        "label": "direction",
+        "z_score": 3.133,
+        "raw_score": -3.133,
+        "pole": "negative"
+      },
+      {
+        "axis": 86,
+        "label": "gender",
+        "z_score": 2.9,
+        "raw_score": 2.9,
+        "pole": "positive"
+      },
+      {
+        "axis": 90,
+        "label": "acceleration/deceleration",
+        "z_score": 2.149,
+        "raw_score": -2.149,
+        "pole": "negative"
+      }
+    ],
+    "hot": [
+      {
+        "axis": 56,
+        "label": "temperature",
+        "z_score": 3.988,
+        "raw_score": 3.988,
+        "pole": "positive"
+      },
+      {
+        "axis": 18,
+        "label": "unwind/wind",
+        "z_score": 2.813,
+        "raw_score": -2.813,
+        "pole": "negative"
+      },
+      {
+        "axis": 75,
+        "label": "adjective/substantive",
+        "z_score": 2.807,
+        "raw_score": -2.807,
+        "pole": "negative"
+      },
+      {
+        "axis": 50,
+        "label": "temperature",
+        "z_score": 2.731,
+        "raw_score": 2.731,
+        "pole": "positive"
+      },
+      {
+        "axis": 49,
+        "label": "hollow/solid",
+        "z_score": 1.903,
+        "raw_score": 1.903,
+        "pole": "positive"
+      }
+    ],
+    "cold": [
+      {
+        "axis": 18,
+        "label": "unwind/wind",
+        "z_score": 3.332,
+        "raw_score": -3.332,
+        "pole": "negative"
+      },
+      {
+        "axis": 65,
+        "label": "age",
+        "z_score": 3.131,
+        "raw_score": 3.131,
+        "pole": "positive"
+      },
+      {
+        "axis": 56,
+        "label": "temperature",
+        "z_score": 3.003,
+        "raw_score": 3.003,
+        "pole": "positive"
+      },
+      {
+        "axis": 77,
+        "label": "impatient/patient",
+        "z_score": 2.07,
+        "raw_score": 2.07,
+        "pole": "positive"
+      },
+      {
+        "axis": 37,
+        "label": "",
+        "z_score": 1.792,
+        "raw_score": 1.792,
+        "pole": "positive"
+      }
+    ],
+    "warm": [
+      {
+        "axis": 18,
+        "label": "unwind/wind",
+        "z_score": 4.36,
+        "raw_score": -4.36,
+        "pole": "negative"
+      },
+      {
+        "axis": 56,
+        "label": "temperature",
+        "z_score": 3.472,
+        "raw_score": 3.472,
+        "pole": "positive"
+      },
+      {
+        "axis": 53,
+        "label": "irresponsible/responsible",
+        "z_score": 2.324,
+        "raw_score": 2.324,
+        "pole": "positive"
+      },
+      {
+        "axis": 96,
+        "label": "temperature",
+        "z_score": 2.262,
+        "raw_score": 2.262,
+        "pole": "positive"
+      },
+      {
+        "axis": 39,
+        "label": "morality",
+        "z_score": 2.235,
+        "raw_score": -2.235,
+        "pole": "negative"
+      }
+    ],
+    "cool": [
+      {
+        "axis": 18,
+        "label": "unwind/wind",
+        "z_score": 3.365,
+        "raw_score": -3.365,
+        "pole": "negative"
+      },
+      {
+        "axis": 56,
+        "label": "temperature",
+        "z_score": 3.001,
+        "raw_score": 3.001,
+        "pole": "positive"
+      },
+      {
+        "axis": 53,
+        "label": "irresponsible/responsible",
+        "z_score": 2.216,
+        "raw_score": 2.216,
+        "pole": "positive"
+      },
+      {
+        "axis": 82,
+        "label": "age/rejuvenate",
+        "z_score": 1.764,
+        "raw_score": 1.764,
+        "pole": "positive"
+      },
+      {
+        "axis": 97,
+        "label": "new/worn",
+        "z_score": 1.754,
+        "raw_score": 1.754,
+        "pole": "positive"
+      }
+    ],
+    "good": [
+      {
+        "axis": 7,
+        "label": "size",
+        "z_score": 3.43,
+        "raw_score": -3.43,
+        "pole": "negative"
+      },
+      {
+        "axis": 25,
+        "label": "direction",
+        "z_score": 3.302,
+        "raw_score": -3.302,
+        "pole": "negative"
+      },
+      {
+        "axis": 20,
+        "label": "sentiment",
+        "z_score": 3.178,
+        "raw_score": -3.178,
+        "pole": "negative"
+      },
+      {
+        "axis": 53,
+        "label": "irresponsible/responsible",
+        "z_score": 2.543,
+        "raw_score": 2.543,
+        "pole": "positive"
+      },
+      {
+        "axis": 5,
+        "label": "informed/uninformed",
+        "z_score": 1.742,
+        "raw_score": 1.742,
+        "pole": "positive"
+      }
+    ],
+    "bad": [
+      {
+        "axis": 7,
+        "label": "size",
+        "z_score": 3.68,
+        "raw_score": -3.68,
+        "pole": "negative"
+      },
+      {
+        "axis": 5,
+        "label": "informed/uninformed",
+        "z_score": 2.369,
+        "raw_score": 2.369,
+        "pole": "positive"
+      },
+      {
+        "axis": 53,
+        "label": "irresponsible/responsible",
+        "z_score": 2.226,
+        "raw_score": 2.226,
+        "pole": "positive"
+      },
+      {
+        "axis": 18,
+        "label": "unwind/wind",
+        "z_score": 1.667,
+        "raw_score": -1.667,
+        "pole": "negative"
+      },
+      {
+        "axis": 44,
+        "label": "enforce/exempt",
+        "z_score": 1.578,
+        "raw_score": -1.578,
+        "pole": "negative"
+      }
+    ]
+  }
+}

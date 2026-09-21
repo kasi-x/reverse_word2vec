@@ -1,0 +1,7230 @@
+{
+  "n_wordnet": 2353,
+  "n_conceptnet": 8265,
+  "n_cn_only": 7124,
+  "n_test_pairs": 5589,
+  "n_queries": 11178,
+  "procrustes": {
+    "1": 0.03202719627840401,
+    "5": 0.0893719806763285,
+    "10": 0.1290033995348005
+  },
+  "random_control": {
+    "1": 0.0,
+    "5": 0.0001789228842368939,
+    "10": 0.0001789228842368939
+  },
+  "hits_dump": [
+    {
+      "query": "abrupt",
+      "target": "gradual",
+      "rank": 1
+    },
+    {
+      "query": "across",
+      "target": "along",
+      "rank": 1
+    },
+    {
+      "query": "admiration",
+      "target": "disdain",
+      "rank": 1
+    },
+    {
+      "query": "admire",
+      "target": "despise",
+      "rank": 1
+    },
+    {
+      "query": "adore",
+      "target": "despise",
+      "rank": 1
+    },
+    {
+      "query": "affair",
+      "target": "relationship",
+      "rank": 1
+    },
+    {
+      "query": "affordable",
+      "target": "unaffordable",
+      "rank": 1
+    },
+    {
+      "query": "after",
+      "target": "before",
+      "rank": 1
+    },
+    {
+      "query": "aftermarket",
+      "target": "oem",
+      "rank": 1
+    },
+    {
+      "query": "afternoon",
+      "target": "morning",
+      "rank": 1
+    },
+    {
+      "query": "along",
+      "target": "across",
+      "rank": 1
+    },
+    {
+      "query": "always",
+      "target": "sometimes",
+      "rank": 1
+    },
+    {
+      "query": "amorphous",
+      "target": "crystalline",
+      "rank": 1
+    },
+    {
+      "query": "analog",
+      "target": "digital",
+      "rank": 1
+    },
+    {
+      "query": "another",
+      "target": "one",
+      "rank": 1
+    },
+    {
+      "query": "anything",
+      "target": "nothing",
+      "rank": 1
+    },
+    {
+      "query": "approximate",
+      "target": "exact",
+      "rank": 1
+    },
+    {
+      "query": "arrival",
+      "target": "departure",
+      "rank": 1
+    },
+    {
+      "query": "arrive",
+      "target": "depart",
+      "rank": 1
+    },
+    {
+      "query": "ashamed",
+      "target": "proud",
+      "rank": 1
+    },
+    {
+      "query": "ask",
+      "target": "tell",
+      "rank": 1
+    },
+    {
+      "query": "attic",
+      "target": "basement",
+      "rank": 1
+    },
+    {
+      "query": "automatically",
+      "target": "manually",
+      "rank": 1
+    },
+    {
+      "query": "autumn",
+      "target": "spring",
+      "rank": 1
+    },
+    {
+      "query": "away",
+      "target": "back",
+      "rank": 1
+    },
+    {
+      "query": "back",
+      "target": "away",
+      "rank": 1
+    },
+    {
+      "query": "bce",
+      "target": "ce",
+      "rank": 1
+    },
+    {
+      "query": "bearish",
+      "target": "bullish",
+      "rank": 1
+    },
+    {
+      "query": "before",
+      "target": "after",
+      "rank": 1
+    },
+    {
+      "query": "beforehand",
+      "target": "afterward",
+      "rank": 1
+    },
+    {
+      "query": "beneficial",
+      "target": "detrimental",
+      "rank": 1
+    },
+    {
+      "query": "benevolent",
+      "target": "malevolent",
+      "rank": 1
+    },
+    {
+      "query": "bleach",
+      "target": "paint",
+      "rank": 1
+    },
+    {
+      "query": "blue",
+      "target": "red",
+      "rank": 1
+    },
+    {
+      "query": "boat",
+      "target": "ship",
+      "rank": 1
+    },
+    {
+      "query": "body",
+      "target": "head",
+      "rank": 1
+    },
+    {
+      "query": "botanist",
+      "target": "zoologist",
+      "rank": 1
+    },
+    {
+      "query": "bought",
+      "target": "sold",
+      "rank": 1
+    },
+    {
+      "query": "bride",
+      "target": "groom",
+      "rank": 1
+    },
+    {
+      "query": "bright",
+      "target": "dark",
+      "rank": 1
+    },
+    {
+      "query": "broad",
+      "target": "narrow",
+      "rank": 1
+    },
+    {
+      "query": "brunette",
+      "target": "blonde",
+      "rank": 1
+    },
+    {
+      "query": "brush",
+      "target": "paint",
+      "rank": 1
+    },
+    {
+      "query": "bullish",
+      "target": "bearish",
+      "rank": 1
+    },
+    {
+      "query": "buying",
+      "target": "selling",
+      "rank": 1
+    },
+    {
+      "query": "came",
+      "target": "went",
+      "rank": 1
+    },
+    {
+      "query": "canoe",
+      "target": "kayak",
+      "rank": 1
+    },
+    {
+      "query": "cartilage",
+      "target": "bone",
+      "rank": 1
+    },
+    {
+      "query": "cat",
+      "target": "dog",
+      "rank": 1
+    },
+    {
+      "query": "ce",
+      "target": "bce",
+      "rank": 1
+    },
+    {
+      "query": "choose",
+      "target": "decide",
+      "rank": 1
+    },
+    {
+      "query": "city",
+      "target": "town",
+      "rank": 1
+    },
+    {
+      "query": "citywide",
+      "target": "nationwide",
+      "rank": 1
+    },
+    {
+      "query": "clever",
+      "target": "clumsy",
+      "rank": 1
+    },
+    {
+      "query": "clumsy",
+      "target": "clever",
+      "rank": 1
+    },
+    {
+      "query": "cold",
+      "target": "warm",
+      "rank": 1
+    },
+    {
+      "query": "college",
+      "target": "school",
+      "rank": 1
+    },
+    {
+      "query": "complete",
+      "target": "partial",
+      "rank": 1
+    },
+    {
+      "query": "concur",
+      "target": "disagree",
+      "rank": 1
+    },
+    {
+      "query": "contemptuous",
+      "target": "respectful",
+      "rank": 1
+    },
+    {
+      "query": "contraction",
+      "target": "growth",
+      "rank": 1
+    },
+    {
+      "query": "cool",
+      "target": "hot",
+      "rank": 1
+    },
+    {
+      "query": "cotton",
+      "target": "wool",
+      "rank": 1
+    },
+    {
+      "query": "could",
+      "target": "would",
+      "rank": 1
+    },
+    {
+      "query": "crawl",
+      "target": "walk",
+      "rank": 1
+    },
+    {
+      "query": "cremation",
+      "target": "burial",
+      "rank": 1
+    },
+    {
+      "query": "crystalline",
+      "target": "amorphous",
+      "rank": 1
+    },
+    {
+      "query": "dad",
+      "target": "mom",
+      "rank": 1
+    },
+    {
+      "query": "dark",
+      "target": "bright",
+      "rank": 1
+    },
+    {
+      "query": "daytime",
+      "target": "nighttime",
+      "rank": 1
+    },
+    {
+      "query": "death",
+      "target": "life",
+      "rank": 1
+    },
+    {
+      "query": "debt",
+      "target": "credit",
+      "rank": 1
+    },
+    {
+      "query": "deletion",
+      "target": "insertion",
+      "rank": 1
+    },
+    {
+      "query": "denial",
+      "target": "acceptance",
+      "rank": 1
+    },
+    {
+      "query": "depart",
+      "target": "arrive",
+      "rank": 1
+    },
+    {
+      "query": "departure",
+      "target": "arrival",
+      "rank": 1
+    },
+    {
+      "query": "despise",
+      "target": "admire",
+      "rank": 1
+    },
+    {
+      "query": "detectable",
+      "target": "undetectable",
+      "rank": 1
+    },
+    {
+      "query": "detrimental",
+      "target": "beneficial",
+      "rank": 1
+    },
+    {
+      "query": "digital",
+      "target": "analog",
+      "rank": 1
+    },
+    {
+      "query": "dinner",
+      "target": "breakfast",
+      "rank": 1
+    },
+    {
+      "query": "disciplined",
+      "target": "undisciplined",
+      "rank": 1
+    },
+    {
+      "query": "discouraged",
+      "target": "encouraged",
+      "rank": 1
+    },
+    {
+      "query": "discrimination",
+      "target": "equality",
+      "rank": 1
+    },
+    {
+      "query": "disdain",
+      "target": "admiration",
+      "rank": 1
+    },
+    {
+      "query": "disregard",
+      "target": "respect",
+      "rank": 1
+    },
+    {
+      "query": "distress",
+      "target": "comfort",
+      "rank": 1
+    },
+    {
+      "query": "divorce",
+      "target": "marriage",
+      "rank": 1
+    },
+    {
+      "query": "dog",
+      "target": "cat",
+      "rank": 1
+    },
+    {
+      "query": "dovish",
+      "target": "hawkish",
+      "rank": 1
+    },
+    {
+      "query": "downbeat",
+      "target": "upbeat",
+      "rank": 1
+    },
+    {
+      "query": "downside",
+      "target": "upside",
+      "rank": 1
+    },
+    {
+      "query": "drama",
+      "target": "comedy",
+      "rank": 1
+    },
+    {
+      "query": "drop",
+      "target": "rise",
+      "rank": 1
+    },
+    {
+      "query": "duck",
+      "target": "goose",
+      "rank": 1
+    },
+    {
+      "query": "duke",
+      "target": "duchess",
+      "rank": 1
+    },
+    {
+      "query": "dusk",
+      "target": "dawn",
+      "rank": 1
+    },
+    {
+      "query": "dynamic",
+      "target": "static",
+      "rank": 1
+    },
+    {
+      "query": "easter",
+      "target": "christmas",
+      "rank": 1
+    },
+    {
+      "query": "easternmost",
+      "target": "westernmost",
+      "rank": 1
+    },
+    {
+      "query": "elect",
+      "target": "vote",
+      "rank": 1
+    },
+    {
+      "query": "encouraged",
+      "target": "discouraged",
+      "rank": 1
+    },
+    {
+      "query": "encyclopedia",
+      "target": "dictionary",
+      "rank": 1
+    },
+    {
+      "query": "end",
+      "target": "start",
+      "rank": 1
+    },
+    {
+      "query": "entire",
+      "target": "part",
+      "rank": 1
+    },
+    {
+      "query": "epilogue",
+      "target": "prologue",
+      "rank": 1
+    },
+    {
+      "query": "equality",
+      "target": "discrimination",
+      "rank": 1
+    },
+    {
+      "query": "euro",
+      "target": "dollar",
+      "rank": 1
+    },
+    {
+      "query": "evening",
+      "target": "morning",
+      "rank": 1
+    },
+    {
+      "query": "evil",
+      "target": "god",
+      "rank": 1
+    },
+    {
+      "query": "excellent",
+      "target": "mediocre",
+      "rank": 1
+    },
+    {
+      "query": "existential",
+      "target": "metaphysical",
+      "rank": 1
+    },
+    {
+      "query": "exporter",
+      "target": "importer",
+      "rank": 1
+    },
+    {
+      "query": "faster",
+      "target": "slower",
+      "rank": 1
+    },
+    {
+      "query": "father",
+      "target": "son",
+      "rank": 1
+    },
+    {
+      "query": "favourable",
+      "target": "unfavourable",
+      "rank": 1
+    },
+    {
+      "query": "fear",
+      "target": "hope",
+      "rank": 1
+    },
+    {
+      "query": "february",
+      "target": "march",
+      "rank": 1
+    },
+    {
+      "query": "filthy",
+      "target": "clean",
+      "rank": 1
+    },
+    {
+      "query": "finale",
+      "target": "premiere",
+      "rank": 1
+    },
+    {
+      "query": "fire",
+      "target": "attack",
+      "rank": 1
+    },
+    {
+      "query": "flexible",
+      "target": "rigid",
+      "rank": 1
+    },
+    {
+      "query": "flimsy",
+      "target": "sturdy",
+      "rank": 1
+    },
+    {
+      "query": "foe",
+      "target": "ally",
+      "rank": 1
+    },
+    {
+      "query": "fortunate",
+      "target": "unlucky",
+      "rank": 1
+    },
+    {
+      "query": "forward",
+      "target": "back",
+      "rank": 1
+    },
+    {
+      "query": "fraternity",
+      "target": "sorority",
+      "rank": 1
+    },
+    {
+      "query": "freshwater",
+      "target": "saltwater",
+      "rank": 1
+    },
+    {
+      "query": "friendship",
+      "target": "enmity",
+      "rank": 1
+    },
+    {
+      "query": "frog",
+      "target": "toad",
+      "rank": 1
+    },
+    {
+      "query": "front",
+      "target": "behind",
+      "rank": 1
+    },
+    {
+      "query": "frown",
+      "target": "smile",
+      "rank": 1
+    },
+    {
+      "query": "fruitful",
+      "target": "fruitless",
+      "rank": 1
+    },
+    {
+      "query": "fruitless",
+      "target": "fruitful",
+      "rank": 1
+    },
+    {
+      "query": "garlic",
+      "target": "onion",
+      "rank": 1
+    },
+    {
+      "query": "gas",
+      "target": "oil",
+      "rank": 1
+    },
+    {
+      "query": "glass",
+      "target": "plastic",
+      "rank": 1
+    },
+    {
+      "query": "god",
+      "target": "evil",
+      "rank": 1
+    },
+    {
+      "query": "gold",
+      "target": "silver",
+      "rank": 1
+    },
+    {
+      "query": "graduate",
+      "target": "undergraduate",
+      "rank": 1
+    },
+    {
+      "query": "great",
+      "target": "little",
+      "rank": 1
+    },
+    {
+      "query": "green",
+      "target": "red",
+      "rank": 1
+    },
+    {
+      "query": "groom",
+      "target": "bride",
+      "rank": 1
+    },
+    {
+      "query": "halloween",
+      "target": "christmas",
+      "rank": 1
+    },
+    {
+      "query": "harm",
+      "target": "protect",
+      "rank": 1
+    },
+    {
+      "query": "harmful",
+      "target": "beneficial",
+      "rank": 1
+    },
+    {
+      "query": "hawkish",
+      "target": "dovish",
+      "rank": 1
+    },
+    {
+      "query": "hear",
+      "target": "listen",
+      "rank": 1
+    },
+    {
+      "query": "heartening",
+      "target": "disheartening",
+      "rank": 1
+    },
+    {
+      "query": "heavier",
+      "target": "lighter",
+      "rank": 1
+    },
+    {
+      "query": "heel",
+      "target": "toe",
+      "rank": 1
+    },
+    {
+      "query": "her",
+      "target": "his",
+      "rank": 1
+    },
+    {
+      "query": "higher",
+      "target": "lower",
+      "rank": 1
+    },
+    {
+      "query": "his",
+      "target": "her",
+      "rank": 1
+    },
+    {
+      "query": "hope",
+      "target": "fear",
+      "rank": 1
+    },
+    {
+      "query": "horizontally",
+      "target": "vertically",
+      "rank": 1
+    },
+    {
+      "query": "hot",
+      "target": "cool",
+      "rank": 1
+    },
+    {
+      "query": "human",
+      "target": "animal",
+      "rank": 1
+    },
+    {
+      "query": "ice",
+      "target": "water",
+      "rank": 1
+    },
+    {
+      "query": "idealism",
+      "target": "pragmatism",
+      "rank": 1
+    },
+    {
+      "query": "illegally",
+      "target": "legally",
+      "rank": 1
+    },
+    {
+      "query": "importer",
+      "target": "exporter",
+      "rank": 1
+    },
+    {
+      "query": "impossibility",
+      "target": "necessity",
+      "rank": 1
+    },
+    {
+      "query": "improving",
+      "target": "deteriorating",
+      "rank": 1
+    },
+    {
+      "query": "inbound",
+      "target": "outbound",
+      "rank": 1
+    },
+    {
+      "query": "inch",
+      "target": "centimeter",
+      "rank": 1
+    },
+    {
+      "query": "indefensible",
+      "target": "defensible",
+      "rank": 1
+    },
+    {
+      "query": "inept",
+      "target": "skillful",
+      "rank": 1
+    },
+    {
+      "query": "infielder",
+      "target": "outfielder",
+      "rank": 1
+    },
+    {
+      "query": "insertion",
+      "target": "deletion",
+      "rank": 1
+    },
+    {
+      "query": "joy",
+      "target": "sadness",
+      "rank": 1
+    },
+    {
+      "query": "kayak",
+      "target": "canoe",
+      "rank": 1
+    },
+    {
+      "query": "kitten",
+      "target": "puppy",
+      "rank": 1
+    },
+    {
+      "query": "knowledge",
+      "target": "ignorance",
+      "rank": 1
+    },
+    {
+      "query": "leaf",
+      "target": "flower",
+      "rank": 1
+    },
+    {
+      "query": "leave",
+      "target": "stay",
+      "rank": 1
+    },
+    {
+      "query": "lemon",
+      "target": "lime",
+      "rank": 1
+    },
+    {
+      "query": "length",
+      "target": "width",
+      "rank": 1
+    },
+    {
+      "query": "lighter",
+      "target": "heavier",
+      "rank": 1
+    },
+    {
+      "query": "lime",
+      "target": "lemon",
+      "rank": 1
+    },
+    {
+      "query": "listen",
+      "target": "hear",
+      "rank": 1
+    },
+    {
+      "query": "longitudinal",
+      "target": "transverse",
+      "rank": 1
+    },
+    {
+      "query": "loose",
+      "target": "stick",
+      "rank": 1
+    },
+    {
+      "query": "loosen",
+      "target": "tighten",
+      "rank": 1
+    },
+    {
+      "query": "lower",
+      "target": "higher",
+      "rank": 1
+    },
+    {
+      "query": "luck",
+      "target": "bad",
+      "rank": 1
+    },
+    {
+      "query": "magazine",
+      "target": "newspaper",
+      "rank": 1
+    },
+    {
+      "query": "make",
+      "target": "take",
+      "rank": 1
+    },
+    {
+      "query": "mammal",
+      "target": "reptile",
+      "rank": 1
+    },
+    {
+      "query": "manually",
+      "target": "automatically",
+      "rank": 1
+    },
+    {
+      "query": "margarine",
+      "target": "butter",
+      "rank": 1
+    },
+    {
+      "query": "marriage",
+      "target": "divorce",
+      "rank": 1
+    },
+    {
+      "query": "me",
+      "target": "you",
+      "rank": 1
+    },
+    {
+      "query": "midnight",
+      "target": "noon",
+      "rank": 1
+    },
+    {
+      "query": "mile",
+      "target": "kilometer",
+      "rank": 1
+    },
+    {
+      "query": "misunderstanding",
+      "target": "understanding",
+      "rank": 1
+    },
+    {
+      "query": "mom",
+      "target": "dad",
+      "rank": 1
+    },
+    {
+      "query": "mono",
+      "target": "stereo",
+      "rank": 1
+    },
+    {
+      "query": "month",
+      "target": "week",
+      "rank": 1
+    },
+    {
+      "query": "morning",
+      "target": "afternoon",
+      "rank": 1
+    },
+    {
+      "query": "mute",
+      "target": "voice",
+      "rank": 1
+    },
+    {
+      "query": "mutton",
+      "target": "lamb",
+      "rank": 1
+    },
+    {
+      "query": "narrow",
+      "target": "broad",
+      "rank": 1
+    },
+    {
+      "query": "nationalize",
+      "target": "privatize",
+      "rank": 1
+    },
+    {
+      "query": "negatively",
+      "target": "positively",
+      "rank": 1
+    },
+    {
+      "query": "neglect",
+      "target": "respect",
+      "rank": 1
+    },
+    {
+      "query": "next",
+      "target": "last",
+      "rank": 1
+    },
+    {
+      "query": "night",
+      "target": "evening",
+      "rank": 1
+    },
+    {
+      "query": "nightmare",
+      "target": "dream",
+      "rank": 1
+    },
+    {
+      "query": "nighttime",
+      "target": "daytime",
+      "rank": 1
+    },
+    {
+      "query": "nonferrous",
+      "target": "ferrous",
+      "rank": 1
+    },
+    {
+      "query": "nope",
+      "target": "yeah",
+      "rank": 1
+    },
+    {
+      "query": "northeast",
+      "target": "southwest",
+      "rank": 1
+    },
+    {
+      "query": "northerly",
+      "target": "southerly",
+      "rank": 1
+    },
+    {
+      "query": "northside",
+      "target": "southside",
+      "rank": 1
+    },
+    {
+      "query": "nose",
+      "target": "eyes",
+      "rank": 1
+    },
+    {
+      "query": "nothing",
+      "target": "something",
+      "rank": 1
+    },
+    {
+      "query": "novelist",
+      "target": "poet",
+      "rank": 1
+    },
+    {
+      "query": "numb",
+      "target": "feeling",
+      "rank": 1
+    },
+    {
+      "query": "nun",
+      "target": "priest",
+      "rank": 1
+    },
+    {
+      "query": "nurse",
+      "target": "doctor",
+      "rank": 1
+    },
+    {
+      "query": "ocean",
+      "target": "sea",
+      "rank": 1
+    },
+    {
+      "query": "offline",
+      "target": "online",
+      "rank": 1
+    },
+    {
+      "query": "oil",
+      "target": "gas",
+      "rank": 1
+    },
+    {
+      "query": "older",
+      "target": "younger",
+      "rank": 1
+    },
+    {
+      "query": "onion",
+      "target": "garlic",
+      "rank": 1
+    },
+    {
+      "query": "opaque",
+      "target": "transparent",
+      "rank": 1
+    },
+    {
+      "query": "outbound",
+      "target": "inbound",
+      "rank": 1
+    },
+    {
+      "query": "outfielder",
+      "target": "infielder",
+      "rank": 1
+    },
+    {
+      "query": "overpaid",
+      "target": "underpaid",
+      "rank": 1
+    },
+    {
+      "query": "overrated",
+      "target": "underrated",
+      "rank": 1
+    },
+    {
+      "query": "pale",
+      "target": "dark",
+      "rank": 1
+    },
+    {
+      "query": "panic",
+      "target": "calm",
+      "rank": 1
+    },
+    {
+      "query": "parents",
+      "target": "children",
+      "rank": 1
+    },
+    {
+      "query": "partial",
+      "target": "complete",
+      "rank": 1
+    },
+    {
+      "query": "peace",
+      "target": "conflict",
+      "rank": 1
+    },
+    {
+      "query": "peaceful",
+      "target": "violent",
+      "rank": 1
+    },
+    {
+      "query": "permanent",
+      "target": "temporary",
+      "rank": 1
+    },
+    {
+      "query": "personality",
+      "target": "character",
+      "rank": 1
+    },
+    {
+      "query": "pie",
+      "target": "cake",
+      "rank": 1
+    },
+    {
+      "query": "pistol",
+      "target": "rifle",
+      "rank": 1
+    },
+    {
+      "query": "poet",
+      "target": "novelist",
+      "rank": 1
+    },
+    {
+      "query": "pragmatism",
+      "target": "idealism",
+      "rank": 1
+    },
+    {
+      "query": "predecessor",
+      "target": "successor",
+      "rank": 1
+    },
+    {
+      "query": "premiere",
+      "target": "finale",
+      "rank": 1
+    },
+    {
+      "query": "prologue",
+      "target": "epilogue",
+      "rank": 1
+    },
+    {
+      "query": "proven",
+      "target": "unproven",
+      "rank": 1
+    },
+    {
+      "query": "pupil",
+      "target": "teacher",
+      "rank": 1
+    },
+    {
+      "query": "purchase",
+      "target": "sale",
+      "rank": 1
+    },
+    {
+      "query": "quick",
+      "target": "slow",
+      "rank": 1
+    },
+    {
+      "query": "rapid",
+      "target": "slow",
+      "rank": 1
+    },
+    {
+      "query": "rapidly",
+      "target": "slowly",
+      "rank": 1
+    },
+    {
+      "query": "rattle",
+      "target": "shake",
+      "rank": 1
+    },
+    {
+      "query": "read",
+      "target": "write",
+      "rank": 1
+    },
+    {
+      "query": "receive",
+      "target": "pay",
+      "rank": 1
+    },
+    {
+      "query": "recognize",
+      "target": "ignore",
+      "rank": 1
+    },
+    {
+      "query": "red",
+      "target": "yellow",
+      "rank": 1
+    },
+    {
+      "query": "refined",
+      "target": "crude",
+      "rank": 1
+    },
+    {
+      "query": "reptile",
+      "target": "mammal",
+      "rank": 1
+    },
+    {
+      "query": "rest",
+      "target": "out",
+      "rank": 1
+    },
+    {
+      "query": "return",
+      "target": "leave",
+      "rank": 1
+    },
+    {
+      "query": "rice",
+      "target": "wheat",
+      "rank": 1
+    },
+    {
+      "query": "rich",
+      "target": "impoverished",
+      "rank": 1
+    },
+    {
+      "query": "rigid",
+      "target": "flexible",
+      "rank": 1
+    },
+    {
+      "query": "rocky",
+      "target": "sandy",
+      "rank": 1
+    },
+    {
+      "query": "rude",
+      "target": "polite",
+      "rank": 1
+    },
+    {
+      "query": "sad",
+      "target": "happy",
+      "rank": 1
+    },
+    {
+      "query": "sale",
+      "target": "purchase",
+      "rank": 1
+    },
+    {
+      "query": "salesman",
+      "target": "saleswoman",
+      "rank": 1
+    },
+    {
+      "query": "salt",
+      "target": "pepper",
+      "rank": 1
+    },
+    {
+      "query": "saltwater",
+      "target": "freshwater",
+      "rank": 1
+    },
+    {
+      "query": "sandy",
+      "target": "rocky",
+      "rank": 1
+    },
+    {
+      "query": "scant",
+      "target": "ample",
+      "rank": 1
+    },
+    {
+      "query": "scarce",
+      "target": "plentiful",
+      "rank": 1
+    },
+    {
+      "query": "school",
+      "target": "college",
+      "rank": 1
+    },
+    {
+      "query": "sea",
+      "target": "ocean",
+      "rank": 1
+    },
+    {
+      "query": "seller",
+      "target": "buyer",
+      "rank": 1
+    },
+    {
+      "query": "selling",
+      "target": "buying",
+      "rank": 1
+    },
+    {
+      "query": "she",
+      "target": "he",
+      "rank": 1
+    },
+    {
+      "query": "shortening",
+      "target": "lengthening",
+      "rank": 1
+    },
+    {
+      "query": "shorts",
+      "target": "pants",
+      "rank": 1
+    },
+    {
+      "query": "shrink",
+      "target": "grow",
+      "rank": 1
+    },
+    {
+      "query": "silver",
+      "target": "gold",
+      "rank": 1
+    },
+    {
+      "query": "slower",
+      "target": "faster",
+      "rank": 1
+    },
+    {
+      "query": "snow",
+      "target": "rain",
+      "rank": 1
+    },
+    {
+      "query": "sobriety",
+      "target": "drunkenness",
+      "rank": 1
+    },
+    {
+      "query": "sold",
+      "target": "bought",
+      "rank": 1
+    },
+    {
+      "query": "solution",
+      "target": "problem",
+      "rank": 1
+    },
+    {
+      "query": "some",
+      "target": "many",
+      "rank": 1
+    },
+    {
+      "query": "something",
+      "target": "nothing",
+      "rank": 1
+    },
+    {
+      "query": "son",
+      "target": "father",
+      "rank": 1
+    },
+    {
+      "query": "sorority",
+      "target": "fraternity",
+      "rank": 1
+    },
+    {
+      "query": "southerly",
+      "target": "northerly",
+      "rank": 1
+    },
+    {
+      "query": "southernmost",
+      "target": "northernmost",
+      "rank": 1
+    },
+    {
+      "query": "southside",
+      "target": "northside",
+      "rank": 1
+    },
+    {
+      "query": "southwards",
+      "target": "northwards",
+      "rank": 1
+    },
+    {
+      "query": "start",
+      "target": "end",
+      "rank": 1
+    },
+    {
+      "query": "static",
+      "target": "dynamic",
+      "rank": 1
+    },
+    {
+      "query": "stay",
+      "target": "leave",
+      "rank": 1
+    },
+    {
+      "query": "stew",
+      "target": "soup",
+      "rank": 1
+    },
+    {
+      "query": "street",
+      "target": "avenue",
+      "rank": 1
+    },
+    {
+      "query": "stronger",
+      "target": "weaker",
+      "rank": 1
+    },
+    {
+      "query": "suitable",
+      "target": "unsuitable",
+      "rank": 1
+    },
+    {
+      "query": "sullen",
+      "target": "cheerful",
+      "rank": 1
+    },
+    {
+      "query": "summer",
+      "target": "winter",
+      "rank": 1
+    },
+    {
+      "query": "support",
+      "target": "opposition",
+      "rank": 1
+    },
+    {
+      "query": "takeoff",
+      "target": "landing",
+      "rank": 1
+    },
+    {
+      "query": "tea",
+      "target": "coffee",
+      "rank": 1
+    },
+    {
+      "query": "teach",
+      "target": "learn",
+      "rank": 1
+    },
+    {
+      "query": "temporary",
+      "target": "permanent",
+      "rank": 1
+    },
+    {
+      "query": "these",
+      "target": "those",
+      "rank": 1
+    },
+    {
+      "query": "thumb",
+      "target": "finger",
+      "rank": 1
+    },
+    {
+      "query": "thunder",
+      "target": "lightning",
+      "rank": 1
+    },
+    {
+      "query": "tighten",
+      "target": "loosen",
+      "rank": 1
+    },
+    {
+      "query": "toad",
+      "target": "frog",
+      "rank": 1
+    },
+    {
+      "query": "toe",
+      "target": "heel",
+      "rank": 1
+    },
+    {
+      "query": "together",
+      "target": "apart",
+      "rank": 1
+    },
+    {
+      "query": "transparent",
+      "target": "opaque",
+      "rank": 1
+    },
+    {
+      "query": "transverse",
+      "target": "longitudinal",
+      "rank": 1
+    },
+    {
+      "query": "truck",
+      "target": "car",
+      "rank": 1
+    },
+    {
+      "query": "unaffordable",
+      "target": "affordable",
+      "rank": 1
+    },
+    {
+      "query": "undergraduate",
+      "target": "graduate",
+      "rank": 1
+    },
+    {
+      "query": "underrated",
+      "target": "overrated",
+      "rank": 1
+    },
+    {
+      "query": "understanding",
+      "target": "misunderstanding",
+      "rank": 1
+    },
+    {
+      "query": "underweight",
+      "target": "overweight",
+      "rank": 1
+    },
+    {
+      "query": "undisciplined",
+      "target": "disciplined",
+      "rank": 1
+    },
+    {
+      "query": "undo",
+      "target": "redo",
+      "rank": 1
+    },
+    {
+      "query": "unfavourable",
+      "target": "favourable",
+      "rank": 1
+    },
+    {
+      "query": "uninhabitable",
+      "target": "habitable",
+      "rank": 1
+    },
+    {
+      "query": "unjustified",
+      "target": "justified",
+      "rank": 1
+    },
+    {
+      "query": "unless",
+      "target": "if",
+      "rank": 1
+    },
+    {
+      "query": "unlicensed",
+      "target": "licensed",
+      "rank": 1
+    },
+    {
+      "query": "unlucky",
+      "target": "fortunate",
+      "rank": 1
+    },
+    {
+      "query": "unproven",
+      "target": "proven",
+      "rank": 1
+    },
+    {
+      "query": "unsafe",
+      "target": "safe",
+      "rank": 1
+    },
+    {
+      "query": "unsuitable",
+      "target": "suitable",
+      "rank": 1
+    },
+    {
+      "query": "unusable",
+      "target": "usable",
+      "rank": 1
+    },
+    {
+      "query": "upbeat",
+      "target": "downbeat",
+      "rank": 1
+    },
+    {
+      "query": "upper",
+      "target": "lower",
+      "rank": 1
+    },
+    {
+      "query": "upside",
+      "target": "downside",
+      "rank": 1
+    },
+    {
+      "query": "validate",
+      "target": "disprove",
+      "rank": 1
+    },
+    {
+      "query": "vertically",
+      "target": "horizontally",
+      "rank": 1
+    },
+    {
+      "query": "voluntary",
+      "target": "mandatory",
+      "rank": 1
+    },
+    {
+      "query": "warm",
+      "target": "chilly",
+      "rank": 1
+    },
+    {
+      "query": "warmed",
+      "target": "cooled",
+      "rank": 1
+    },
+    {
+      "query": "weaker",
+      "target": "stronger",
+      "rank": 1
+    },
+    {
+      "query": "week",
+      "target": "month",
+      "rank": 1
+    },
+    {
+      "query": "went",
+      "target": "came",
+      "rank": 1
+    },
+    {
+      "query": "westernmost",
+      "target": "easternmost",
+      "rank": 1
+    },
+    {
+      "query": "width",
+      "target": "length",
+      "rank": 1
+    },
+    {
+      "query": "wig",
+      "target": "hair",
+      "rank": 1
+    },
+    {
+      "query": "window",
+      "target": "door",
+      "rank": 1
+    },
+    {
+      "query": "winter",
+      "target": "summer",
+      "rank": 1
+    },
+    {
+      "query": "wood",
+      "target": "stone",
+      "rank": 1
+    },
+    {
+      "query": "would",
+      "target": "could",
+      "rank": 1
+    },
+    {
+      "query": "write",
+      "target": "read",
+      "rank": 1
+    },
+    {
+      "query": "yellow",
+      "target": "red",
+      "rank": 1
+    },
+    {
+      "query": "younger",
+      "target": "older",
+      "rank": 1
+    },
+    {
+      "query": "acceptance",
+      "target": "denial",
+      "rank": 2
+    },
+    {
+      "query": "adult",
+      "target": "child",
+      "rank": 2
+    },
+    {
+      "query": "afternoon",
+      "target": "evening",
+      "rank": 2
+    },
+    {
+      "query": "ally",
+      "target": "foe",
+      "rank": 2
+    },
+    {
+      "query": "altruistic",
+      "target": "selfish",
+      "rank": 2
+    },
+    {
+      "query": "amphibian",
+      "target": "reptile",
+      "rank": 2
+    },
+    {
+      "query": "animal",
+      "target": "human",
+      "rank": 2
+    },
+    {
+      "query": "answer",
+      "target": "wrong",
+      "rank": 2
+    },
+    {
+      "query": "antagonist",
+      "target": "protagonist",
+      "rank": 2
+    },
+    {
+      "query": "antithesis",
+      "target": "epitome",
+      "rank": 2
+    },
+    {
+      "query": "april",
+      "target": "march",
+      "rank": 2
+    },
+    {
+      "query": "aroma",
+      "target": "odor",
+      "rank": 2
+    },
+    {
+      "query": "arrow",
+      "target": "bow",
+      "rank": 2
+    },
+    {
+      "query": "asymmetric",
+      "target": "symmetric",
+      "rank": 2
+    },
+    {
+      "query": "attainable",
+      "target": "unattainable",
+      "rank": 2
+    },
+    {
+      "query": "aunt",
+      "target": "niece",
+      "rank": 2
+    },
+    {
+      "query": "barren",
+      "target": "fertile",
+      "rank": 2
+    },
+    {
+      "query": "beneficial",
+      "target": "harmful",
+      "rank": 2
+    },
+    {
+      "query": "blindness",
+      "target": "vision",
+      "rank": 2
+    },
+    {
+      "query": "blunt",
+      "target": "sharp",
+      "rank": 2
+    },
+    {
+      "query": "boy",
+      "target": "man",
+      "rank": 2
+    },
+    {
+      "query": "bravery",
+      "target": "cowardice",
+      "rank": 2
+    },
+    {
+      "query": "bread",
+      "target": "cake",
+      "rank": 2
+    },
+    {
+      "query": "breakfast",
+      "target": "dinner",
+      "rank": 2
+    },
+    {
+      "query": "breathe",
+      "target": "inhale",
+      "rank": 2
+    },
+    {
+      "query": "broadsheet",
+      "target": "tabloid",
+      "rank": 2
+    },
+    {
+      "query": "bumpy",
+      "target": "smooth",
+      "rank": 2
+    },
+    {
+      "query": "bury",
+      "target": "dig",
+      "rank": 2
+    },
+    {
+      "query": "butter",
+      "target": "margarine",
+      "rank": 2
+    },
+    {
+      "query": "buyer",
+      "target": "seller",
+      "rank": 2
+    },
+    {
+      "query": "can",
+      "target": "could",
+      "rank": 2
+    },
+    {
+      "query": "cathedral",
+      "target": "chapel",
+      "rank": 2
+    },
+    {
+      "query": "chairwoman",
+      "target": "chairman",
+      "rank": 2
+    },
+    {
+      "query": "chaos",
+      "target": "calm",
+      "rank": 2
+    },
+    {
+      "query": "chapel",
+      "target": "cathedral",
+      "rank": 2
+    },
+    {
+      "query": "cheerful",
+      "target": "sullen",
+      "rank": 2
+    },
+    {
+      "query": "child",
+      "target": "mother",
+      "rank": 2
+    },
+    {
+      "query": "children",
+      "target": "parents",
+      "rank": 2
+    },
+    {
+      "query": "chilly",
+      "target": "warm",
+      "rank": 2
+    },
+    {
+      "query": "citizen",
+      "target": "immigrant",
+      "rank": 2
+    },
+    {
+      "query": "closer",
+      "target": "away",
+      "rank": 2
+    },
+    {
+      "query": "cloud",
+      "target": "sky",
+      "rank": 2
+    },
+    {
+      "query": "coffee",
+      "target": "tea",
+      "rank": 2
+    },
+    {
+      "query": "come",
+      "target": "going",
+      "rank": 2
+    },
+    {
+      "query": "comedy",
+      "target": "drama",
+      "rank": 2
+    },
+    {
+      "query": "complicated",
+      "target": "simple",
+      "rank": 2
+    },
+    {
+      "query": "conceal",
+      "target": "reveal",
+      "rank": 2
+    },
+    {
+      "query": "conflict",
+      "target": "peace",
+      "rank": 2
+    },
+    {
+      "query": "continent",
+      "target": "asia",
+      "rank": 2
+    },
+    {
+      "query": "cookie",
+      "target": "cake",
+      "rank": 2
+    },
+    {
+      "query": "cooled",
+      "target": "warmed",
+      "rank": 2
+    },
+    {
+      "query": "cooling",
+      "target": "heat",
+      "rank": 2
+    },
+    {
+      "query": "corner",
+      "target": "edge",
+      "rank": 2
+    },
+    {
+      "query": "couch",
+      "target": "bed",
+      "rank": 2
+    },
+    {
+      "query": "credit",
+      "target": "debt",
+      "rank": 2
+    },
+    {
+      "query": "cure",
+      "target": "disease",
+      "rank": 2
+    },
+    {
+      "query": "customer",
+      "target": "employee",
+      "rank": 2
+    },
+    {
+      "query": "daughter",
+      "target": "mother",
+      "rank": 2
+    },
+    {
+      "query": "dawn",
+      "target": "dusk",
+      "rank": 2
+    },
+    {
+      "query": "day",
+      "target": "week",
+      "rank": 2
+    },
+    {
+      "query": "defeat",
+      "target": "win",
+      "rank": 2
+    },
+    {
+      "query": "defensible",
+      "target": "indefensible",
+      "rank": 2
+    },
+    {
+      "query": "delete",
+      "target": "insert",
+      "rank": 2
+    },
+    {
+      "query": "deny",
+      "target": "claim",
+      "rank": 2
+    },
+    {
+      "query": "desegregation",
+      "target": "segregation",
+      "rank": 2
+    },
+    {
+      "query": "despise",
+      "target": "adore",
+      "rank": 2
+    },
+    {
+      "query": "deteriorating",
+      "target": "improving",
+      "rank": 2
+    },
+    {
+      "query": "dinner",
+      "target": "lunch",
+      "rank": 2
+    },
+    {
+      "query": "discount",
+      "target": "premium",
+      "rank": 2
+    },
+    {
+      "query": "disheartening",
+      "target": "heartening",
+      "rank": 2
+    },
+    {
+      "query": "dispute",
+      "target": "agreement",
+      "rank": 2
+    },
+    {
+      "query": "disturbed",
+      "target": "calm",
+      "rank": 2
+    },
+    {
+      "query": "divorced",
+      "target": "married",
+      "rank": 2
+    },
+    {
+      "query": "door",
+      "target": "window",
+      "rank": 2
+    },
+    {
+      "query": "doubt",
+      "target": "believe",
+      "rank": 2
+    },
+    {
+      "query": "downstream",
+      "target": "upriver",
+      "rank": 2
+    },
+    {
+      "query": "dream",
+      "target": "nightmare",
+      "rank": 2
+    },
+    {
+      "query": "dumb",
+      "target": "smart",
+      "rank": 2
+    },
+    {
+      "query": "earth",
+      "target": "mars",
+      "rank": 2
+    },
+    {
+      "query": "eastside",
+      "target": "westside",
+      "rank": 2
+    },
+    {
+      "query": "edge",
+      "target": "corner",
+      "rank": 2
+    },
+    {
+      "query": "editorial",
+      "target": "article",
+      "rank": 2
+    },
+    {
+      "query": "elbow",
+      "target": "knee",
+      "rank": 2
+    },
+    {
+      "query": "enough",
+      "target": "too",
+      "rank": 2
+    },
+    {
+      "query": "enter",
+      "target": "leave",
+      "rank": 2
+    },
+    {
+      "query": "epitome",
+      "target": "antithesis",
+      "rank": 2
+    },
+    {
+      "query": "erratic",
+      "target": "consistent",
+      "rank": 2
+    },
+    {
+      "query": "error",
+      "target": "correct",
+      "rank": 2
+    },
+    {
+      "query": "evening",
+      "target": "afternoon",
+      "rank": 2
+    },
+    {
+      "query": "excellent",
+      "target": "bad",
+      "rank": 2
+    },
+    {
+      "query": "exhale",
+      "target": "breathe",
+      "rank": 2
+    },
+    {
+      "query": "expand",
+      "target": "reduce",
+      "rank": 2
+    },
+    {
+      "query": "expedite",
+      "target": "impede",
+      "rank": 2
+    },
+    {
+      "query": "eye",
+      "target": "nose",
+      "rank": 2
+    },
+    {
+      "query": "eyes",
+      "target": "nose",
+      "rank": 2
+    },
+    {
+      "query": "fate",
+      "target": "future",
+      "rank": 2
+    },
+    {
+      "query": "fertile",
+      "target": "barren",
+      "rank": 2
+    },
+    {
+      "query": "filipina",
+      "target": "filipino",
+      "rank": 2
+    },
+    {
+      "query": "finger",
+      "target": "thumb",
+      "rank": 2
+    },
+    {
+      "query": "flower",
+      "target": "leaf",
+      "rank": 2
+    },
+    {
+      "query": "four",
+      "target": "five",
+      "rank": 2
+    },
+    {
+      "query": "global",
+      "target": "domestic",
+      "rank": 2
+    },
+    {
+      "query": "goose",
+      "target": "duck",
+      "rank": 2
+    },
+    {
+      "query": "guided",
+      "target": "ballistic",
+      "rank": 2
+    },
+    {
+      "query": "hail",
+      "target": "rain",
+      "rank": 2
+    },
+    {
+      "query": "haze",
+      "target": "mist",
+      "rank": 2
+    },
+    {
+      "query": "head",
+      "target": "body",
+      "rank": 2
+    },
+    {
+      "query": "healthy",
+      "target": "sick",
+      "rank": 2
+    },
+    {
+      "query": "hero",
+      "target": "villain",
+      "rank": 2
+    },
+    {
+      "query": "hide",
+      "target": "reveal",
+      "rank": 2
+    },
+    {
+      "query": "how",
+      "target": "why",
+      "rank": 2
+    },
+    {
+      "query": "humble",
+      "target": "arrogant",
+      "rank": 2
+    },
+    {
+      "query": "income",
+      "target": "tax",
+      "rank": 2
+    },
+    {
+      "query": "inexpensive",
+      "target": "expensive",
+      "rank": 2
+    },
+    {
+      "query": "inhale",
+      "target": "breathe",
+      "rank": 2
+    },
+    {
+      "query": "insert",
+      "target": "delete",
+      "rank": 2
+    },
+    {
+      "query": "invoice",
+      "target": "receipt",
+      "rank": 2
+    },
+    {
+      "query": "jog",
+      "target": "walk",
+      "rank": 2
+    },
+    {
+      "query": "join",
+      "target": "leave",
+      "rank": 2
+    },
+    {
+      "query": "kilometer",
+      "target": "mile",
+      "rank": 2
+    },
+    {
+      "query": "kilometre",
+      "target": "mile",
+      "rank": 2
+    },
+    {
+      "query": "kitchen",
+      "target": "room",
+      "rank": 2
+    },
+    {
+      "query": "landing",
+      "target": "takeoff",
+      "rank": 2
+    },
+    {
+      "query": "lateral",
+      "target": "medial",
+      "rank": 2
+    },
+    {
+      "query": "lay",
+      "target": "stand",
+      "rank": 2
+    },
+    {
+      "query": "learn",
+      "target": "forget",
+      "rank": 2
+    },
+    {
+      "query": "learning",
+      "target": "teaching",
+      "rank": 2
+    },
+    {
+      "query": "legally",
+      "target": "illegally",
+      "rank": 2
+    },
+    {
+      "query": "lengthening",
+      "target": "shortening",
+      "rank": 2
+    },
+    {
+      "query": "liar",
+      "target": "honest",
+      "rank": 2
+    },
+    {
+      "query": "licensed",
+      "target": "unlicensed",
+      "rank": 2
+    },
+    {
+      "query": "lightning",
+      "target": "thunder",
+      "rank": 2
+    },
+    {
+      "query": "loyalty",
+      "target": "betrayal",
+      "rank": 2
+    },
+    {
+      "query": "lunch",
+      "target": "dinner",
+      "rank": 2
+    },
+    {
+      "query": "maid",
+      "target": "servant",
+      "rank": 2
+    },
+    {
+      "query": "man",
+      "target": "boy",
+      "rank": 2
+    },
+    {
+      "query": "manhood",
+      "target": "femininity",
+      "rank": 2
+    },
+    {
+      "query": "many",
+      "target": "some",
+      "rank": 2
+    },
+    {
+      "query": "mare",
+      "target": "stallion",
+      "rank": 2
+    },
+    {
+      "query": "mediocre",
+      "target": "excellent",
+      "rank": 2
+    },
+    {
+      "query": "medium",
+      "target": "large",
+      "rank": 2
+    },
+    {
+      "query": "metal",
+      "target": "plastic",
+      "rank": 2
+    },
+    {
+      "query": "mile",
+      "target": "kilometre",
+      "rank": 2
+    },
+    {
+      "query": "moon",
+      "target": "earth",
+      "rank": 2
+    },
+    {
+      "query": "morning",
+      "target": "evening",
+      "rank": 2
+    },
+    {
+      "query": "mother",
+      "target": "daughter",
+      "rank": 2
+    },
+    {
+      "query": "muscle",
+      "target": "bone",
+      "rank": 2
+    },
+    {
+      "query": "must",
+      "target": "should",
+      "rank": 2
+    },
+    {
+      "query": "nationwide",
+      "target": "citywide",
+      "rank": 2
+    },
+    {
+      "query": "night",
+      "target": "morning",
+      "rank": 2
+    },
+    {
+      "query": "nightfall",
+      "target": "dawn",
+      "rank": 2
+    },
+    {
+      "query": "noon",
+      "target": "midnight",
+      "rank": 2
+    },
+    {
+      "query": "nor",
+      "target": "neither",
+      "rank": 2
+    },
+    {
+      "query": "northernmost",
+      "target": "southernmost",
+      "rank": 2
+    },
+    {
+      "query": "northwards",
+      "target": "southwards",
+      "rank": 2
+    },
+    {
+      "query": "nothing",
+      "target": "anything",
+      "rank": 2
+    },
+    {
+      "query": "notorious",
+      "target": "famous",
+      "rank": 2
+    },
+    {
+      "query": "odor",
+      "target": "aroma",
+      "rank": 2
+    },
+    {
+      "query": "oem",
+      "target": "aftermarket",
+      "rank": 2
+    },
+    {
+      "query": "often",
+      "target": "usually",
+      "rank": 2
+    },
+    {
+      "query": "one",
+      "target": "another",
+      "rank": 2
+    },
+    {
+      "query": "or",
+      "target": "either",
+      "rank": 2
+    },
+    {
+      "query": "oriental",
+      "target": "occidental",
+      "rank": 2
+    },
+    {
+      "query": "penicillin",
+      "target": "antibiotic",
+      "rank": 2
+    },
+    {
+      "query": "place",
+      "target": "time",
+      "rank": 2
+    },
+    {
+      "query": "plentiful",
+      "target": "scarce",
+      "rank": 2
+    },
+    {
+      "query": "poetry",
+      "target": "prose",
+      "rank": 2
+    },
+    {
+      "query": "positively",
+      "target": "negatively",
+      "rank": 2
+    },
+    {
+      "query": "postgraduate",
+      "target": "undergraduate",
+      "rank": 2
+    },
+    {
+      "query": "premium",
+      "target": "discount",
+      "rank": 2
+    },
+    {
+      "query": "prequel",
+      "target": "sequel",
+      "rank": 2
+    },
+    {
+      "query": "preserve",
+      "target": "ruin",
+      "rank": 2
+    },
+    {
+      "query": "privatize",
+      "target": "nationalize",
+      "rank": 2
+    },
+    {
+      "query": "progressive",
+      "target": "conservative",
+      "rank": 2
+    },
+    {
+      "query": "proud",
+      "target": "ashamed",
+      "rank": 2
+    },
+    {
+      "query": "purse",
+      "target": "wallet",
+      "rank": 2
+    },
+    {
+      "query": "quality",
+      "target": "bad",
+      "rank": 2
+    },
+    {
+      "query": "rain",
+      "target": "snow",
+      "rank": 2
+    },
+    {
+      "query": "reading",
+      "target": "writing",
+      "rank": 2
+    },
+    {
+      "query": "reason",
+      "target": "why",
+      "rank": 2
+    },
+    {
+      "query": "red",
+      "target": "blue",
+      "rank": 2
+    },
+    {
+      "query": "redo",
+      "target": "undo",
+      "rank": 2
+    },
+    {
+      "query": "reduce",
+      "target": "increase",
+      "rank": 2
+    },
+    {
+      "query": "reforestation",
+      "target": "deforestation",
+      "rank": 2
+    },
+    {
+      "query": "refund",
+      "target": "payment",
+      "rank": 2
+    },
+    {
+      "query": "relaxation",
+      "target": "stress",
+      "rank": 2
+    },
+    {
+      "query": "reveal",
+      "target": "hide",
+      "rank": 2
+    },
+    {
+      "query": "rifle",
+      "target": "pistol",
+      "rank": 2
+    },
+    {
+      "query": "ruck",
+      "target": "scrum",
+      "rank": 2
+    },
+    {
+      "query": "safe",
+      "target": "unsafe",
+      "rank": 2
+    },
+    {
+      "query": "saleswoman",
+      "target": "salesman",
+      "rank": 2
+    },
+    {
+      "query": "salt",
+      "target": "sugar",
+      "rank": 2
+    },
+    {
+      "query": "skyrocket",
+      "target": "plummet",
+      "rank": 2
+    },
+    {
+      "query": "slowly",
+      "target": "rapidly",
+      "rank": 2
+    },
+    {
+      "query": "smart",
+      "target": "dumb",
+      "rank": 2
+    },
+    {
+      "query": "southland",
+      "target": "northland",
+      "rank": 2
+    },
+    {
+      "query": "southwest",
+      "target": "northeast",
+      "rank": 2
+    },
+    {
+      "query": "space",
+      "target": "earth",
+      "rank": 2
+    },
+    {
+      "query": "spring",
+      "target": "winter",
+      "rank": 2
+    },
+    {
+      "query": "stay",
+      "target": "go",
+      "rank": 2
+    },
+    {
+      "query": "steak",
+      "target": "chicken",
+      "rank": 2
+    },
+    {
+      "query": "stick",
+      "target": "loose",
+      "rank": 2
+    },
+    {
+      "query": "stone",
+      "target": "wood",
+      "rank": 2
+    },
+    {
+      "query": "stove",
+      "target": "oven",
+      "rank": 2
+    },
+    {
+      "query": "straight",
+      "target": "round",
+      "rank": 2
+    },
+    {
+      "query": "successor",
+      "target": "predecessor",
+      "rank": 2
+    },
+    {
+      "query": "sun",
+      "target": "rain",
+      "rank": 2
+    },
+    {
+      "query": "sunshine",
+      "target": "rain",
+      "rank": 2
+    },
+    {
+      "query": "supper",
+      "target": "breakfast",
+      "rank": 2
+    },
+    {
+      "query": "susceptible",
+      "target": "immune",
+      "rank": 2
+    },
+    {
+      "query": "suspend",
+      "target": "resume",
+      "rank": 2
+    },
+    {
+      "query": "sweet",
+      "target": "salty",
+      "rank": 2
+    },
+    {
+      "query": "tax",
+      "target": "income",
+      "rank": 2
+    },
+    {
+      "query": "teacher",
+      "target": "student",
+      "rank": 2
+    },
+    {
+      "query": "tin",
+      "target": "copper",
+      "rank": 2
+    },
+    {
+      "query": "tiny",
+      "target": "large",
+      "rank": 2
+    },
+    {
+      "query": "town",
+      "target": "city",
+      "rank": 2
+    },
+    {
+      "query": "ugly",
+      "target": "pretty",
+      "rank": 2
+    },
+    {
+      "query": "unattainable",
+      "target": "attainable",
+      "rank": 2
+    },
+    {
+      "query": "undetectable",
+      "target": "detectable",
+      "rank": 2
+    },
+    {
+      "query": "uneven",
+      "target": "smooth",
+      "rank": 2
+    },
+    {
+      "query": "usually",
+      "target": "often",
+      "rank": 2
+    },
+    {
+      "query": "valuable",
+      "target": "useless",
+      "rank": 2
+    },
+    {
+      "query": "vanilla",
+      "target": "chocolate",
+      "rank": 2
+    },
+    {
+      "query": "vein",
+      "target": "artery",
+      "rank": 2
+    },
+    {
+      "query": "violent",
+      "target": "peaceful",
+      "rank": 2
+    },
+    {
+      "query": "wallpaper",
+      "target": "paint",
+      "rank": 2
+    },
+    {
+      "query": "warm",
+      "target": "cold",
+      "rank": 2
+    },
+    {
+      "query": "westside",
+      "target": "eastside",
+      "rank": 2
+    },
+    {
+      "query": "win",
+      "target": "defeat",
+      "rank": 2
+    },
+    {
+      "query": "wine",
+      "target": "beer",
+      "rank": 2
+    },
+    {
+      "query": "winter",
+      "target": "spring",
+      "rank": 2
+    },
+    {
+      "query": "wool",
+      "target": "cotton",
+      "rank": 2
+    },
+    {
+      "query": "wrist",
+      "target": "ankle",
+      "rank": 2
+    },
+    {
+      "query": "year",
+      "target": "month",
+      "rank": 2
+    },
+    {
+      "query": "zoologist",
+      "target": "botanist",
+      "rank": 2
+    },
+    {
+      "query": "add",
+      "target": "remove",
+      "rank": 3
+    },
+    {
+      "query": "affordable",
+      "target": "expensive",
+      "rank": 3
+    },
+    {
+      "query": "ahead",
+      "target": "behind",
+      "rank": 3
+    },
+    {
+      "query": "all",
+      "target": "only",
+      "rank": 3
+    },
+    {
+      "query": "alligator",
+      "target": "crocodile",
+      "rank": 3
+    },
+    {
+      "query": "although",
+      "target": "because",
+      "rank": 3
+    },
+    {
+      "query": "ample",
+      "target": "scant",
+      "rank": 3
+    },
+    {
+      "query": "ankle",
+      "target": "wrist",
+      "rank": 3
+    },
+    {
+      "query": "anniversary",
+      "target": "birthday",
+      "rank": 3
+    },
+    {
+      "query": "apart",
+      "target": "together",
+      "rank": 3
+    },
+    {
+      "query": "asia",
+      "target": "continent",
+      "rank": 3
+    },
+    {
+      "query": "avenue",
+      "target": "street",
+      "rank": 3
+    },
+    {
+      "query": "basement",
+      "target": "upstairs",
+      "rank": 3
+    },
+    {
+      "query": "bath",
+      "target": "shower",
+      "rank": 3
+    },
+    {
+      "query": "bathe",
+      "target": "shower",
+      "rank": 3
+    },
+    {
+      "query": "be",
+      "target": "not",
+      "rank": 3
+    },
+    {
+      "query": "birthday",
+      "target": "anniversary",
+      "rank": 3
+    },
+    {
+      "query": "bitter",
+      "target": "sweet",
+      "rank": 3
+    },
+    {
+      "query": "blonde",
+      "target": "brunette",
+      "rank": 3
+    },
+    {
+      "query": "blue",
+      "target": "yellow",
+      "rank": 3
+    },
+    {
+      "query": "bone",
+      "target": "cartilage",
+      "rank": 3
+    },
+    {
+      "query": "boring",
+      "target": "interesting",
+      "rank": 3
+    },
+    {
+      "query": "bright",
+      "target": "gray",
+      "rank": 3
+    },
+    {
+      "query": "burial",
+      "target": "cremation",
+      "rank": 3
+    },
+    {
+      "query": "calm",
+      "target": "chaos",
+      "rank": 3
+    },
+    {
+      "query": "capture",
+      "target": "escape",
+      "rank": 3
+    },
+    {
+      "query": "catch",
+      "target": "throw",
+      "rank": 3
+    },
+    {
+      "query": "cause",
+      "target": "result",
+      "rank": 3
+    },
+    {
+      "query": "cellar",
+      "target": "attic",
+      "rank": 3
+    },
+    {
+      "query": "centimeter",
+      "target": "inch",
+      "rank": 3
+    },
+    {
+      "query": "chastity",
+      "target": "promiscuity",
+      "rank": 3
+    },
+    {
+      "query": "christmas",
+      "target": "easter",
+      "rank": 3
+    },
+    {
+      "query": "claim",
+      "target": "deny",
+      "rank": 3
+    },
+    {
+      "query": "close",
+      "target": "far",
+      "rank": 3
+    },
+    {
+      "query": "communism",
+      "target": "democracy",
+      "rank": 3
+    },
+    {
+      "query": "compliance",
+      "target": "violation",
+      "rank": 3
+    },
+    {
+      "query": "congratulations",
+      "target": "condolences",
+      "rank": 3
+    },
+    {
+      "query": "consonant",
+      "target": "vowels",
+      "rank": 3
+    },
+    {
+      "query": "corner",
+      "target": "side",
+      "rank": 3
+    },
+    {
+      "query": "creek",
+      "target": "river",
+      "rank": 3
+    },
+    {
+      "query": "crescendo",
+      "target": "climax",
+      "rank": 3
+    },
+    {
+      "query": "curse",
+      "target": "blessing",
+      "rank": 3
+    },
+    {
+      "query": "cut",
+      "target": "put",
+      "rank": 3
+    },
+    {
+      "query": "dairy",
+      "target": "poultry",
+      "rank": 3
+    },
+    {
+      "query": "despondent",
+      "target": "cheerful",
+      "rank": 3
+    },
+    {
+      "query": "dictatorship",
+      "target": "democracy",
+      "rank": 3
+    },
+    {
+      "query": "dictionary",
+      "target": "encyclopedia",
+      "rank": 3
+    },
+    {
+      "query": "disprove",
+      "target": "validate",
+      "rank": 3
+    },
+    {
+      "query": "divorce",
+      "target": "marry",
+      "rank": 3
+    },
+    {
+      "query": "doctor",
+      "target": "nurse",
+      "rank": 3
+    },
+    {
+      "query": "downplay",
+      "target": "emphasize",
+      "rank": 3
+    },
+    {
+      "query": "downward",
+      "target": "upwards",
+      "rank": 3
+    },
+    {
+      "query": "earth",
+      "target": "space",
+      "rank": 3
+    },
+    {
+      "query": "easy",
+      "target": "hard",
+      "rank": 3
+    },
+    {
+      "query": "embrace",
+      "target": "abandon",
+      "rank": 3
+    },
+    {
+      "query": "evening",
+      "target": "night",
+      "rank": 3
+    },
+    {
+      "query": "everything",
+      "target": "nothing",
+      "rank": 3
+    },
+    {
+      "query": "expensive",
+      "target": "inexpensive",
+      "rank": 3
+    },
+    {
+      "query": "fair",
+      "target": "unjust",
+      "rank": 3
+    },
+    {
+      "query": "famous",
+      "target": "known",
+      "rank": 3
+    },
+    {
+      "query": "ferrous",
+      "target": "nonferrous",
+      "rank": 3
+    },
+    {
+      "query": "filling",
+      "target": "empty",
+      "rank": 3
+    },
+    {
+      "query": "five",
+      "target": "four",
+      "rank": 3
+    },
+    {
+      "query": "flood",
+      "target": "drought",
+      "rank": 3
+    },
+    {
+      "query": "forgot",
+      "target": "remember",
+      "rank": 3
+    },
+    {
+      "query": "forth",
+      "target": "back",
+      "rank": 3
+    },
+    {
+      "query": "freedom",
+      "target": "oppression",
+      "rank": 3
+    },
+    {
+      "query": "frequently",
+      "target": "rarely",
+      "rank": 3
+    },
+    {
+      "query": "going",
+      "target": "come",
+      "rank": 3
+    },
+    {
+      "query": "granddaughter",
+      "target": "grandson",
+      "rank": 3
+    },
+    {
+      "query": "green",
+      "target": "blue",
+      "rank": 3
+    },
+    {
+      "query": "grow",
+      "target": "shrink",
+      "rank": 3
+    },
+    {
+      "query": "gums",
+      "target": "teeth",
+      "rank": 3
+    },
+    {
+      "query": "habitable",
+      "target": "uninhabitable",
+      "rank": 3
+    },
+    {
+      "query": "hard",
+      "target": "easy",
+      "rank": 3
+    },
+    {
+      "query": "have",
+      "target": "not",
+      "rank": 3
+    },
+    {
+      "query": "he",
+      "target": "she",
+      "rank": 3
+    },
+    {
+      "query": "hill",
+      "target": "mountain",
+      "rank": 3
+    },
+    {
+      "query": "humane",
+      "target": "inhuman",
+      "rank": 3
+    },
+    {
+      "query": "identical",
+      "target": "different",
+      "rank": 3
+    },
+    {
+      "query": "ignore",
+      "target": "recognize",
+      "rank": 3
+    },
+    {
+      "query": "immune",
+      "target": "susceptible",
+      "rank": 3
+    },
+    {
+      "query": "infertile",
+      "target": "fertile",
+      "rank": 3
+    },
+    {
+      "query": "inhuman",
+      "target": "humane",
+      "rank": 3
+    },
+    {
+      "query": "joy",
+      "target": "grief",
+      "rank": 3
+    },
+    {
+      "query": "judge",
+      "target": "jury",
+      "rank": 3
+    },
+    {
+      "query": "jury",
+      "target": "judge",
+      "rank": 3
+    },
+    {
+      "query": "knee",
+      "target": "elbow",
+      "rank": 3
+    },
+    {
+      "query": "ladder",
+      "target": "climb",
+      "rank": 3
+    },
+    {
+      "query": "lake",
+      "target": "river",
+      "rank": 3
+    },
+    {
+      "query": "leave",
+      "target": "return",
+      "rank": 3
+    },
+    {
+      "query": "lose",
+      "target": "get",
+      "rank": 3
+    },
+    {
+      "query": "lower",
+      "target": "upper",
+      "rank": 3
+    },
+    {
+      "query": "march",
+      "target": "april",
+      "rank": 3
+    },
+    {
+      "query": "married",
+      "target": "divorced",
+      "rank": 3
+    },
+    {
+      "query": "matter",
+      "target": "nothing",
+      "rank": 3
+    },
+    {
+      "query": "messy",
+      "target": "neat",
+      "rank": 3
+    },
+    {
+      "query": "morning",
+      "target": "night",
+      "rank": 3
+    },
+    {
+      "query": "mountain",
+      "target": "hill",
+      "rank": 3
+    },
+    {
+      "query": "much",
+      "target": "too",
+      "rank": 3
+    },
+    {
+      "query": "must",
+      "target": "not",
+      "rank": 3
+    },
+    {
+      "query": "napkin",
+      "target": "towel",
+      "rank": 3
+    },
+    {
+      "query": "nationalisation",
+      "target": "privatisation",
+      "rank": 3
+    },
+    {
+      "query": "nationalization",
+      "target": "privatization",
+      "rank": 3
+    },
+    {
+      "query": "negligible",
+      "target": "significant",
+      "rank": 3
+    },
+    {
+      "query": "numb",
+      "target": "feel",
+      "rank": 3
+    },
+    {
+      "query": "nun",
+      "target": "monk",
+      "rank": 3
+    },
+    {
+      "query": "observe",
+      "target": "ignore",
+      "rank": 3
+    },
+    {
+      "query": "occasionally",
+      "target": "often",
+      "rank": 3
+    },
+    {
+      "query": "occidental",
+      "target": "oriental",
+      "rank": 3
+    },
+    {
+      "query": "onto",
+      "target": "off",
+      "rank": 3
+    },
+    {
+      "query": "oven",
+      "target": "stove",
+      "rank": 3
+    },
+    {
+      "query": "paint",
+      "target": "brush",
+      "rank": 3
+    },
+    {
+      "query": "palm",
+      "target": "tree",
+      "rank": 3
+    },
+    {
+      "query": "pan",
+      "target": "pot",
+      "rank": 3
+    },
+    {
+      "query": "passive",
+      "target": "aggressive",
+      "rank": 3
+    },
+    {
+      "query": "peacetime",
+      "target": "wartime",
+      "rank": 3
+    },
+    {
+      "query": "person",
+      "target": "man",
+      "rank": 3
+    },
+    {
+      "query": "pork",
+      "target": "chicken",
+      "rank": 3
+    },
+    {
+      "query": "previous",
+      "target": "following",
+      "rank": 3
+    },
+    {
+      "query": "protect",
+      "target": "harm",
+      "rank": 3
+    },
+    {
+      "query": "quality",
+      "target": "poor",
+      "rank": 3
+    },
+    {
+      "query": "red",
+      "target": "green",
+      "rank": 3
+    },
+    {
+      "query": "reduction",
+      "target": "increase",
+      "rank": 3
+    },
+    {
+      "query": "relationship",
+      "target": "affair",
+      "rank": 3
+    },
+    {
+      "query": "reptile",
+      "target": "amphibian",
+      "rank": 3
+    },
+    {
+      "query": "reveal",
+      "target": "conceal",
+      "rank": 3
+    },
+    {
+      "query": "rid",
+      "target": "keep",
+      "rank": 3
+    },
+    {
+      "query": "rise",
+      "target": "drop",
+      "rank": 3
+    },
+    {
+      "query": "river",
+      "target": "creek",
+      "rank": 3
+    },
+    {
+      "query": "roll",
+      "target": "rock",
+      "rank": 3
+    },
+    {
+      "query": "roof",
+      "target": "floor",
+      "rank": 3
+    },
+    {
+      "query": "satan",
+      "target": "god",
+      "rank": 3
+    },
+    {
+      "query": "scrum",
+      "target": "ruck",
+      "rank": 3
+    },
+    {
+      "query": "seaman",
+      "target": "captain",
+      "rank": 3
+    },
+    {
+      "query": "seldom",
+      "target": "often",
+      "rank": 3
+    },
+    {
+      "query": "shirts",
+      "target": "pants",
+      "rank": 3
+    },
+    {
+      "query": "silk",
+      "target": "wool",
+      "rank": 3
+    },
+    {
+      "query": "sky",
+      "target": "cloud",
+      "rank": 3
+    },
+    {
+      "query": "sleep",
+      "target": "awake",
+      "rank": 3
+    },
+    {
+      "query": "sloppy",
+      "target": "meticulous",
+      "rank": 3
+    },
+    {
+      "query": "smooth",
+      "target": "bumpy",
+      "rank": 3
+    },
+    {
+      "query": "specific",
+      "target": "any",
+      "rank": 3
+    },
+    {
+      "query": "spring",
+      "target": "autumn",
+      "rank": 3
+    },
+    {
+      "query": "student",
+      "target": "teacher",
+      "rank": 3
+    },
+    {
+      "query": "subtle",
+      "target": "obvious",
+      "rank": 3
+    },
+    {
+      "query": "suburb",
+      "target": "city",
+      "rank": 3
+    },
+    {
+      "query": "swallow",
+      "target": "eat",
+      "rank": 3
+    },
+    {
+      "query": "tabloid",
+      "target": "broadsheet",
+      "rank": 3
+    },
+    {
+      "query": "take",
+      "target": "make",
+      "rank": 3
+    },
+    {
+      "query": "tell",
+      "target": "ask",
+      "rank": 3
+    },
+    {
+      "query": "terrible",
+      "target": "wonderful",
+      "rank": 3
+    },
+    {
+      "query": "throw",
+      "target": "catch",
+      "rank": 3
+    },
+    {
+      "query": "track",
+      "target": "record",
+      "rank": 3
+    },
+    {
+      "query": "uncover",
+      "target": "conceal",
+      "rank": 3
+    },
+    {
+      "query": "undergraduate",
+      "target": "postgraduate",
+      "rank": 3
+    },
+    {
+      "query": "understand",
+      "target": "know",
+      "rank": 3
+    },
+    {
+      "query": "upturn",
+      "target": "downturn",
+      "rank": 3
+    },
+    {
+      "query": "upwards",
+      "target": "downward",
+      "rank": 3
+    },
+    {
+      "query": "villain",
+      "target": "hero",
+      "rank": 3
+    },
+    {
+      "query": "vision",
+      "target": "blindness",
+      "rank": 3
+    },
+    {
+      "query": "wealthy",
+      "target": "impoverished",
+      "rank": 3
+    },
+    {
+      "query": "winless",
+      "target": "undefeated",
+      "rank": 3
+    },
+    {
+      "query": "winning",
+      "target": "losing",
+      "rank": 3
+    },
+    {
+      "query": "wrongly",
+      "target": "correctly",
+      "rank": 3
+    },
+    {
+      "query": "abuse",
+      "target": "care",
+      "rank": 4
+    },
+    {
+      "query": "adulthood",
+      "target": "childhood",
+      "rank": 4
+    },
+    {
+      "query": "anarchy",
+      "target": "democracy",
+      "rank": 4
+    },
+    {
+      "query": "ancient",
+      "target": "modern",
+      "rank": 4
+    },
+    {
+      "query": "answer",
+      "target": "why",
+      "rank": 4
+    },
+    {
+      "query": "asset",
+      "target": "debt",
+      "rank": 4
+    },
+    {
+      "query": "awake",
+      "target": "sleep",
+      "rank": 4
+    },
+    {
+      "query": "bedroom",
+      "target": "room",
+      "rank": 4
+    },
+    {
+      "query": "beef",
+      "target": "chicken",
+      "rank": 4
+    },
+    {
+      "query": "bit",
+      "target": "lot",
+      "rank": 4
+    },
+    {
+      "query": "bone",
+      "target": "skin",
+      "rank": 4
+    },
+    {
+      "query": "boom",
+      "target": "recession",
+      "rank": 4
+    },
+    {
+      "query": "bullet",
+      "target": "shot",
+      "rank": 4
+    },
+    {
+      "query": "cannot",
+      "target": "could",
+      "rank": 4
+    },
+    {
+      "query": "captain",
+      "target": "crew",
+      "rank": 4
+    },
+    {
+      "query": "car",
+      "target": "truck",
+      "rank": 4
+    },
+    {
+      "query": "ceiling",
+      "target": "floor",
+      "rank": 4
+    },
+    {
+      "query": "christmas",
+      "target": "halloween",
+      "rank": 4
+    },
+    {
+      "query": "circle",
+      "target": "square",
+      "rank": 4
+    },
+    {
+      "query": "climate",
+      "target": "weather",
+      "rank": 4
+    },
+    {
+      "query": "compulsory",
+      "target": "voluntary",
+      "rank": 4
+    },
+    {
+      "query": "consequential",
+      "target": "inconsequential",
+      "rank": 4
+    },
+    {
+      "query": "costume",
+      "target": "dress",
+      "rank": 4
+    },
+    {
+      "query": "coward",
+      "target": "brave",
+      "rank": 4
+    },
+    {
+      "query": "cruel",
+      "target": "kind",
+      "rank": 4
+    },
+    {
+      "query": "dawn",
+      "target": "evening",
+      "rank": 4
+    },
+    {
+      "query": "deficit",
+      "target": "surplus",
+      "rank": 4
+    },
+    {
+      "query": "democracy",
+      "target": "dictatorship",
+      "rank": 4
+    },
+    {
+      "query": "derivative",
+      "target": "integral",
+      "rank": 4
+    },
+    {
+      "query": "dollar",
+      "target": "euro",
+      "rank": 4
+    },
+    {
+      "query": "drink",
+      "target": "liquor",
+      "rank": 4
+    },
+    {
+      "query": "drive",
+      "target": "stop",
+      "rank": 4
+    },
+    {
+      "query": "duchess",
+      "target": "duke",
+      "rank": 4
+    },
+    {
+      "query": "ebb",
+      "target": "flow",
+      "rank": 4
+    },
+    {
+      "query": "eight",
+      "target": "seven",
+      "rank": 4
+    },
+    {
+      "query": "employee",
+      "target": "customer",
+      "rank": 4
+    },
+    {
+      "query": "escape",
+      "target": "capture",
+      "rank": 4
+    },
+    {
+      "query": "everywhere",
+      "target": "nowhere",
+      "rank": 4
+    },
+    {
+      "query": "extinction",
+      "target": "evolution",
+      "rank": 4
+    },
+    {
+      "query": "extreme",
+      "target": "moderate",
+      "rank": 4
+    },
+    {
+      "query": "granddaughter",
+      "target": "grandmother",
+      "rank": 4
+    },
+    {
+      "query": "grass",
+      "target": "weeds",
+      "rank": 4
+    },
+    {
+      "query": "identical",
+      "target": "distinct",
+      "rank": 4
+    },
+    {
+      "query": "into",
+      "target": "out",
+      "rank": 4
+    },
+    {
+      "query": "kerosene",
+      "target": "gasoline",
+      "rank": 4
+    },
+    {
+      "query": "ketchup",
+      "target": "mustard",
+      "rank": 4
+    },
+    {
+      "query": "lax",
+      "target": "strict",
+      "rank": 4
+    },
+    {
+      "query": "liquor",
+      "target": "drink",
+      "rank": 4
+    },
+    {
+      "query": "listen",
+      "target": "talk",
+      "rank": 4
+    },
+    {
+      "query": "little",
+      "target": "lot",
+      "rank": 4
+    },
+    {
+      "query": "load",
+      "target": "unload",
+      "rank": 4
+    },
+    {
+      "query": "longitudinal",
+      "target": "lateral",
+      "rank": 4
+    },
+    {
+      "query": "losing",
+      "target": "winning",
+      "rank": 4
+    },
+    {
+      "query": "lot",
+      "target": "little",
+      "rank": 4
+    },
+    {
+      "query": "lots",
+      "target": "few",
+      "rank": 4
+    },
+    {
+      "query": "luckily",
+      "target": "unfortunately",
+      "rank": 4
+    },
+    {
+      "query": "lumber",
+      "target": "wood",
+      "rank": 4
+    },
+    {
+      "query": "medial",
+      "target": "lateral",
+      "rank": 4
+    },
+    {
+      "query": "men",
+      "target": "boys",
+      "rank": 4
+    },
+    {
+      "query": "mild",
+      "target": "severe",
+      "rank": 4
+    },
+    {
+      "query": "monochrome",
+      "target": "color",
+      "rank": 4
+    },
+    {
+      "query": "month",
+      "target": "year",
+      "rank": 4
+    },
+    {
+      "query": "nation",
+      "target": "state",
+      "rank": 4
+    },
+    {
+      "query": "noon",
+      "target": "afternoon",
+      "rank": 4
+    },
+    {
+      "query": "northland",
+      "target": "southland",
+      "rank": 4
+    },
+    {
+      "query": "orange",
+      "target": "blue",
+      "rank": 4
+    },
+    {
+      "query": "pants",
+      "target": "shirt",
+      "rank": 4
+    },
+    {
+      "query": "paragraph",
+      "target": "verse",
+      "rank": 4
+    },
+    {
+      "query": "pet",
+      "target": "animal",
+      "rank": 4
+    },
+    {
+      "query": "platonic",
+      "target": "romantic",
+      "rank": 4
+    },
+    {
+      "query": "plenty",
+      "target": "little",
+      "rank": 4
+    },
+    {
+      "query": "polite",
+      "target": "rude",
+      "rank": 4
+    },
+    {
+      "query": "prevent",
+      "target": "allow",
+      "rank": 4
+    },
+    {
+      "query": "prosecutor",
+      "target": "attorney",
+      "rank": 4
+    },
+    {
+      "query": "put",
+      "target": "up",
+      "rank": 4
+    },
+    {
+      "query": "quit",
+      "target": "join",
+      "rank": 4
+    },
+    {
+      "query": "refuse",
+      "target": "agree",
+      "rank": 4
+    },
+    {
+      "query": "reply",
+      "target": "answer",
+      "rank": 4
+    },
+    {
+      "query": "respectful",
+      "target": "contemptuous",
+      "rank": 4
+    },
+    {
+      "query": "reverence",
+      "target": "disdain",
+      "rank": 4
+    },
+    {
+      "query": "rinse",
+      "target": "wash",
+      "rank": 4
+    },
+    {
+      "query": "river",
+      "target": "lake",
+      "rank": 4
+    },
+    {
+      "query": "sadness",
+      "target": "joy",
+      "rank": 4
+    },
+    {
+      "query": "salty",
+      "target": "sweet",
+      "rank": 4
+    },
+    {
+      "query": "sand",
+      "target": "water",
+      "rank": 4
+    },
+    {
+      "query": "savings",
+      "target": "debt",
+      "rank": 4
+    },
+    {
+      "query": "science",
+      "target": "geography",
+      "rank": 4
+    },
+    {
+      "query": "scorn",
+      "target": "admiration",
+      "rank": 4
+    },
+    {
+      "query": "sequel",
+      "target": "prequel",
+      "rank": 4
+    },
+    {
+      "query": "servant",
+      "target": "maid",
+      "rank": 4
+    },
+    {
+      "query": "seven",
+      "target": "eight",
+      "rank": 4
+    },
+    {
+      "query": "ship",
+      "target": "boat",
+      "rank": 4
+    },
+    {
+      "query": "shirt",
+      "target": "pants",
+      "rank": 4
+    },
+    {
+      "query": "shorten",
+      "target": "extend",
+      "rank": 4
+    },
+    {
+      "query": "side",
+      "target": "front",
+      "rank": 4
+    },
+    {
+      "query": "sometimes",
+      "target": "always",
+      "rank": 4
+    },
+    {
+      "query": "sperm",
+      "target": "egg",
+      "rank": 4
+    },
+    {
+      "query": "spring",
+      "target": "fall",
+      "rank": 4
+    },
+    {
+      "query": "strength",
+      "target": "weak",
+      "rank": 4
+    },
+    {
+      "query": "student",
+      "target": "graduate",
+      "rank": 4
+    },
+    {
+      "query": "subsidy",
+      "target": "tax",
+      "rank": 4
+    },
+    {
+      "query": "surplus",
+      "target": "deficit",
+      "rank": 4
+    },
+    {
+      "query": "taste",
+      "target": "smell",
+      "rank": 4
+    },
+    {
+      "query": "taxes",
+      "target": "pay",
+      "rank": 4
+    },
+    {
+      "query": "those",
+      "target": "these",
+      "rank": 4
+    },
+    {
+      "query": "touch",
+      "target": "feel",
+      "rank": 4
+    },
+    {
+      "query": "triangle",
+      "target": "circle",
+      "rank": 4
+    },
+    {
+      "query": "unhappy",
+      "target": "delighted",
+      "rank": 4
+    },
+    {
+      "query": "unimpressed",
+      "target": "impressed",
+      "rank": 4
+    },
+    {
+      "query": "usable",
+      "target": "unusable",
+      "rank": 4
+    },
+    {
+      "query": "valley",
+      "target": "mountain",
+      "rank": 4
+    },
+    {
+      "query": "vegetable",
+      "target": "fruit",
+      "rank": 4
+    },
+    {
+      "query": "vowels",
+      "target": "consonant",
+      "rank": 4
+    },
+    {
+      "query": "wall",
+      "target": "window",
+      "rank": 4
+    },
+    {
+      "query": "wholesaler",
+      "target": "retailer",
+      "rank": 4
+    },
+    {
+      "query": "worsen",
+      "target": "improve",
+      "rank": 4
+    },
+    {
+      "query": "yellow",
+      "target": "blue",
+      "rank": 4
+    },
+    {
+      "query": "admiration",
+      "target": "scorn",
+      "rank": 5
+    },
+    {
+      "query": "adopt",
+      "target": "abandon",
+      "rank": 5
+    },
+    {
+      "query": "again",
+      "target": "once",
+      "rank": 5
+    },
+    {
+      "query": "age",
+      "target": "years",
+      "rank": 5
+    },
+    {
+      "query": "agreement",
+      "target": "dispute",
+      "rank": 5
+    },
+    {
+      "query": "allow",
+      "target": "prevent",
+      "rank": 5
+    },
+    {
+      "query": "an",
+      "target": "the",
+      "rank": 5
+    },
+    {
+      "query": "and",
+      "target": "but",
+      "rank": 5
+    },
+    {
+      "query": "anybody",
+      "target": "nobody",
+      "rank": 5
+    },
+    {
+      "query": "aroma",
+      "target": "smell",
+      "rank": 5
+    },
+    {
+      "query": "asymmetric",
+      "target": "symmetrical",
+      "rank": 5
+    },
+    {
+      "query": "attorney",
+      "target": "prosecutor",
+      "rank": 5
+    },
+    {
+      "query": "behind",
+      "target": "ahead",
+      "rank": 5
+    },
+    {
+      "query": "below",
+      "target": "rise",
+      "rank": 5
+    },
+    {
+      "query": "beneath",
+      "target": "above",
+      "rank": 5
+    },
+    {
+      "query": "birthday",
+      "target": "day",
+      "rank": 5
+    },
+    {
+      "query": "blue",
+      "target": "green",
+      "rank": 5
+    },
+    {
+      "query": "buy",
+      "target": "selling",
+      "rank": 5
+    },
+    {
+      "query": "cake",
+      "target": "bread",
+      "rank": 5
+    },
+    {
+      "query": "can",
+      "target": "cannot",
+      "rank": 5
+    },
+    {
+      "query": "cherish",
+      "target": "despise",
+      "rank": 5
+    },
+    {
+      "query": "chicken",
+      "target": "pork",
+      "rank": 5
+    },
+    {
+      "query": "closer",
+      "target": "far",
+      "rank": 5
+    },
+    {
+      "query": "coffee",
+      "target": "drink",
+      "rank": 5
+    },
+    {
+      "query": "color",
+      "target": "black",
+      "rank": 5
+    },
+    {
+      "query": "comply",
+      "target": "violate",
+      "rank": 5
+    },
+    {
+      "query": "congregation",
+      "target": "pastor",
+      "rank": 5
+    },
+    {
+      "query": "correctly",
+      "target": "wrongly",
+      "rank": 5
+    },
+    {
+      "query": "could",
+      "target": "not",
+      "rank": 5
+    },
+    {
+      "query": "cream",
+      "target": "cake",
+      "rank": 5
+    },
+    {
+      "query": "crocodile",
+      "target": "alligator",
+      "rank": 5
+    },
+    {
+      "query": "daybreak",
+      "target": "dusk",
+      "rank": 5
+    },
+    {
+      "query": "decline",
+      "target": "increase",
+      "rank": 5
+    },
+    {
+      "query": "deforestation",
+      "target": "reforestation",
+      "rank": 5
+    },
+    {
+      "query": "dining",
+      "target": "restaurant",
+      "rank": 5
+    },
+    {
+      "query": "doctor",
+      "target": "patient",
+      "rank": 5
+    },
+    {
+      "query": "donkey",
+      "target": "horse",
+      "rank": 5
+    },
+    {
+      "query": "drought",
+      "target": "flood",
+      "rank": 5
+    },
+    {
+      "query": "duck",
+      "target": "chicken",
+      "rank": 5
+    },
+    {
+      "query": "ear",
+      "target": "nose",
+      "rank": 5
+    },
+    {
+      "query": "enmity",
+      "target": "friendship",
+      "rank": 5
+    },
+    {
+      "query": "enter",
+      "target": "go",
+      "rank": 5
+    },
+    {
+      "query": "evening",
+      "target": "day",
+      "rank": 5
+    },
+    {
+      "query": "final",
+      "target": "first",
+      "rank": 5
+    },
+    {
+      "query": "flow",
+      "target": "water",
+      "rank": 5
+    },
+    {
+      "query": "following",
+      "target": "previous",
+      "rank": 5
+    },
+    {
+      "query": "forget",
+      "target": "know",
+      "rank": 5
+    },
+    {
+      "query": "fork",
+      "target": "spoon",
+      "rank": 5
+    },
+    {
+      "query": "future",
+      "target": "current",
+      "rank": 5
+    },
+    {
+      "query": "goat",
+      "target": "sheep",
+      "rank": 5
+    },
+    {
+      "query": "grief",
+      "target": "joy",
+      "rank": 5
+    },
+    {
+      "query": "healthy",
+      "target": "ill",
+      "rank": 5
+    },
+    {
+      "query": "heat",
+      "target": "cooling",
+      "rank": 5
+    },
+    {
+      "query": "honored",
+      "target": "embarrassed",
+      "rank": 5
+    },
+    {
+      "query": "inconceivable",
+      "target": "conceivable",
+      "rank": 5
+    },
+    {
+      "query": "increase",
+      "target": "reduce",
+      "rank": 5
+    },
+    {
+      "query": "ineptitude",
+      "target": "competence",
+      "rank": 5
+    },
+    {
+      "query": "intelligent",
+      "target": "stupid",
+      "rank": 5
+    },
+    {
+      "query": "invaluable",
+      "target": "useless",
+      "rank": 5
+    },
+    {
+      "query": "jelly",
+      "target": "peanut",
+      "rank": 5
+    },
+    {
+      "query": "justified",
+      "target": "unjustified",
+      "rank": 5
+    },
+    {
+      "query": "large",
+      "target": "tiny",
+      "rank": 5
+    },
+    {
+      "query": "leave",
+      "target": "come",
+      "rank": 5
+    },
+    {
+      "query": "length",
+      "target": "short",
+      "rank": 5
+    },
+    {
+      "query": "loosely",
+      "target": "tightly",
+      "rank": 5
+    },
+    {
+      "query": "losses",
+      "target": "profit",
+      "rank": 5
+    },
+    {
+      "query": "mandatory",
+      "target": "voluntary",
+      "rank": 5
+    },
+    {
+      "query": "manners",
+      "target": "rude",
+      "rank": 5
+    },
+    {
+      "query": "march",
+      "target": "february",
+      "rank": 5
+    },
+    {
+      "query": "mars",
+      "target": "earth",
+      "rank": 5
+    },
+    {
+      "query": "moderate",
+      "target": "extreme",
+      "rank": 5
+    },
+    {
+      "query": "mountain",
+      "target": "valley",
+      "rank": 5
+    },
+    {
+      "query": "mouth",
+      "target": "nose",
+      "rank": 5
+    },
+    {
+      "query": "mum",
+      "target": "dad",
+      "rank": 5
+    },
+    {
+      "query": "narrow",
+      "target": "deep",
+      "rank": 5
+    },
+    {
+      "query": "niece",
+      "target": "aunt",
+      "rank": 5
+    },
+    {
+      "query": "only",
+      "target": "all",
+      "rank": 5
+    },
+    {
+      "query": "overweight",
+      "target": "underweight",
+      "rank": 5
+    },
+    {
+      "query": "permitted",
+      "target": "allow",
+      "rank": 5
+    },
+    {
+      "query": "plummet",
+      "target": "skyrocket",
+      "rank": 5
+    },
+    {
+      "query": "pop",
+      "target": "rap",
+      "rank": 5
+    },
+    {
+      "query": "poultry",
+      "target": "dairy",
+      "rank": 5
+    },
+    {
+      "query": "prose",
+      "target": "verse",
+      "rank": 5
+    },
+    {
+      "query": "puppy",
+      "target": "kitten",
+      "rank": 5
+    },
+    {
+      "query": "rarely",
+      "target": "frequently",
+      "rank": 5
+    },
+    {
+      "query": "remove",
+      "target": "add",
+      "rank": 5
+    },
+    {
+      "query": "resume",
+      "target": "suspend",
+      "rank": 5
+    },
+    {
+      "query": "room",
+      "target": "bedroom",
+      "rank": 5
+    },
+    {
+      "query": "round",
+      "target": "straight",
+      "rank": 5
+    },
+    {
+      "query": "rush",
+      "target": "go",
+      "rank": 5
+    },
+    {
+      "query": "science",
+      "target": "studies",
+      "rank": 5
+    },
+    {
+      "query": "selling",
+      "target": "buy",
+      "rank": 5
+    },
+    {
+      "query": "severe",
+      "target": "mild",
+      "rank": 5
+    },
+    {
+      "query": "should",
+      "target": "must",
+      "rank": 5
+    },
+    {
+      "query": "shower",
+      "target": "bath",
+      "rank": 5
+    },
+    {
+      "query": "shrink",
+      "target": "expand",
+      "rank": 5
+    },
+    {
+      "query": "sick",
+      "target": "healthy",
+      "rank": 5
+    },
+    {
+      "query": "silk",
+      "target": "cotton",
+      "rank": 5
+    },
+    {
+      "query": "skin",
+      "target": "bone",
+      "rank": 5
+    },
+    {
+      "query": "sleep",
+      "target": "bed",
+      "rank": 5
+    },
+    {
+      "query": "sobriety",
+      "target": "intoxication",
+      "rank": 5
+    },
+    {
+      "query": "sofa",
+      "target": "bed",
+      "rank": 5
+    },
+    {
+      "query": "speak",
+      "target": "hear",
+      "rank": 5
+    },
+    {
+      "query": "split",
+      "target": "together",
+      "rank": 5
+    },
+    {
+      "query": "stay",
+      "target": "come",
+      "rank": 5
+    },
+    {
+      "query": "stepdaughter",
+      "target": "stepson",
+      "rank": 5
+    },
+    {
+      "query": "stop",
+      "target": "go",
+      "rank": 5
+    },
+    {
+      "query": "suit",
+      "target": "dress",
+      "rank": 5
+    },
+    {
+      "query": "tunnel",
+      "target": "bridge",
+      "rank": 5
+    },
+    {
+      "query": "unfinished",
+      "target": "complete",
+      "rank": 5
+    },
+    {
+      "query": "unlikely",
+      "target": "possible",
+      "rank": 5
+    },
+    {
+      "query": "unload",
+      "target": "load",
+      "rank": 5
+    },
+    {
+      "query": "unprotected",
+      "target": "safe",
+      "rank": 5
+    },
+    {
+      "query": "upstairs",
+      "target": "basement",
+      "rank": 5
+    },
+    {
+      "query": "voluntary",
+      "target": "compulsory",
+      "rank": 5
+    },
+    {
+      "query": "walk",
+      "target": "sit",
+      "rank": 5
+    },
+    {
+      "query": "wall",
+      "target": "floor",
+      "rank": 5
+    },
+    {
+      "query": "wash",
+      "target": "dry",
+      "rank": 5
+    },
+    {
+      "query": "week",
+      "target": "day",
+      "rank": 5
+    },
+    {
+      "query": "whisper",
+      "target": "cry",
+      "rank": 5
+    },
+    {
+      "query": "writing",
+      "target": "reading",
+      "rank": 5
+    },
+    {
+      "query": "yep",
+      "target": "nope",
+      "rank": 5
+    },
+    {
+      "query": "zipper",
+      "target": "buttons",
+      "rank": 5
+    },
+    {
+      "query": "accidentally",
+      "target": "intentionally",
+      "rank": 6
+    },
+    {
+      "query": "adults",
+      "target": "children",
+      "rank": 6
+    },
+    {
+      "query": "afforestation",
+      "target": "deforestation",
+      "rank": 6
+    },
+    {
+      "query": "age",
+      "target": "young",
+      "rank": 6
+    },
+    {
+      "query": "ambiguous",
+      "target": "precise",
+      "rank": 6
+    },
+    {
+      "query": "angry",
+      "target": "calm",
+      "rank": 6
+    },
+    {
+      "query": "antibiotic",
+      "target": "penicillin",
+      "rank": 6
+    },
+    {
+      "query": "artery",
+      "target": "vein",
+      "rank": 6
+    },
+    {
+      "query": "attic",
+      "target": "cellar",
+      "rank": 6
+    },
+    {
+      "query": "begin",
+      "target": "stop",
+      "rank": 6
+    },
+    {
+      "query": "believe",
+      "target": "doubt",
+      "rank": 6
+    },
+    {
+      "query": "bird",
+      "target": "animal",
+      "rank": 6
+    },
+    {
+      "query": "body",
+      "target": "hand",
+      "rank": 6
+    },
+    {
+      "query": "bone",
+      "target": "muscle",
+      "rank": 6
+    },
+    {
+      "query": "brother",
+      "target": "daughter",
+      "rank": 6
+    },
+    {
+      "query": "cannot",
+      "target": "can",
+      "rank": 6
+    },
+    {
+      "query": "canyon",
+      "target": "mountain",
+      "rank": 6
+    },
+    {
+      "query": "cause",
+      "target": "prevent",
+      "rank": 6
+    },
+    {
+      "query": "character",
+      "target": "personality",
+      "rank": 6
+    },
+    {
+      "query": "chew",
+      "target": "bite",
+      "rank": 6
+    },
+    {
+      "query": "chin",
+      "target": "neck",
+      "rank": 6
+    },
+    {
+      "query": "classical",
+      "target": "modern",
+      "rank": 6
+    },
+    {
+      "query": "color",
+      "target": "dark",
+      "rank": 6
+    },
+    {
+      "query": "compliment",
+      "target": "insult",
+      "rank": 6
+    },
+    {
+      "query": "condemnation",
+      "target": "praise",
+      "rank": 6
+    },
+    {
+      "query": "continent",
+      "target": "country",
+      "rank": 6
+    },
+    {
+      "query": "correct",
+      "target": "error",
+      "rank": 6
+    },
+    {
+      "query": "dawn",
+      "target": "nightfall",
+      "rank": 6
+    },
+    {
+      "query": "daytime",
+      "target": "evening",
+      "rank": 6
+    },
+    {
+      "query": "deep",
+      "target": "narrow",
+      "rank": 6
+    },
+    {
+      "query": "descend",
+      "target": "climb",
+      "rank": 6
+    },
+    {
+      "query": "die",
+      "target": "live",
+      "rank": 6
+    },
+    {
+      "query": "dig",
+      "target": "bury",
+      "rank": 6
+    },
+    {
+      "query": "displeased",
+      "target": "elated",
+      "rank": 6
+    },
+    {
+      "query": "distinct",
+      "target": "identical",
+      "rank": 6
+    },
+    {
+      "query": "dusk",
+      "target": "daybreak",
+      "rank": 6
+    },
+    {
+      "query": "earn",
+      "target": "pay",
+      "rank": 6
+    },
+    {
+      "query": "easy",
+      "target": "impossible",
+      "rank": 6
+    },
+    {
+      "query": "emphasize",
+      "target": "downplay",
+      "rank": 6
+    },
+    {
+      "query": "enough",
+      "target": "much",
+      "rank": 6
+    },
+    {
+      "query": "euphemism",
+      "target": "pejorative",
+      "rank": 6
+    },
+    {
+      "query": "exhumation",
+      "target": "burial",
+      "rank": 6
+    },
+    {
+      "query": "expensive",
+      "target": "affordable",
+      "rank": 6
+    },
+    {
+      "query": "feel",
+      "target": "think",
+      "rank": 6
+    },
+    {
+      "query": "freedom",
+      "target": "slavery",
+      "rank": 6
+    },
+    {
+      "query": "glad",
+      "target": "disappointed",
+      "rank": 6
+    },
+    {
+      "query": "grandson",
+      "target": "granddaughter",
+      "rank": 6
+    },
+    {
+      "query": "hall",
+      "target": "room",
+      "rank": 6
+    },
+    {
+      "query": "heal",
+      "target": "wound",
+      "rank": 6
+    },
+    {
+      "query": "health",
+      "target": "illness",
+      "rank": 6
+    },
+    {
+      "query": "hide",
+      "target": "find",
+      "rank": 6
+    },
+    {
+      "query": "hold",
+      "target": "put",
+      "rank": 6
+    },
+    {
+      "query": "honor",
+      "target": "shame",
+      "rank": 6
+    },
+    {
+      "query": "ignorance",
+      "target": "knowledge",
+      "rank": 6
+    },
+    {
+      "query": "ill",
+      "target": "healthy",
+      "rank": 6
+    },
+    {
+      "query": "improve",
+      "target": "worsen",
+      "rank": 6
+    },
+    {
+      "query": "learn",
+      "target": "teach",
+      "rank": 6
+    },
+    {
+      "query": "less",
+      "target": "much",
+      "rank": 6
+    },
+    {
+      "query": "liberty",
+      "target": "slavery",
+      "rank": 6
+    },
+    {
+      "query": "listen",
+      "target": "ignore",
+      "rank": 6
+    },
+    {
+      "query": "lost",
+      "target": "win",
+      "rank": 6
+    },
+    {
+      "query": "lower",
+      "target": "rise",
+      "rank": 6
+    },
+    {
+      "query": "male",
+      "target": "woman",
+      "rank": 6
+    },
+    {
+      "query": "malevolent",
+      "target": "benevolent",
+      "rank": 6
+    },
+    {
+      "query": "mate",
+      "target": "opponent",
+      "rank": 6
+    },
+    {
+      "query": "materialism",
+      "target": "idealism",
+      "rank": 6
+    },
+    {
+      "query": "meter",
+      "target": "mile",
+      "rank": 6
+    },
+    {
+      "query": "meticulous",
+      "target": "sloppy",
+      "rank": 6
+    },
+    {
+      "query": "modern",
+      "target": "ancient",
+      "rank": 6
+    },
+    {
+      "query": "monk",
+      "target": "nun",
+      "rank": 6
+    },
+    {
+      "query": "navy",
+      "target": "army",
+      "rank": 6
+    },
+    {
+      "query": "nephew",
+      "target": "uncle",
+      "rank": 6
+    },
+    {
+      "query": "newspaper",
+      "target": "magazine",
+      "rank": 6
+    },
+    {
+      "query": "nose",
+      "target": "ear",
+      "rank": 6
+    },
+    {
+      "query": "often",
+      "target": "occasionally",
+      "rank": 6
+    },
+    {
+      "query": "partial",
+      "target": "full",
+      "rank": 6
+    },
+    {
+      "query": "person",
+      "target": "people",
+      "rank": 6
+    },
+    {
+      "query": "poor",
+      "target": "good",
+      "rank": 6
+    },
+    {
+      "query": "prose",
+      "target": "poetry",
+      "rank": 6
+    },
+    {
+      "query": "raise",
+      "target": "pay",
+      "rank": 6
+    },
+    {
+      "query": "repair",
+      "target": "damage",
+      "rank": 6
+    },
+    {
+      "query": "restaurant",
+      "target": "dining",
+      "rank": 6
+    },
+    {
+      "query": "ruin",
+      "target": "preserve",
+      "rank": 6
+    },
+    {
+      "query": "seldom",
+      "target": "frequently",
+      "rank": 6
+    },
+    {
+      "query": "servant",
+      "target": "mistress",
+      "rank": 6
+    },
+    {
+      "query": "seven",
+      "target": "three",
+      "rank": 6
+    },
+    {
+      "query": "shade",
+      "target": "bright",
+      "rank": 6
+    },
+    {
+      "query": "shoddy",
+      "target": "quality",
+      "rank": 6
+    },
+    {
+      "query": "shrink",
+      "target": "growth",
+      "rank": 6
+    },
+    {
+      "query": "sibling",
+      "target": "cousin",
+      "rank": 6
+    },
+    {
+      "query": "side",
+      "target": "corner",
+      "rank": 6
+    },
+    {
+      "query": "skirt",
+      "target": "pants",
+      "rank": 6
+    },
+    {
+      "query": "slavery",
+      "target": "freedom",
+      "rank": 6
+    },
+    {
+      "query": "soup",
+      "target": "stew",
+      "rank": 6
+    },
+    {
+      "query": "stood",
+      "target": "fell",
+      "rank": 6
+    },
+    {
+      "query": "stop",
+      "target": "keep",
+      "rank": 6
+    },
+    {
+      "query": "stream",
+      "target": "river",
+      "rank": 6
+    },
+    {
+      "query": "suburbs",
+      "target": "city",
+      "rank": 6
+    },
+    {
+      "query": "summer",
+      "target": "fall",
+      "rank": 6
+    },
+    {
+      "query": "supporter",
+      "target": "opponent",
+      "rank": 6
+    },
+    {
+      "query": "talk",
+      "target": "listen",
+      "rank": 6
+    },
+    {
+      "query": "three",
+      "target": "seven",
+      "rank": 6
+    },
+    {
+      "query": "tight",
+      "target": "stretch",
+      "rank": 6
+    },
+    {
+      "query": "tightly",
+      "target": "loosely",
+      "rank": 6
+    },
+    {
+      "query": "too",
+      "target": "much",
+      "rank": 6
+    },
+    {
+      "query": "tough",
+      "target": "easy",
+      "rank": 6
+    },
+    {
+      "query": "turn",
+      "target": "go",
+      "rank": 6
+    },
+    {
+      "query": "uncle",
+      "target": "nephew",
+      "rank": 6
+    },
+    {
+      "query": "under",
+      "target": "over",
+      "rank": 6
+    },
+    {
+      "query": "useless",
+      "target": "necessary",
+      "rank": 6
+    },
+    {
+      "query": "verse",
+      "target": "prose",
+      "rank": 6
+    },
+    {
+      "query": "voiceless",
+      "target": "voiced",
+      "rank": 6
+    },
+    {
+      "query": "weeds",
+      "target": "grass",
+      "rank": 6
+    },
+    {
+      "query": "whisper",
+      "target": "scream",
+      "rank": 6
+    },
+    {
+      "query": "whole",
+      "target": "part",
+      "rank": 6
+    },
+    {
+      "query": "why",
+      "target": "reason",
+      "rank": 6
+    },
+    {
+      "query": "withhold",
+      "target": "disclose",
+      "rank": 6
+    },
+    {
+      "query": "wool",
+      "target": "silk",
+      "rank": 6
+    },
+    {
+      "query": "you",
+      "target": "me",
+      "rank": 6
+    },
+    {
+      "query": "achieve",
+      "target": "fail",
+      "rank": 7
+    },
+    {
+      "query": "across",
+      "target": "down",
+      "rank": 7
+    },
+    {
+      "query": "adult",
+      "target": "children",
+      "rank": 7
+    },
+    {
+      "query": "aggressive",
+      "target": "timid",
+      "rank": 7
+    },
+    {
+      "query": "backwards",
+      "target": "forward",
+      "rank": 7
+    },
+    {
+      "query": "ban",
+      "target": "permit",
+      "rank": 7
+    },
+    {
+      "query": "basement",
+      "target": "attic",
+      "rank": 7
+    },
+    {
+      "query": "blessing",
+      "target": "curse",
+      "rank": 7
+    },
+    {
+      "query": "bread",
+      "target": "butter",
+      "rank": 7
+    },
+    {
+      "query": "bye",
+      "target": "hello",
+      "rank": 7
+    },
+    {
+      "query": "cake",
+      "target": "pie",
+      "rank": 7
+    },
+    {
+      "query": "cent",
+      "target": "dollars",
+      "rank": 7
+    },
+    {
+      "query": "chicken",
+      "target": "beef",
+      "rank": 7
+    },
+    {
+      "query": "competence",
+      "target": "ineptitude",
+      "rank": 7
+    },
+    {
+      "query": "cotton",
+      "target": "silk",
+      "rank": 7
+    },
+    {
+      "query": "cowardice",
+      "target": "bravery",
+      "rank": 7
+    },
+    {
+      "query": "cramped",
+      "target": "room",
+      "rank": 7
+    },
+    {
+      "query": "daylight",
+      "target": "darkness",
+      "rank": 7
+    },
+    {
+      "query": "delighted",
+      "target": "unhappy",
+      "rank": 7
+    },
+    {
+      "query": "distinguish",
+      "target": "confuse",
+      "rank": 7
+    },
+    {
+      "query": "dozen",
+      "target": "few",
+      "rank": 7
+    },
+    {
+      "query": "drown",
+      "target": "swim",
+      "rank": 7
+    },
+    {
+      "query": "drum",
+      "target": "bass",
+      "rank": 7
+    },
+    {
+      "query": "dull",
+      "target": "exciting",
+      "rank": 7
+    },
+    {
+      "query": "ear",
+      "target": "eyes",
+      "rank": 7
+    },
+    {
+      "query": "earth",
+      "target": "moon",
+      "rank": 7
+    },
+    {
+      "query": "east",
+      "target": "western",
+      "rank": 7
+    },
+    {
+      "query": "eat",
+      "target": "drink",
+      "rank": 7
+    },
+    {
+      "query": "either",
+      "target": "or",
+      "rank": 7
+    },
+    {
+      "query": "electric",
+      "target": "steam",
+      "rank": 7
+    },
+    {
+      "query": "enough",
+      "target": "little",
+      "rank": 7
+    },
+    {
+      "query": "front",
+      "target": "side",
+      "rank": 7
+    },
+    {
+      "query": "fusion",
+      "target": "fission",
+      "rank": 7
+    },
+    {
+      "query": "gift",
+      "target": "card",
+      "rank": 7
+    },
+    {
+      "query": "give",
+      "target": "get",
+      "rank": 7
+    },
+    {
+      "query": "hair",
+      "target": "wig",
+      "rank": 7
+    },
+    {
+      "query": "hear",
+      "target": "talk",
+      "rank": 7
+    },
+    {
+      "query": "her",
+      "target": "him",
+      "rank": 7
+    },
+    {
+      "query": "home",
+      "target": "out",
+      "rank": 7
+    },
+    {
+      "query": "immigrant",
+      "target": "citizen",
+      "rank": 7
+    },
+    {
+      "query": "impoverished",
+      "target": "rich",
+      "rank": 7
+    },
+    {
+      "query": "impressed",
+      "target": "unimpressed",
+      "rank": 7
+    },
+    {
+      "query": "increase",
+      "target": "decline",
+      "rank": 7
+    },
+    {
+      "query": "inside",
+      "target": "out",
+      "rank": 7
+    },
+    {
+      "query": "insignificant",
+      "target": "important",
+      "rank": 7
+    },
+    {
+      "query": "insult",
+      "target": "respect",
+      "rank": 7
+    },
+    {
+      "query": "intentionally",
+      "target": "accidentally",
+      "rank": 7
+    },
+    {
+      "query": "jelly",
+      "target": "butter",
+      "rank": 7
+    },
+    {
+      "query": "lamb",
+      "target": "mutton",
+      "rank": 7
+    },
+    {
+      "query": "lateral",
+      "target": "longitudinal",
+      "rank": 7
+    },
+    {
+      "query": "let",
+      "target": "tell",
+      "rank": 7
+    },
+    {
+      "query": "likely",
+      "target": "probably",
+      "rank": 7
+    },
+    {
+      "query": "magazine",
+      "target": "book",
+      "rank": 7
+    },
+    {
+      "query": "metaphysical",
+      "target": "existential",
+      "rank": 7
+    },
+    {
+      "query": "money",
+      "target": "credit",
+      "rank": 7
+    },
+    {
+      "query": "much",
+      "target": "some",
+      "rank": 7
+    },
+    {
+      "query": "music",
+      "target": "tunes",
+      "rank": 7
+    },
+    {
+      "query": "nascent",
+      "target": "moribund",
+      "rank": 7
+    },
+    {
+      "query": "need",
+      "target": "want",
+      "rank": 7
+    },
+    {
+      "query": "nobody",
+      "target": "everybody",
+      "rank": 7
+    },
+    {
+      "query": "nylon",
+      "target": "wool",
+      "rank": 7
+    },
+    {
+      "query": "page",
+      "target": "book",
+      "rank": 7
+    },
+    {
+      "query": "pastor",
+      "target": "congregation",
+      "rank": 7
+    },
+    {
+      "query": "person",
+      "target": "woman",
+      "rank": 7
+    },
+    {
+      "query": "pertinent",
+      "target": "irrelevant",
+      "rank": 7
+    },
+    {
+      "query": "plastic",
+      "target": "glass",
+      "rank": 7
+    },
+    {
+      "query": "positive",
+      "target": "bad",
+      "rank": 7
+    },
+    {
+      "query": "precise",
+      "target": "ambiguous",
+      "rank": 7
+    },
+    {
+      "query": "prevent",
+      "target": "stop",
+      "rank": 7
+    },
+    {
+      "query": "raise",
+      "target": "cut",
+      "rank": 7
+    },
+    {
+      "query": "rap",
+      "target": "pop",
+      "rank": 7
+    },
+    {
+      "query": "recycle",
+      "target": "waste",
+      "rank": 7
+    },
+    {
+      "query": "rules",
+      "target": "legal",
+      "rank": 7
+    },
+    {
+      "query": "sanity",
+      "target": "madness",
+      "rank": 7
+    },
+    {
+      "query": "scream",
+      "target": "whisper",
+      "rank": 7
+    },
+    {
+      "query": "sea",
+      "target": "coast",
+      "rank": 7
+    },
+    {
+      "query": "silence",
+      "target": "voice",
+      "rank": 7
+    },
+    {
+      "query": "silk",
+      "target": "satin",
+      "rank": 7
+    },
+    {
+      "query": "skillful",
+      "target": "inept",
+      "rank": 7
+    },
+    {
+      "query": "slack",
+      "target": "tight",
+      "rank": 7
+    },
+    {
+      "query": "smell",
+      "target": "aroma",
+      "rank": 7
+    },
+    {
+      "query": "solitaire",
+      "target": "multiplayer",
+      "rank": 7
+    },
+    {
+      "query": "solitude",
+      "target": "intimacy",
+      "rank": 7
+    },
+    {
+      "query": "somebody",
+      "target": "nobody",
+      "rank": 7
+    },
+    {
+      "query": "stand",
+      "target": "turn",
+      "rank": 7
+    },
+    {
+      "query": "stereo",
+      "target": "mono",
+      "rank": 7
+    },
+    {
+      "query": "sturdy",
+      "target": "flimsy",
+      "rank": 7
+    },
+    {
+      "query": "unintentional",
+      "target": "intentional",
+      "rank": 7
+    },
+    {
+      "query": "up",
+      "target": "put",
+      "rank": 7
+    },
+    {
+      "query": "violate",
+      "target": "comply",
+      "rank": 7
+    },
+    {
+      "query": "waking",
+      "target": "sleep",
+      "rank": 7
+    },
+    {
+      "query": "wallet",
+      "target": "purse",
+      "rank": 7
+    },
+    {
+      "query": "western",
+      "target": "east",
+      "rank": 7
+    },
+    {
+      "query": "why",
+      "target": "how",
+      "rank": 7
+    },
+    {
+      "query": "writer",
+      "target": "poet",
+      "rank": 7
+    },
+    {
+      "query": "acquire",
+      "target": "abandon",
+      "rank": 8
+    },
+    {
+      "query": "acrimony",
+      "target": "friendship",
+      "rank": 8
+    },
+    {
+      "query": "animal",
+      "target": "bird",
+      "rank": 8
+    },
+    {
+      "query": "antidote",
+      "target": "poison",
+      "rank": 8
+    },
+    {
+      "query": "ascii",
+      "target": "binary",
+      "rank": 8
+    },
+    {
+      "query": "attack",
+      "target": "fire",
+      "rank": 8
+    },
+    {
+      "query": "bass",
+      "target": "drum",
+      "rank": 8
+    },
+    {
+      "query": "bc",
+      "target": "ad",
+      "rank": 8
+    },
+    {
+      "query": "blind",
+      "target": "eye",
+      "rank": 8
+    },
+    {
+      "query": "boys",
+      "target": "men",
+      "rank": 8
+    },
+    {
+      "query": "captain",
+      "target": "ship",
+      "rank": 8
+    },
+    {
+      "query": "chairman",
+      "target": "chairwoman",
+      "rank": 8
+    },
+    {
+      "query": "children",
+      "target": "people",
+      "rank": 8
+    },
+    {
+      "query": "clean",
+      "target": "filthy",
+      "rank": 8
+    },
+    {
+      "query": "cold",
+      "target": "heat",
+      "rank": 8
+    },
+    {
+      "query": "conceal",
+      "target": "uncover",
+      "rank": 8
+    },
+    {
+      "query": "continue",
+      "target": "stop",
+      "rank": 8
+    },
+    {
+      "query": "creationism",
+      "target": "evolution",
+      "rank": 8
+    },
+    {
+      "query": "damage",
+      "target": "repair",
+      "rank": 8
+    },
+    {
+      "query": "dismissal",
+      "target": "appointment",
+      "rank": 8
+    },
+    {
+      "query": "downturn",
+      "target": "upturn",
+      "rank": 8
+    },
+    {
+      "query": "dress",
+      "target": "pants",
+      "rank": 8
+    },
+    {
+      "query": "early",
+      "target": "later",
+      "rank": 8
+    },
+    {
+      "query": "expose",
+      "target": "hide",
+      "rank": 8
+    },
+    {
+      "query": "eye",
+      "target": "ear",
+      "rank": 8
+    },
+    {
+      "query": "face",
+      "target": "back",
+      "rank": 8
+    },
+    {
+      "query": "femininity",
+      "target": "manhood",
+      "rank": 8
+    },
+    {
+      "query": "few",
+      "target": "most",
+      "rank": 8
+    },
+    {
+      "query": "fine",
+      "target": "bad",
+      "rank": 8
+    },
+    {
+      "query": "frequently",
+      "target": "seldom",
+      "rank": 8
+    },
+    {
+      "query": "gaudy",
+      "target": "tasteful",
+      "rank": 8
+    },
+    {
+      "query": "glove",
+      "target": "shoe",
+      "rank": 8
+    },
+    {
+      "query": "grandfather",
+      "target": "grandmother",
+      "rank": 8
+    },
+    {
+      "query": "grandmother",
+      "target": "grandfather",
+      "rank": 8
+    },
+    {
+      "query": "honor",
+      "target": "humiliation",
+      "rank": 8
+    },
+    {
+      "query": "listening",
+      "target": "talk",
+      "rank": 8
+    },
+    {
+      "query": "live",
+      "target": "broadcast",
+      "rank": 8
+    },
+    {
+      "query": "man",
+      "target": "girl",
+      "rank": 8
+    },
+    {
+      "query": "meet",
+      "target": "go",
+      "rank": 8
+    },
+    {
+      "query": "metal",
+      "target": "glass",
+      "rank": 8
+    },
+    {
+      "query": "minute",
+      "target": "hour",
+      "rank": 8
+    },
+    {
+      "query": "mule",
+      "target": "horse",
+      "rank": 8
+    },
+    {
+      "query": "must",
+      "target": "might",
+      "rank": 8
+    },
+    {
+      "query": "nobody",
+      "target": "somebody",
+      "rank": 8
+    },
+    {
+      "query": "notoriety",
+      "target": "fame",
+      "rank": 8
+    },
+    {
+      "query": "nursery",
+      "target": "school",
+      "rank": 8
+    },
+    {
+      "query": "oasis",
+      "target": "desert",
+      "rank": 8
+    },
+    {
+      "query": "planting",
+      "target": "harvest",
+      "rank": 8
+    },
+    {
+      "query": "plastic",
+      "target": "metal",
+      "rank": 8
+    },
+    {
+      "query": "poorly",
+      "target": "well",
+      "rank": 8
+    },
+    {
+      "query": "prairie",
+      "target": "mountain",
+      "rank": 8
+    },
+    {
+      "query": "rigidity",
+      "target": "flexibility",
+      "rank": 8
+    },
+    {
+      "query": "shoe",
+      "target": "hat",
+      "rank": 8
+    },
+    {
+      "query": "sit",
+      "target": "walk",
+      "rank": 8
+    },
+    {
+      "query": "skirt",
+      "target": "dress",
+      "rank": 8
+    },
+    {
+      "query": "sleep",
+      "target": "waking",
+      "rank": 8
+    },
+    {
+      "query": "stallion",
+      "target": "mare",
+      "rank": 8
+    },
+    {
+      "query": "stepson",
+      "target": "stepdaughter",
+      "rank": 8
+    },
+    {
+      "query": "stop",
+      "target": "going",
+      "rank": 8
+    },
+    {
+      "query": "sun",
+      "target": "snow",
+      "rank": 8
+    },
+    {
+      "query": "sweet",
+      "target": "bitter",
+      "rank": 8
+    },
+    {
+      "query": "table",
+      "target": "floor",
+      "rank": 8
+    },
+    {
+      "query": "tell",
+      "target": "let",
+      "rank": 8
+    },
+    {
+      "query": "tin",
+      "target": "aluminum",
+      "rank": 8
+    },
+    {
+      "query": "two",
+      "target": "one",
+      "rank": 8
+    },
+    {
+      "query": "unrated",
+      "target": "rated",
+      "rank": 8
+    },
+    {
+      "query": "upriver",
+      "target": "downstream",
+      "rank": 8
+    },
+    {
+      "query": "vegetable",
+      "target": "corn",
+      "rank": 8
+    },
+    {
+      "query": "violation",
+      "target": "compliance",
+      "rank": 8
+    },
+    {
+      "query": "weather",
+      "target": "sunny",
+      "rank": 8
+    },
+    {
+      "query": "wheat",
+      "target": "rice",
+      "rank": 8
+    },
+    {
+      "query": "able",
+      "target": "cannot",
+      "rank": 9
+    },
+    {
+      "query": "against",
+      "target": "for",
+      "rank": 9
+    },
+    {
+      "query": "agree",
+      "target": "refuse",
+      "rank": 9
+    },
+    {
+      "query": "animal",
+      "target": "pet",
+      "rank": 9
+    },
+    {
+      "query": "bed",
+      "target": "sleep",
+      "rank": 9
+    },
+    {
+      "query": "bit",
+      "target": "much",
+      "rank": 9
+    },
+    {
+      "query": "bow",
+      "target": "arrow",
+      "rank": 9
+    },
+    {
+      "query": "bridge",
+      "target": "tunnel",
+      "rank": 9
+    },
+    {
+      "query": "buy",
+      "target": "sale",
+      "rank": 9
+    },
+    {
+      "query": "cardboard",
+      "target": "paper",
+      "rank": 9
+    },
+    {
+      "query": "cheap",
+      "target": "pricey",
+      "rank": 9
+    },
+    {
+      "query": "cloud",
+      "target": "blue",
+      "rank": 9
+    },
+    {
+      "query": "consume",
+      "target": "produce",
+      "rank": 9
+    },
+    {
+      "query": "cut",
+      "target": "raise",
+      "rank": 9
+    },
+    {
+      "query": "dancer",
+      "target": "singer",
+      "rank": 9
+    },
+    {
+      "query": "democracy",
+      "target": "communism",
+      "rank": 9
+    },
+    {
+      "query": "deny",
+      "target": "accept",
+      "rank": 9
+    },
+    {
+      "query": "depth",
+      "target": "height",
+      "rank": 9
+    },
+    {
+      "query": "desert",
+      "target": "ocean",
+      "rank": 9
+    },
+    {
+      "query": "devil",
+      "target": "god",
+      "rank": 9
+    },
+    {
+      "query": "drink",
+      "target": "eat",
+      "rank": 9
+    },
+    {
+      "query": "drunkenness",
+      "target": "sobriety",
+      "rank": 9
+    },
+    {
+      "query": "either",
+      "target": "both",
+      "rank": 9
+    },
+    {
+      "query": "emptying",
+      "target": "filling",
+      "rank": 9
+    },
+    {
+      "query": "everybody",
+      "target": "nobody",
+      "rank": 9
+    },
+    {
+      "query": "explain",
+      "target": "question",
+      "rank": 9
+    },
+    {
+      "query": "grandmother",
+      "target": "granddaughter",
+      "rank": 9
+    },
+    {
+      "query": "gray",
+      "target": "bright",
+      "rank": 9
+    },
+    {
+      "query": "hallway",
+      "target": "room",
+      "rank": 9
+    },
+    {
+      "query": "healed",
+      "target": "wound",
+      "rank": 9
+    },
+    {
+      "query": "heat",
+      "target": "cold",
+      "rank": 9
+    },
+    {
+      "query": "history",
+      "target": "time",
+      "rank": 9
+    },
+    {
+      "query": "hold",
+      "target": "go",
+      "rank": 9
+    },
+    {
+      "query": "honour",
+      "target": "disgrace",
+      "rank": 9
+    },
+    {
+      "query": "impoverished",
+      "target": "wealthy",
+      "rank": 9
+    },
+    {
+      "query": "input",
+      "target": "output",
+      "rank": 9
+    },
+    {
+      "query": "intentional",
+      "target": "unintentional",
+      "rank": 9
+    },
+    {
+      "query": "interesting",
+      "target": "boring",
+      "rank": 9
+    },
+    {
+      "query": "ladies",
+      "target": "men",
+      "rank": 9
+    },
+    {
+      "query": "lean",
+      "target": "fat",
+      "rank": 9
+    },
+    {
+      "query": "man",
+      "target": "person",
+      "rank": 9
+    },
+    {
+      "query": "merciful",
+      "target": "cruel",
+      "rank": 9
+    },
+    {
+      "query": "mist",
+      "target": "smoke",
+      "rank": 9
+    },
+    {
+      "query": "mommy",
+      "target": "dad",
+      "rank": 9
+    },
+    {
+      "query": "moose",
+      "target": "squirrel",
+      "rank": 9
+    },
+    {
+      "query": "needed",
+      "target": "necessary",
+      "rank": 9
+    },
+    {
+      "query": "nose",
+      "target": "eye",
+      "rank": 9
+    },
+    {
+      "query": "not",
+      "target": "could",
+      "rank": 9
+    },
+    {
+      "query": "one",
+      "target": "two",
+      "rank": 9
+    },
+    {
+      "query": "opposition",
+      "target": "support",
+      "rank": 9
+    },
+    {
+      "query": "owe",
+      "target": "pay",
+      "rank": 9
+    },
+    {
+      "query": "pay",
+      "target": "receive",
+      "rank": 9
+    },
+    {
+      "query": "personal",
+      "target": "public",
+      "rank": 9
+    },
+    {
+      "query": "possible",
+      "target": "unlikely",
+      "rank": 9
+    },
+    {
+      "query": "pricey",
+      "target": "cheap",
+      "rank": 9
+    },
+    {
+      "query": "probably",
+      "target": "likely",
+      "rank": 9
+    },
+    {
+      "query": "rude",
+      "target": "gentle",
+      "rank": 9
+    },
+    {
+      "query": "safe",
+      "target": "danger",
+      "rank": 9
+    },
+    {
+      "query": "sale",
+      "target": "buy",
+      "rank": 9
+    },
+    {
+      "query": "seldom",
+      "target": "always",
+      "rank": 9
+    },
+    {
+      "query": "sheep",
+      "target": "goat",
+      "rank": 9
+    },
+    {
+      "query": "sidekick",
+      "target": "mentor",
+      "rank": 9
+    },
+    {
+      "query": "slow",
+      "target": "quick",
+      "rank": 9
+    },
+    {
+      "query": "soda",
+      "target": "milk",
+      "rank": 9
+    },
+    {
+      "query": "sunlight",
+      "target": "shade",
+      "rank": 9
+    },
+    {
+      "query": "sunny",
+      "target": "weather",
+      "rank": 9
+    },
+    {
+      "query": "tiny",
+      "target": "huge",
+      "rank": 9
+    },
+    {
+      "query": "towel",
+      "target": "napkin",
+      "rank": 9
+    },
+    {
+      "query": "transcendental",
+      "target": "algebraic",
+      "rank": 9
+    },
+    {
+      "query": "useful",
+      "target": "unnecessary",
+      "rank": 9
+    },
+    {
+      "query": "useless",
+      "target": "valuable",
+      "rank": 9
+    },
+    {
+      "query": "vegetable",
+      "target": "meat",
+      "rank": 9
+    },
+    {
+      "query": "window",
+      "target": "wall",
+      "rank": 9
+    },
+    {
+      "query": "wonderful",
+      "target": "terrible",
+      "rank": 9
+    },
+    {
+      "query": "adept",
+      "target": "inept",
+      "rank": 10
+    },
+    {
+      "query": "affair",
+      "target": "marriage",
+      "rank": 10
+    },
+    {
+      "query": "age",
+      "target": "younger",
+      "rank": 10
+    },
+    {
+      "query": "air",
+      "target": "ground",
+      "rank": 10
+    },
+    {
+      "query": "angel",
+      "target": "devil",
+      "rank": 10
+    },
+    {
+      "query": "argue",
+      "target": "agree",
+      "rank": 10
+    },
+    {
+      "query": "armor",
+      "target": "helmet",
+      "rank": 10
+    },
+    {
+      "query": "attempt",
+      "target": "trying",
+      "rank": 10
+    },
+    {
+      "query": "behind",
+      "target": "front",
+      "rank": 10
+    },
+    {
+      "query": "build",
+      "target": "destroy",
+      "rank": 10
+    },
+    {
+      "query": "buy",
+      "target": "money",
+      "rank": 10
+    },
+    {
+      "query": "carbon",
+      "target": "oxygen",
+      "rank": 10
+    },
+    {
+      "query": "chicken",
+      "target": "steak",
+      "rank": 10
+    },
+    {
+      "query": "chin",
+      "target": "forehead",
+      "rank": 10
+    },
+    {
+      "query": "chop",
+      "target": "finely",
+      "rank": 10
+    },
+    {
+      "query": "circle",
+      "target": "line",
+      "rank": 10
+    },
+    {
+      "query": "clock",
+      "target": "watch",
+      "rank": 10
+    },
+    {
+      "query": "confuse",
+      "target": "distinguish",
+      "rank": 10
+    },
+    {
+      "query": "conservation",
+      "target": "pollution",
+      "rank": 10
+    },
+    {
+      "query": "consistent",
+      "target": "erratic",
+      "rank": 10
+    },
+    {
+      "query": "credit",
+      "target": "money",
+      "rank": 10
+    },
+    {
+      "query": "dark",
+      "target": "pale",
+      "rank": 10
+    },
+    {
+      "query": "darkness",
+      "target": "light",
+      "rank": 10
+    },
+    {
+      "query": "desk",
+      "target": "chair",
+      "rank": 10
+    },
+    {
+      "query": "dexter",
+      "target": "sinister",
+      "rank": 10
+    },
+    {
+      "query": "diffuse",
+      "target": "dense",
+      "rank": 10
+    },
+    {
+      "query": "disadvantage",
+      "target": "benefit",
+      "rank": 10
+    },
+    {
+      "query": "disclose",
+      "target": "withhold",
+      "rank": 10
+    },
+    {
+      "query": "distance",
+      "target": "long",
+      "rank": 10
+    },
+    {
+      "query": "dress",
+      "target": "trousers",
+      "rank": 10
+    },
+    {
+      "query": "enemy",
+      "target": "allied",
+      "rank": 10
+    },
+    {
+      "query": "every",
+      "target": "only",
+      "rank": 10
+    },
+    {
+      "query": "exact",
+      "target": "approximate",
+      "rank": 10
+    },
+    {
+      "query": "exit",
+      "target": "entry",
+      "rank": 10
+    },
+    {
+      "query": "eye",
+      "target": "mouth",
+      "rank": 10
+    },
+    {
+      "query": "factory",
+      "target": "company",
+      "rank": 10
+    },
+    {
+      "query": "farewell",
+      "target": "greeting",
+      "rank": 10
+    },
+    {
+      "query": "floor",
+      "target": "roof",
+      "rank": 10
+    },
+    {
+      "query": "gain",
+      "target": "lose",
+      "rank": 10
+    },
+    {
+      "query": "girl",
+      "target": "man",
+      "rank": 10
+    },
+    {
+      "query": "glut",
+      "target": "shortage",
+      "rank": 10
+    },
+    {
+      "query": "grave",
+      "target": "serious",
+      "rank": 10
+    },
+    {
+      "query": "hat",
+      "target": "shoe",
+      "rank": 10
+    },
+    {
+      "query": "intoxication",
+      "target": "sobriety",
+      "rank": 10
+    },
+    {
+      "query": "life",
+      "target": "death",
+      "rank": 10
+    },
+    {
+      "query": "loss",
+      "target": "victory",
+      "rank": 10
+    },
+    {
+      "query": "milk",
+      "target": "soda",
+      "rank": 10
+    },
+    {
+      "query": "most",
+      "target": "some",
+      "rank": 10
+    },
+    {
+      "query": "mouth",
+      "target": "eyes",
+      "rank": 10
+    },
+    {
+      "query": "move",
+      "target": "put",
+      "rank": 10
+    },
+    {
+      "query": "never",
+      "target": "always",
+      "rank": 10
+    },
+    {
+      "query": "nobody",
+      "target": "anybody",
+      "rank": 10
+    },
+    {
+      "query": "nope",
+      "target": "yep",
+      "rank": 10
+    },
+    {
+      "query": "obey",
+      "target": "violate",
+      "rank": 10
+    },
+    {
+      "query": "out",
+      "target": "into",
+      "rank": 10
+    },
+    {
+      "query": "owner",
+      "target": "buyer",
+      "rank": 10
+    },
+    {
+      "query": "pain",
+      "target": "feeling",
+      "rank": 10
+    },
+    {
+      "query": "part",
+      "target": "entire",
+      "rank": 10
+    },
+    {
+      "query": "peace",
+      "target": "violence",
+      "rank": 10
+    },
+    {
+      "query": "pen",
+      "target": "paper",
+      "rank": 10
+    },
+    {
+      "query": "pencil",
+      "target": "paint",
+      "rank": 10
+    },
+    {
+      "query": "plastic",
+      "target": "paper",
+      "rank": 10
+    },
+    {
+      "query": "privatization",
+      "target": "nationalization",
+      "rank": 10
+    },
+    {
+      "query": "receipt",
+      "target": "payment",
+      "rank": 10
+    },
+    {
+      "query": "servant",
+      "target": "man",
+      "rank": 10
+    },
+    {
+      "query": "single",
+      "target": "each",
+      "rank": 10
+    },
+    {
+      "query": "sky",
+      "target": "blue",
+      "rank": 10
+    },
+    {
+      "query": "smell",
+      "target": "taste",
+      "rank": 10
+    },
+    {
+      "query": "some",
+      "target": "much",
+      "rank": 10
+    },
+    {
+      "query": "state",
+      "target": "nation",
+      "rank": 10
+    },
+    {
+      "query": "steam",
+      "target": "electric",
+      "rank": 10
+    },
+    {
+      "query": "stop",
+      "target": "let",
+      "rank": 10
+    },
+    {
+      "query": "sugar",
+      "target": "salt",
+      "rank": 10
+    },
+    {
+      "query": "tax",
+      "target": "money",
+      "rank": 10
+    },
+    {
+      "query": "thaw",
+      "target": "freeze",
+      "rank": 10
+    },
+    {
+      "query": "toe",
+      "target": "finger",
+      "rank": 10
+    },
+    {
+      "query": "tunes",
+      "target": "music",
+      "rank": 10
+    },
+    {
+      "query": "undefeated",
+      "target": "winless",
+      "rank": 10
+    },
+    {
+      "query": "unnecessary",
+      "target": "need",
+      "rank": 10
+    },
+    {
+      "query": "unsolicited",
+      "target": "solicited",
+      "rank": 10
+    },
+    {
+      "query": "violence",
+      "target": "peace",
+      "rank": 10
+    },
+    {
+      "query": "wash",
+      "target": "rinse",
+      "rank": 10
+    },
+    {
+      "query": "water",
+      "target": "flow",
+      "rank": 10
+    },
+    {
+      "query": "younger",
+      "target": "elder",
+      "rank": 10
+    }
+  ],
+  "elapsed_s": 1339.243135690689
+}

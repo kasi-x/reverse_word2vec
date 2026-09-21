@@ -13,6 +13,7 @@ in a word embedding space" but using ICA features for interpretability.
 
 5-fold CV evaluation included.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -119,7 +120,7 @@ class AntonymClassifier:
         antonym_pairs: list[tuple[str, str]],
         neg_ratio: float = 3.0,
         rng: np.random.RandomState | None = None,
-    ) -> "AntonymClassifier":
+    ) -> AntonymClassifier:
         """Train the classifier on antonym pairs."""
         X, y = self._build_dataset(antonym_pairs, neg_ratio, rng)
         X_scaled = self.scaler.fit_transform(X)
@@ -160,10 +161,10 @@ class AntonymClassifier:
         excl = {word} | (exclude or set())
 
         # Batch compute features for all vocabulary words
+        n_features = 2 * self.space.n_components
         n = len(self.space.words)
-        X = np.zeros((n, 200), dtype=np.float32)
-        for i, w in enumerate(self.space.words):
-            s = self.space.S[i]
+        X = np.zeros((n, n_features), dtype=np.float32)
+        for i, s in enumerate(self.space.S):
             X[i] = self._features(s_w, s)
 
         X_scaled = self.scaler.transform(X)
@@ -193,7 +194,8 @@ class AntonymClassifier:
         For each fold: train on 4/5 pairs, evaluate retrieval on 1/5 pairs.
         """
         valid_pairs = [
-            (w1, w2) for w1, w2 in antonym_pairs
+            (w1, w2)
+            for w1, w2 in antonym_pairs
             if self.space.score(w1) is not None and self.space.score(w2) is not None
         ]
 
@@ -233,11 +235,13 @@ class AntonymClassifier:
 
             metrics = {f"hits_at_{k}": hits[k] / evaluated for k in [1, 5, 10]}
             fold_results.append(metrics)
-            print(f"  Fold {fold_idx+1}/{n_folds}: "
-                  f"Hits@1={metrics['hits_at_1']:.3f}  "
-                  f"Hits@5={metrics['hits_at_5']:.3f}  "
-                  f"Hits@10={metrics['hits_at_10']:.3f}  "
-                  f"({evaluated} pairs)")
+            print(
+                f"  Fold {fold_idx + 1}/{n_folds}: "
+                f"Hits@1={metrics['hits_at_1']:.3f}  "
+                f"Hits@5={metrics['hits_at_5']:.3f}  "
+                f"Hits@10={metrics['hits_at_10']:.3f}  "
+                f"({evaluated} pairs)"
+            )
 
         # Aggregate
         agg = {}
@@ -257,6 +261,6 @@ class AntonymClassifier:
             return []
         # Coefficients for the positive class
         coefs = self.clf.coef_[0]  # (200,)
-        abs_diff_coefs = coefs[:self.space.n_components]  # first 100 = |s1-s2|
+        abs_diff_coefs = coefs[: self.space.n_components]  # first 100 = |s1-s2|
         ranked = np.argsort(np.abs(abs_diff_coefs))[::-1][:n]
         return [(int(k), float(abs_diff_coefs[k])) for k in ranked]

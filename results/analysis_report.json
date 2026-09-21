@@ -1,0 +1,1579 @@
+{
+  "axis_interpretability": {
+    "total_axes": 100,
+    "labeled_axes": 89,
+    "well_supported_axes": 89,
+    "interpretability_rate": 0.89,
+    "kurtosis_stats": {
+      "mean": 4.271895973848268,
+      "median": 3.482642829044118,
+      "max": 34.476095618794545,
+      "min": -0.24207148878428253
+    },
+    "labeled_axis_details": [
+      {
+        "idx": 0,
+        "label": "foot/head",
+        "kurtosis": 1.7655390423781991,
+        "n_pairs": 7
+      },
+      {
+        "idx": 1,
+        "label": "defense/prosecution",
+        "kurtosis": 4.26757429386778,
+        "n_pairs": 12
+      },
+      {
+        "idx": 2,
+        "label": "dependent/independent",
+        "kurtosis": 3.5113864340704524,
+        "n_pairs": 4
+      },
+      {
+        "idx": 3,
+        "label": "obligatory/optional",
+        "kurtosis": 5.524448874611256,
+        "n_pairs": 4
+      },
+      {
+        "idx": 4,
+        "label": "clergyman/layman",
+        "kurtosis": 3.8217530093098935,
+        "n_pairs": 3
+      },
+      {
+        "idx": 5,
+        "label": "informed/uninformed",
+        "kurtosis": -0.24207148878428253,
+        "n_pairs": 11
+      },
+      {
+        "idx": 6,
+        "label": "temperature",
+        "kurtosis": 3.4926762232876944,
+        "n_pairs": 10
+      },
+      {
+        "idx": 7,
+        "label": "size",
+        "kurtosis": 3.467683223423667,
+        "n_pairs": 38
+      },
+      {
+        "idx": 8,
+        "label": "activity",
+        "kurtosis": 1.4618245120105025,
+        "n_pairs": 11
+      },
+      {
+        "idx": 9,
+        "label": "direction",
+        "kurtosis": 10.271176055473568,
+        "n_pairs": 18
+      },
+      {
+        "idx": 11,
+        "label": "multiculturalism/nationalism",
+        "kurtosis": 2.9033777235615883,
+        "n_pairs": 4
+      },
+      {
+        "idx": 12,
+        "label": "light",
+        "kurtosis": 1.450520670809368,
+        "n_pairs": 6
+      },
+      {
+        "idx": 13,
+        "label": "forward/reverse",
+        "kurtosis": 3.6860602839236662,
+        "n_pairs": 5
+      },
+      {
+        "idx": 14,
+        "label": "orthodox/unorthodox",
+        "kurtosis": 4.321745767684928,
+        "n_pairs": 6
+      },
+      {
+        "idx": 15,
+        "label": "extinguish/ignite",
+        "kurtosis": 2.04112451114234,
+        "n_pairs": 4
+      },
+      {
+        "idx": 16,
+        "label": "equatorial/polar",
+        "kurtosis": 2.9304885247020973,
+        "n_pairs": 3
+      },
+      {
+        "idx": 17,
+        "label": "bear/bull",
+        "kurtosis": 4.655794430251438,
+        "n_pairs": 6
+      },
+      {
+        "idx": 18,
+        "label": "unwind/wind",
+        "kurtosis": 4.509993715516031,
+        "n_pairs": 8
+      },
+      {
+        "idx": 19,
+        "label": "endemic/epidemic",
+        "kurtosis": 3.975759926834769,
+        "n_pairs": 10
+      },
+      {
+        "idx": 20,
+        "label": "sentiment",
+        "kurtosis": 4.138796475458461,
+        "n_pairs": 45
+      },
+      {
+        "idx": 21,
+        "label": "quantity",
+        "kurtosis": 2.624672137965656,
+        "n_pairs": 36
+      },
+      {
+        "idx": 22,
+        "label": "amphibious/aquatic",
+        "kurtosis": 5.800894782711843,
+        "n_pairs": 11
+      },
+      {
+        "idx": 23,
+        "label": "direction",
+        "kurtosis": 2.397301964561059,
+        "n_pairs": 6
+      },
+      {
+        "idx": 25,
+        "label": "direction",
+        "kurtosis": 6.605418546361941,
+        "n_pairs": 42
+      },
+      {
+        "idx": 26,
+        "label": "tied/untied",
+        "kurtosis": 1.9598075278977625,
+        "n_pairs": 4
+      },
+      {
+        "idx": 27,
+        "label": "hit/miss",
+        "kurtosis": 7.123984675741003,
+        "n_pairs": 7
+      },
+      {
+        "idx": 28,
+        "label": "speed",
+        "kurtosis": 4.238797860425597,
+        "n_pairs": 30
+      },
+      {
+        "idx": 29,
+        "label": "shrink/stretch",
+        "kurtosis": 4.744068647591854,
+        "n_pairs": 4
+      },
+      {
+        "idx": 30,
+        "label": "direction",
+        "kurtosis": 5.592871561555672,
+        "n_pairs": 5
+      },
+      {
+        "idx": 31,
+        "label": "appropriate/inappropriate",
+        "kurtosis": 1.132396627333046,
+        "n_pairs": 6
+      },
+      {
+        "idx": 34,
+        "label": "strength",
+        "kurtosis": 8.156959333651653,
+        "n_pairs": 27
+      },
+      {
+        "idx": 35,
+        "label": "size",
+        "kurtosis": 4.807865456576534,
+        "n_pairs": 8
+      },
+      {
+        "idx": 36,
+        "label": "disorderly/orderly",
+        "kurtosis": 1.3662850054936948,
+        "n_pairs": 22
+      },
+      {
+        "idx": 38,
+        "label": "cooperative/uncooperative",
+        "kurtosis": 0.9249255775858196,
+        "n_pairs": 6
+      },
+      {
+        "idx": 39,
+        "label": "morality",
+        "kurtosis": 2.0217568022526287,
+        "n_pairs": 51
+      },
+      {
+        "idx": 40,
+        "label": "leaky/tight",
+        "kurtosis": 0.939453444061527,
+        "n_pairs": 5
+      },
+      {
+        "idx": 42,
+        "label": "gender",
+        "kurtosis": 2.9740499051196965,
+        "n_pairs": 13
+      },
+      {
+        "idx": 43,
+        "label": "molar/molecular",
+        "kurtosis": 6.70358696505968,
+        "n_pairs": 4
+      },
+      {
+        "idx": 44,
+        "label": "enforce/exempt",
+        "kurtosis": 3.38868291355263,
+        "n_pairs": 8
+      },
+      {
+        "idx": 45,
+        "label": "immobile/mobile",
+        "kurtosis": 5.3626788155593506,
+        "n_pairs": 8
+      },
+      {
+        "idx": 46,
+        "label": "maxi/midi",
+        "kurtosis": 2.9266214664981662,
+        "n_pairs": 4
+      },
+      {
+        "idx": 47,
+        "label": "general/specific",
+        "kurtosis": 2.8684158099189627,
+        "n_pairs": 8
+      },
+      {
+        "idx": 48,
+        "label": "apologetic/unapologetic",
+        "kurtosis": 0.9770552709582456,
+        "n_pairs": 9
+      },
+      {
+        "idx": 49,
+        "label": "hollow/solid",
+        "kurtosis": 1.003938655748204,
+        "n_pairs": 7
+      },
+      {
+        "idx": 50,
+        "label": "temperature",
+        "kurtosis": 6.520426484621032,
+        "n_pairs": 13
+      },
+      {
+        "idx": 51,
+        "label": "compact/loose",
+        "kurtosis": 3.4726094348005416,
+        "n_pairs": 4
+      },
+      {
+        "idx": 52,
+        "label": "curved/straight",
+        "kurtosis": 2.2518200975518408,
+        "n_pairs": 8
+      },
+      {
+        "idx": 53,
+        "label": "irresponsible/responsible",
+        "kurtosis": 3.682284516774158,
+        "n_pairs": 13
+      },
+      {
+        "idx": 54,
+        "label": "activity",
+        "kurtosis": 1.675005640475625,
+        "n_pairs": 9
+      },
+      {
+        "idx": 55,
+        "label": "sonic/supersonic",
+        "kurtosis": 3.573005716527465,
+        "n_pairs": 7
+      },
+      {
+        "idx": 56,
+        "label": "temperature",
+        "kurtosis": 12.242152397502474,
+        "n_pairs": 17
+      },
+      {
+        "idx": 57,
+        "label": "debilitating/invigorating",
+        "kurtosis": 4.876735886133577,
+        "n_pairs": 16
+      },
+      {
+        "idx": 58,
+        "label": "documented/undocumented",
+        "kurtosis": 3.3709444043157344,
+        "n_pairs": 16
+      },
+      {
+        "idx": 59,
+        "label": "sentiment",
+        "kurtosis": 1.2707110618183268,
+        "n_pairs": 12
+      },
+      {
+        "idx": 60,
+        "label": "sealed/unsealed",
+        "kurtosis": 2.7925641906345646,
+        "n_pairs": 6
+      },
+      {
+        "idx": 62,
+        "label": "size",
+        "kurtosis": 4.200492670006831,
+        "n_pairs": 13
+      },
+      {
+        "idx": 63,
+        "label": "activity",
+        "kurtosis": 2.856674446107246,
+        "n_pairs": 13
+      },
+      {
+        "idx": 64,
+        "label": "competition/cooperation",
+        "kurtosis": 3.1237939831662045,
+        "n_pairs": 17
+      },
+      {
+        "idx": 65,
+        "label": "age",
+        "kurtosis": 0.8216841082495541,
+        "n_pairs": 13
+      },
+      {
+        "idx": 66,
+        "label": "size",
+        "kurtosis": 6.563996205576261,
+        "n_pairs": 3
+      },
+      {
+        "idx": 68,
+        "label": "formality",
+        "kurtosis": 3.3441645064489194,
+        "n_pairs": 16
+      },
+      {
+        "idx": 70,
+        "label": "treated/untreated",
+        "kurtosis": 4.560973696884952,
+        "n_pairs": 20
+      },
+      {
+        "idx": 71,
+        "label": "hardball/softball",
+        "kurtosis": 7.163134738218702,
+        "n_pairs": 7
+      },
+      {
+        "idx": 72,
+        "label": "multiply/singly",
+        "kurtosis": 3.1716787962403457,
+        "n_pairs": 19
+      },
+      {
+        "idx": 73,
+        "label": "quantity",
+        "kurtosis": 2.2764107251046655,
+        "n_pairs": 5
+      },
+      {
+        "idx": 74,
+        "label": "morality",
+        "kurtosis": 1.096997488234977,
+        "n_pairs": 19
+      },
+      {
+        "idx": 75,
+        "label": "adjective/substantive",
+        "kurtosis": 2.9597395366156,
+        "n_pairs": 5
+      },
+      {
+        "idx": 76,
+        "label": "size",
+        "kurtosis": 1.9337630954513791,
+        "n_pairs": 11
+      },
+      {
+        "idx": 77,
+        "label": "impatient/patient",
+        "kurtosis": 5.895424224688323,
+        "n_pairs": 9
+      },
+      {
+        "idx": 78,
+        "label": "gather/spread",
+        "kurtosis": 1.645828827896243,
+        "n_pairs": 14
+      },
+      {
+        "idx": 79,
+        "label": "impassable/passable",
+        "kurtosis": 1.531045337162805,
+        "n_pairs": 14
+      },
+      {
+        "idx": 80,
+        "label": "close/open",
+        "kurtosis": 10.856066875813301,
+        "n_pairs": 7
+      },
+      {
+        "idx": 81,
+        "label": "figurative/literal",
+        "kurtosis": 1.847917110471199,
+        "n_pairs": 8
+      },
+      {
+        "idx": 82,
+        "label": "age/rejuvenate",
+        "kurtosis": 8.375900654246433,
+        "n_pairs": 39
+      },
+      {
+        "idx": 83,
+        "label": "complexity",
+        "kurtosis": 2.6805372674458736,
+        "n_pairs": 24
+      },
+      {
+        "idx": 84,
+        "label": "fair/foul",
+        "kurtosis": 2.5477218176762397,
+        "n_pairs": 11
+      },
+      {
+        "idx": 85,
+        "label": "compromising/uncompromising",
+        "kurtosis": 7.605311086455387,
+        "n_pairs": 12
+      },
+      {
+        "idx": 86,
+        "label": "gender",
+        "kurtosis": 4.084376214744277,
+        "n_pairs": 8
+      },
+      {
+        "idx": 87,
+        "label": "complexity",
+        "kurtosis": 2.5868776381568575,
+        "n_pairs": 42
+      },
+      {
+        "idx": 88,
+        "label": "separation/union",
+        "kurtosis": 3.28706899023532,
+        "n_pairs": 4
+      },
+      {
+        "idx": 89,
+        "label": "aquatic/terrestrial",
+        "kurtosis": 5.695044026636225,
+        "n_pairs": 6
+      },
+      {
+        "idx": 90,
+        "label": "acceleration/deceleration",
+        "kurtosis": 2.140372344743768,
+        "n_pairs": 5
+      },
+      {
+        "idx": 91,
+        "label": "openness",
+        "kurtosis": 2.4266159543345207,
+        "n_pairs": 21
+      },
+      {
+        "idx": 92,
+        "label": "compound/simple",
+        "kurtosis": 2.774159947545188,
+        "n_pairs": 7
+      },
+      {
+        "idx": 94,
+        "label": "tapped/untapped",
+        "kurtosis": 0.7719684875276478,
+        "n_pairs": 7
+      },
+      {
+        "idx": 95,
+        "label": "democratic/undemocratic",
+        "kurtosis": 4.521307541523051,
+        "n_pairs": 3
+      },
+      {
+        "idx": 96,
+        "label": "temperature",
+        "kurtosis": 2.95893191742843,
+        "n_pairs": 10
+      },
+      {
+        "idx": 97,
+        "label": "new/worn",
+        "kurtosis": 4.941429644027212,
+        "n_pairs": 9
+      },
+      {
+        "idx": 98,
+        "label": "direct/inverse",
+        "kurtosis": 5.217866522586764,
+        "n_pairs": 19
+      }
+    ]
+  },
+  "per_axis_success": {
+    "foot/head": {
+      "axis_idx": 0,
+      "tested": 7,
+      "hits": 2,
+      "success_rate": 0.2857142857142857
+    },
+    "defense/prosecution": {
+      "axis_idx": 1,
+      "tested": 12,
+      "hits": 4,
+      "success_rate": 0.3333333333333333
+    },
+    "dependent/independent": {
+      "axis_idx": 2,
+      "tested": 4,
+      "hits": 3,
+      "success_rate": 0.75
+    },
+    "obligatory/optional": {
+      "axis_idx": 3,
+      "tested": 4,
+      "hits": 1,
+      "success_rate": 0.25
+    },
+    "clergyman/layman": {
+      "axis_idx": 4,
+      "tested": 3,
+      "hits": 2,
+      "success_rate": 0.6666666666666666
+    },
+    "informed/uninformed": {
+      "axis_idx": 5,
+      "tested": 11,
+      "hits": 1,
+      "success_rate": 0.09090909090909091
+    },
+    "temperature": {
+      "axis_idx": 96,
+      "tested": 10,
+      "hits": 5,
+      "success_rate": 0.5
+    },
+    "size": {
+      "axis_idx": 76,
+      "tested": 11,
+      "hits": 7,
+      "success_rate": 0.6363636363636364
+    },
+    "activity": {
+      "axis_idx": 63,
+      "tested": 13,
+      "hits": 2,
+      "success_rate": 0.15384615384615385
+    },
+    "direction": {
+      "axis_idx": 30,
+      "tested": 5,
+      "hits": 2,
+      "success_rate": 0.4
+    },
+    "multiculturalism/nationalism": {
+      "axis_idx": 11,
+      "tested": 4,
+      "hits": 3,
+      "success_rate": 0.75
+    },
+    "light": {
+      "axis_idx": 12,
+      "tested": 6,
+      "hits": 2,
+      "success_rate": 0.3333333333333333
+    },
+    "forward/reverse": {
+      "axis_idx": 13,
+      "tested": 5,
+      "hits": 2,
+      "success_rate": 0.4
+    },
+    "orthodox/unorthodox": {
+      "axis_idx": 14,
+      "tested": 6,
+      "hits": 0,
+      "success_rate": 0.0
+    },
+    "extinguish/ignite": {
+      "axis_idx": 15,
+      "tested": 4,
+      "hits": 3,
+      "success_rate": 0.75
+    },
+    "equatorial/polar": {
+      "axis_idx": 16,
+      "tested": 3,
+      "hits": 2,
+      "success_rate": 0.6666666666666666
+    },
+    "bear/bull": {
+      "axis_idx": 17,
+      "tested": 6,
+      "hits": 4,
+      "success_rate": 0.6666666666666666
+    },
+    "unwind/wind": {
+      "axis_idx": 18,
+      "tested": 8,
+      "hits": 4,
+      "success_rate": 0.5
+    },
+    "endemic/epidemic": {
+      "axis_idx": 19,
+      "tested": 10,
+      "hits": 2,
+      "success_rate": 0.2
+    },
+    "sentiment": {
+      "axis_idx": 59,
+      "tested": 12,
+      "hits": 4,
+      "success_rate": 0.3333333333333333
+    },
+    "quantity": {
+      "axis_idx": 73,
+      "tested": 5,
+      "hits": 2,
+      "success_rate": 0.4
+    },
+    "amphibious/aquatic": {
+      "axis_idx": 22,
+      "tested": 11,
+      "hits": 2,
+      "success_rate": 0.18181818181818182
+    },
+    "tied/untied": {
+      "axis_idx": 26,
+      "tested": 4,
+      "hits": 2,
+      "success_rate": 0.5
+    },
+    "hit/miss": {
+      "axis_idx": 27,
+      "tested": 7,
+      "hits": 3,
+      "success_rate": 0.42857142857142855
+    },
+    "speed": {
+      "axis_idx": 28,
+      "tested": 30,
+      "hits": 8,
+      "success_rate": 0.26666666666666666
+    },
+    "shrink/stretch": {
+      "axis_idx": 29,
+      "tested": 4,
+      "hits": 1,
+      "success_rate": 0.25
+    },
+    "appropriate/inappropriate": {
+      "axis_idx": 31,
+      "tested": 6,
+      "hits": 5,
+      "success_rate": 0.8333333333333334
+    },
+    "strength": {
+      "axis_idx": 34,
+      "tested": 27,
+      "hits": 9,
+      "success_rate": 0.3333333333333333
+    },
+    "disorderly/orderly": {
+      "axis_idx": 36,
+      "tested": 22,
+      "hits": 7,
+      "success_rate": 0.3181818181818182
+    },
+    "cooperative/uncooperative": {
+      "axis_idx": 38,
+      "tested": 6,
+      "hits": 0,
+      "success_rate": 0.0
+    },
+    "morality": {
+      "axis_idx": 74,
+      "tested": 19,
+      "hits": 10,
+      "success_rate": 0.5263157894736842
+    },
+    "leaky/tight": {
+      "axis_idx": 40,
+      "tested": 5,
+      "hits": 1,
+      "success_rate": 0.2
+    },
+    "gender": {
+      "axis_idx": 86,
+      "tested": 8,
+      "hits": 2,
+      "success_rate": 0.25
+    },
+    "molar/molecular": {
+      "axis_idx": 43,
+      "tested": 4,
+      "hits": 3,
+      "success_rate": 0.75
+    },
+    "enforce/exempt": {
+      "axis_idx": 44,
+      "tested": 8,
+      "hits": 1,
+      "success_rate": 0.125
+    },
+    "immobile/mobile": {
+      "axis_idx": 45,
+      "tested": 8,
+      "hits": 1,
+      "success_rate": 0.125
+    },
+    "maxi/midi": {
+      "axis_idx": 46,
+      "tested": 4,
+      "hits": 0,
+      "success_rate": 0.0
+    },
+    "general/specific": {
+      "axis_idx": 47,
+      "tested": 8,
+      "hits": 2,
+      "success_rate": 0.25
+    },
+    "apologetic/unapologetic": {
+      "axis_idx": 48,
+      "tested": 9,
+      "hits": 6,
+      "success_rate": 0.6666666666666666
+    },
+    "hollow/solid": {
+      "axis_idx": 49,
+      "tested": 7,
+      "hits": 2,
+      "success_rate": 0.2857142857142857
+    },
+    "compact/loose": {
+      "axis_idx": 51,
+      "tested": 4,
+      "hits": 0,
+      "success_rate": 0.0
+    },
+    "curved/straight": {
+      "axis_idx": 52,
+      "tested": 8,
+      "hits": 4,
+      "success_rate": 0.5
+    },
+    "irresponsible/responsible": {
+      "axis_idx": 53,
+      "tested": 13,
+      "hits": 1,
+      "success_rate": 0.07692307692307693
+    },
+    "sonic/supersonic": {
+      "axis_idx": 55,
+      "tested": 7,
+      "hits": 1,
+      "success_rate": 0.14285714285714285
+    },
+    "debilitating/invigorating": {
+      "axis_idx": 57,
+      "tested": 16,
+      "hits": 3,
+      "success_rate": 0.1875
+    },
+    "documented/undocumented": {
+      "axis_idx": 58,
+      "tested": 16,
+      "hits": 5,
+      "success_rate": 0.3125
+    },
+    "sealed/unsealed": {
+      "axis_idx": 60,
+      "tested": 6,
+      "hits": 2,
+      "success_rate": 0.3333333333333333
+    },
+    "competition/cooperation": {
+      "axis_idx": 64,
+      "tested": 17,
+      "hits": 5,
+      "success_rate": 0.29411764705882354
+    },
+    "age": {
+      "axis_idx": 65,
+      "tested": 13,
+      "hits": 7,
+      "success_rate": 0.5384615384615384
+    },
+    "formality": {
+      "axis_idx": 68,
+      "tested": 16,
+      "hits": 5,
+      "success_rate": 0.3125
+    },
+    "treated/untreated": {
+      "axis_idx": 70,
+      "tested": 20,
+      "hits": 5,
+      "success_rate": 0.25
+    },
+    "hardball/softball": {
+      "axis_idx": 71,
+      "tested": 7,
+      "hits": 3,
+      "success_rate": 0.42857142857142855
+    },
+    "multiply/singly": {
+      "axis_idx": 72,
+      "tested": 19,
+      "hits": 6,
+      "success_rate": 0.3157894736842105
+    },
+    "adjective/substantive": {
+      "axis_idx": 75,
+      "tested": 5,
+      "hits": 0,
+      "success_rate": 0.0
+    },
+    "impatient/patient": {
+      "axis_idx": 77,
+      "tested": 9,
+      "hits": 3,
+      "success_rate": 0.3333333333333333
+    },
+    "gather/spread": {
+      "axis_idx": 78,
+      "tested": 14,
+      "hits": 4,
+      "success_rate": 0.2857142857142857
+    },
+    "impassable/passable": {
+      "axis_idx": 79,
+      "tested": 14,
+      "hits": 7,
+      "success_rate": 0.5
+    },
+    "close/open": {
+      "axis_idx": 80,
+      "tested": 7,
+      "hits": 4,
+      "success_rate": 0.5714285714285714
+    },
+    "figurative/literal": {
+      "axis_idx": 81,
+      "tested": 8,
+      "hits": 4,
+      "success_rate": 0.5
+    },
+    "age/rejuvenate": {
+      "axis_idx": 82,
+      "tested": 39,
+      "hits": 4,
+      "success_rate": 0.10256410256410256
+    },
+    "complexity": {
+      "axis_idx": 87,
+      "tested": 42,
+      "hits": 17,
+      "success_rate": 0.40476190476190477
+    },
+    "fair/foul": {
+      "axis_idx": 84,
+      "tested": 11,
+      "hits": 3,
+      "success_rate": 0.2727272727272727
+    },
+    "compromising/uncompromising": {
+      "axis_idx": 85,
+      "tested": 12,
+      "hits": 5,
+      "success_rate": 0.4166666666666667
+    },
+    "separation/union": {
+      "axis_idx": 88,
+      "tested": 4,
+      "hits": 1,
+      "success_rate": 0.25
+    },
+    "aquatic/terrestrial": {
+      "axis_idx": 89,
+      "tested": 6,
+      "hits": 2,
+      "success_rate": 0.3333333333333333
+    },
+    "acceleration/deceleration": {
+      "axis_idx": 90,
+      "tested": 5,
+      "hits": 3,
+      "success_rate": 0.6
+    },
+    "openness": {
+      "axis_idx": 91,
+      "tested": 21,
+      "hits": 7,
+      "success_rate": 0.3333333333333333
+    },
+    "compound/simple": {
+      "axis_idx": 92,
+      "tested": 7,
+      "hits": 2,
+      "success_rate": 0.2857142857142857
+    },
+    "tapped/untapped": {
+      "axis_idx": 94,
+      "tested": 7,
+      "hits": 0,
+      "success_rate": 0.0
+    },
+    "democratic/undemocratic": {
+      "axis_idx": 95,
+      "tested": 3,
+      "hits": 1,
+      "success_rate": 0.3333333333333333
+    },
+    "new/worn": {
+      "axis_idx": 97,
+      "tested": 9,
+      "hits": 1,
+      "success_rate": 0.1111111111111111
+    },
+    "direct/inverse": {
+      "axis_idx": 98,
+      "tested": 19,
+      "hits": 5,
+      "success_rate": 0.2631578947368421
+    }
+  },
+  "zero_point_analysis": {
+    "axis_0_foot/head": {
+      "axis_idx": 0,
+      "label": "foot/head",
+      "neutral_words": [
+        {
+          "word": "resorted",
+          "score": 1.2980239288454398e-05
+        },
+        {
+          "word": "generated",
+          "score": -0.00011183725970893733
+        },
+        {
+          "word": "bottom",
+          "score": 0.00011187363687288776
+        },
+        {
+          "word": "books",
+          "score": -0.0001520645599432597
+        },
+        {
+          "word": "sitcom",
+          "score": -0.00017749510769980617
+        },
+        {
+          "word": "jakub",
+          "score": -0.00018509538809977826
+        },
+        {
+          "word": "should",
+          "score": -0.00018624769361014426
+        },
+        {
+          "word": "multimillionaire",
+          "score": -0.0001897869313645605
+        },
+        {
+          "word": "umbrella",
+          "score": 0.00025640742251066654
+        },
+        {
+          "word": "socially",
+          "score": 0.0002604285392631395
+        },
+        {
+          "word": "alison",
+          "score": -0.0003042288519479875
+        },
+        {
+          "word": "lengthwise",
+          "score": -0.00036023709932771696
+        },
+        {
+          "word": "testy",
+          "score": 0.0003607154466150032
+        },
+        {
+          "word": "rejection",
+          "score": -0.00036766763035134086
+        },
+        {
+          "word": "goodison",
+          "score": 0.00039879480030436136
+        },
+        {
+          "word": "fostered",
+          "score": 0.0004011276818625203
+        },
+        {
+          "word": "taoyuan",
+          "score": 0.00040728334739987713
+        },
+        {
+          "word": "extravagance",
+          "score": 0.0004651600958003502
+        },
+        {
+          "word": "siren",
+          "score": -0.0004695639360968312
+        },
+        {
+          "word": "avignon",
+          "score": -0.0005148801350576715
+        }
+      ]
+    },
+    "axis_1_defense/prosecution": {
+      "axis_idx": 1,
+      "label": "defense/prosecution",
+      "neutral_words": [
+        {
+          "word": "disperse",
+          "score": 0.00010125409226320352
+        },
+        {
+          "word": "baugh",
+          "score": -0.00012100314744596273
+        },
+        {
+          "word": "santi",
+          "score": -0.00013424051665737066
+        },
+        {
+          "word": "d'estaing",
+          "score": -0.0001527058267328166
+        },
+        {
+          "word": "sweaters",
+          "score": -0.00017299872548063417
+        },
+        {
+          "word": "reconciled",
+          "score": -0.00023858077499112375
+        },
+        {
+          "word": "influences",
+          "score": 0.0002448087035115538
+        },
+        {
+          "word": "frankly",
+          "score": 0.00025683199928716724
+        },
+        {
+          "word": "temperate",
+          "score": 0.00042224445431685606
+        },
+        {
+          "word": "nighttime",
+          "score": 0.0004401926759815181
+        },
+        {
+          "word": "aviva",
+          "score": 0.000475270655633981
+        },
+        {
+          "word": "fitting",
+          "score": 0.0005278964700955876
+        },
+        {
+          "word": "moskowitz",
+          "score": 0.0005297374508864232
+        },
+        {
+          "word": "amtrak",
+          "score": -0.0005384737719413308
+        },
+        {
+          "word": "jahn",
+          "score": -0.0005646708650751759
+        },
+        {
+          "word": "succumbing",
+          "score": -0.0005931087028829325
+        },
+        {
+          "word": "royals",
+          "score": 0.0005981280446550597
+        },
+        {
+          "word": "lofts",
+          "score": 0.0006078872927191794
+        },
+        {
+          "word": "pontifical",
+          "score": 0.0006185866009582957
+        },
+        {
+          "word": "wilkes",
+          "score": -0.0006231717705293834
+        }
+      ]
+    },
+    "axis_2_dependent/independent": {
+      "axis_idx": 2,
+      "label": "dependent/independent",
+      "neutral_words": [
+        {
+          "word": "percentages",
+          "score": 2.5422662283005164e-06
+        },
+        {
+          "word": "weaves",
+          "score": -6.988891353008285e-06
+        },
+        {
+          "word": "lob",
+          "score": 5.817889894858651e-05
+        },
+        {
+          "word": "reflecting",
+          "score": 7.020240722538371e-05
+        },
+        {
+          "word": "providing",
+          "score": 8.378043121564366e-05
+        },
+        {
+          "word": "unproven",
+          "score": -0.00013253375201630673
+        },
+        {
+          "word": "mannerisms",
+          "score": -0.00013277704273805313
+        },
+        {
+          "word": "adjoins",
+          "score": 0.00014658219824295076
+        },
+        {
+          "word": "labs",
+          "score": 0.00018959563554692163
+        },
+        {
+          "word": "unimpeded",
+          "score": 0.00019438944957398335
+        },
+        {
+          "word": "muddled",
+          "score": -0.0002636447514657906
+        },
+        {
+          "word": "gradual",
+          "score": 0.00030231561415215263
+        },
+        {
+          "word": "trucking",
+          "score": 0.0003354467965549189
+        },
+        {
+          "word": "thereof",
+          "score": -0.0003394250748970369
+        },
+        {
+          "word": "salinity",
+          "score": -0.00035959399765677193
+        },
+        {
+          "word": "debtors",
+          "score": 0.000361289954993317
+        },
+        {
+          "word": "wavelengths",
+          "score": 0.00037778182644430746
+        },
+        {
+          "word": "incisive",
+          "score": -0.0003998896713694603
+        },
+        {
+          "word": "testimonials",
+          "score": -0.00040040432820072065
+        },
+        {
+          "word": "mcgrady",
+          "score": -0.0004243021090034783
+        }
+      ]
+    },
+    "axis_3_obligatory/optional": {
+      "axis_idx": 3,
+      "label": "obligatory/optional",
+      "neutral_words": [
+        {
+          "word": "instance",
+          "score": -6.095345669046241e-06
+        },
+        {
+          "word": "desert",
+          "score": 1.1468559124484968e-05
+        },
+        {
+          "word": "parade",
+          "score": 2.7605733514313895e-05
+        },
+        {
+          "word": "multilateralism",
+          "score": 3.822629327624919e-05
+        },
+        {
+          "word": "criticized",
+          "score": -7.140141573558684e-05
+        },
+        {
+          "word": "co-operation",
+          "score": -7.234979112766836e-05
+        },
+        {
+          "word": "usain",
+          "score": 0.00012085881039552507
+        },
+        {
+          "word": "indra",
+          "score": 0.00012596652709487172
+        },
+        {
+          "word": "donates",
+          "score": -0.0002148746384880377
+        },
+        {
+          "word": "prosecutor",
+          "score": -0.0002199163264288185
+        },
+        {
+          "word": "philosopher",
+          "score": -0.000227760530962536
+        },
+        {
+          "word": "module",
+          "score": -0.00023273327497392625
+        },
+        {
+          "word": "filmmaker",
+          "score": -0.00024657114455917573
+        },
+        {
+          "word": "thickened",
+          "score": -0.00025667372338340533
+        },
+        {
+          "word": "mcconnell",
+          "score": 0.0002605193634371367
+        },
+        {
+          "word": "embrace",
+          "score": -0.0002670223361761047
+        },
+        {
+          "word": "high-rise",
+          "score": -0.00027277179319280337
+        },
+        {
+          "word": "goran",
+          "score": 0.0002788655979787343
+        },
+        {
+          "word": "squadron",
+          "score": 0.0002840519168176393
+        },
+        {
+          "word": "laptop",
+          "score": 0.0002909087202331514
+        }
+      ]
+    },
+    "axis_4_clergyman/layman": {
+      "axis_idx": 4,
+      "label": "clergyman/layman",
+      "neutral_words": [
+        {
+          "word": "mcginley",
+          "score": 4.84043893921249e-06
+        },
+        {
+          "word": "partisanship",
+          "score": -2.528117093096675e-05
+        },
+        {
+          "word": "perfume",
+          "score": -4.4426418423675175e-05
+        },
+        {
+          "word": "navigate",
+          "score": -8.48394482055113e-05
+        },
+        {
+          "word": "legitimately",
+          "score": 0.0001117618087120194
+        },
+        {
+          "word": "compel",
+          "score": 0.0001267128905327733
+        },
+        {
+          "word": "defeat",
+          "score": -0.0001622020056484102
+        },
+        {
+          "word": "valves",
+          "score": -0.0001732333104955803
+        },
+        {
+          "word": "meissner",
+          "score": 0.00020078681492874972
+        },
+        {
+          "word": "sometimes",
+          "score": -0.00022053434683265614
+        },
+        {
+          "word": "delia",
+          "score": 0.0002222030108307367
+        },
+        {
+          "word": "abercrombie",
+          "score": -0.00022938241263277252
+        },
+        {
+          "word": "low-budget",
+          "score": 0.00023985744285902653
+        },
+        {
+          "word": "tricks",
+          "score": 0.0002504066536919621
+        },
+        {
+          "word": "samaraweera",
+          "score": -0.0003103513243923522
+        },
+        {
+          "word": "gould",
+          "score": 0.00032288750384857864
+        },
+        {
+          "word": "waldron",
+          "score": 0.0003452319168366263
+        },
+        {
+          "word": "meeks",
+          "score": 0.00034561588585481064
+        },
+        {
+          "word": "permit",
+          "score": -0.0003478141587945722
+        },
+        {
+          "word": "meggett",
+          "score": 0.0003636505410862719
+        }
+      ]
+    }
+  },
+  "bias_analysis": {
+    "axis_label": "gender",
+    "axis_idx": 42,
+    "professions": [
+      {
+        "word": "manager",
+        "score": -1.3069667714995958
+      },
+      {
+        "word": "president",
+        "score": -0.8973086861103936
+      },
+      {
+        "word": "director",
+        "score": -0.6977702142741635
+      },
+      {
+        "word": "electrician",
+        "score": -0.5386694027431657
+      },
+      {
+        "word": "scientist",
+        "score": -0.5027680176955
+      },
+      {
+        "word": "professor",
+        "score": -0.477239495492288
+      },
+      {
+        "word": "programmer",
+        "score": -0.4280655146973306
+      },
+      {
+        "word": "engineer",
+        "score": -0.3597555430259073
+      },
+      {
+        "word": "plumber",
+        "score": -0.2934910152712253
+      },
+      {
+        "word": "mechanic",
+        "score": -0.2623726114218194
+      },
+      {
+        "word": "surgeon",
+        "score": -0.2423657493581792
+      },
+      {
+        "word": "architect",
+        "score": -0.10744165191134493
+      },
+      {
+        "word": "accountant",
+        "score": 0.2749615072010273
+      },
+      {
+        "word": "pilot",
+        "score": 0.33365858626196643
+      },
+      {
+        "word": "pharmacist",
+        "score": 0.4511744378300373
+      },
+      {
+        "word": "musician",
+        "score": 0.4708340515067956
+      },
+      {
+        "word": "carpenter",
+        "score": 0.4748523363300511
+      },
+      {
+        "word": "secretary",
+        "score": 0.5034717618027444
+      },
+      {
+        "word": "lawyer",
+        "score": 0.7179434277238398
+      },
+      {
+        "word": "chef",
+        "score": 0.8484832885388855
+      },
+      {
+        "word": "doctor",
+        "score": 0.9416060783652083
+      },
+      {
+        "word": "dentist",
+        "score": 1.2523332987714113
+      },
+      {
+        "word": "librarian",
+        "score": 1.3998146050241576
+      },
+      {
+        "word": "athlete",
+        "score": 1.444932522183598
+      },
+      {
+        "word": "artist",
+        "score": 1.6520505965311045
+      },
+      {
+        "word": "journalist",
+        "score": 1.891072064793333
+      },
+      {
+        "word": "receptionist",
+        "score": 2.0973722514996567
+      },
+      {
+        "word": "teacher",
+        "score": 2.363118923758286
+      },
+      {
+        "word": "therapist",
+        "score": 2.5487812983115266
+      },
+      {
+        "word": "nurse",
+        "score": 3.1008341488201374
+      }
+    ]
+  },
+  "reconstruction_quality": {
+    "n_samples": 1000,
+    "n_components_total": 100,
+    "note": "k = n_components_total is a lossless change of basis (error is float noise by construction)",
+    "by_kept_components": {
+      "5": {
+        "mean_relative_error": 0.9436770896398725,
+        "median_relative_error": 0.9571772468457596,
+        "p95_relative_error": 1.0025823705096262
+      },
+      "10": {
+        "mean_relative_error": 0.9078391066571027,
+        "median_relative_error": 0.9256251055443314,
+        "p95_relative_error": 0.9850947046008499
+      },
+      "25": {
+        "mean_relative_error": 0.8028189136052607,
+        "median_relative_error": 0.8197392957430248,
+        "p95_relative_error": 0.9243405844284205
+      },
+      "50": {
+        "mean_relative_error": 0.617536168261098,
+        "median_relative_error": 0.6187087565626674,
+        "p95_relative_error": 0.7864159315990342
+      },
+      "75": {
+        "mean_relative_error": 0.3846002781363162,
+        "median_relative_error": 0.3745107642984797,
+        "p95_relative_error": 0.5663476256159142
+      },
+      "100": {
+        "mean_relative_error": 7.79074265850994e-14,
+        "median_relative_error": 7.711695831192841e-14,
+        "p95_relative_error": 9.70972335707205e-14
+      }
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "per_category": {
+    "capital-common-countries": {
+      "evaluated": 200,
+      "ica_accuracy": 0.19,
+      "traditional_accuracy": 0.94,
+      "ica_correct": 38,
+      "traditional_correct": 188
+    },
+    "capital-world": {
+      "evaluated": 200,
+      "ica_accuracy": 0.185,
+      "traditional_accuracy": 0.875,
+      "ica_correct": 37,
+      "traditional_correct": 175
+    },
+    "currency": {
+      "evaluated": 200,
+      "ica_accuracy": 0.0,
+      "traditional_accuracy": 0.095,
+      "ica_correct": 0,
+      "traditional_correct": 19
+    },
+    "city-in-state": {
+      "evaluated": 200,
+      "ica_accuracy": 0.06,
+      "traditional_accuracy": 0.345,
+      "ica_correct": 12,
+      "traditional_correct": 69
+    },
+    "family": {
+      "evaluated": 200,
+      "ica_accuracy": 0.25,
+      "traditional_accuracy": 0.77,
+      "ica_correct": 50,
+      "traditional_correct": 154
+    },
+    "gram1-adjective-to-adverb": {
+      "evaluated": 200,
+      "ica_accuracy": 0.02,
+      "traditional_accuracy": 0.195,
+      "ica_correct": 4,
+      "traditional_correct": 39
+    },
+    "gram2-opposite": {
+      "evaluated": 200,
+      "ica_accuracy": 0.035,
+      "traditional_accuracy": 0.22,
+      "ica_correct": 7,
+      "traditional_correct": 44
+    },
+    "gram3-comparative": {
+      "evaluated": 200,
+      "ica_accuracy": 0.305,
+      "traditional_accuracy": 0.805,
+      "ica_correct": 61,
+      "traditional_correct": 161
+    },
+    "gram4-superlative": {
+      "evaluated": 200,
+      "ica_accuracy": 0.0,
+      "traditional_accuracy": 0.535,
+      "ica_correct": 0,
+      "traditional_correct": 107
+    },
+    "gram5-present-participle": {
+      "evaluated": 200,
+      "ica_accuracy": 0.37,
+      "traditional_accuracy": 0.55,
+      "ica_correct": 74,
+      "traditional_correct": 110
+    },
+    "gram6-nationality-adjective": {
+      "evaluated": 200,
+      "ica_accuracy": 0.18,
+      "traditional_accuracy": 0.82,
+      "ica_correct": 36,
+      "traditional_correct": 164
+    },
+    "gram7-past-tense": {
+      "evaluated": 200,
+      "ica_accuracy": 0.425,
+      "traditional_accuracy": 0.52,
+      "ica_correct": 85,
+      "traditional_correct": 104
+    },
+    "gram8-plural": {
+      "evaluated": 200,
+      "ica_accuracy": 0.46,
+      "traditional_accuracy": 0.775,
+      "ica_correct": 92,
+      "traditional_correct": 155
+    },
+    "gram9-plural-verbs": {
+      "evaluated": 200,
+      "ica_accuracy": 0.065,
+      "traditional_accuracy": 0.605,
+      "ica_correct": 13,
+      "traditional_correct": 121
+    }
+  },
+  "overall": {
+    "evaluated": 2800,
+    "ica_accuracy": 0.18178571428571427,
+    "traditional_accuracy": 0.575
+  }
+}

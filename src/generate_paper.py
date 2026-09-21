@@ -1,10 +1,23 @@
 """
 Generate an academic paper from analysis results.
 
-Reads results/*.json and produces paper/paper.md.
+Reads results/*.json and produces paper/paper.md. Every number in the paper
+is read from a result file; when a file is missing the text falls back to
+"n/a" and a warning is printed, so the paper can never silently show stale
+or invented numbers.
 """
+
 import json
 from pathlib import Path
+
+RESULT_FILES = [
+    "qualitative_eval.json",
+    "antonym_retrieval.json",
+    "analogy_eval.json",
+    "analysis_report.json",
+    "reranker_eval.json",
+    "leakfree_comparison.json",
+]
 
 
 def load_json(path: str) -> dict | None:
@@ -12,8 +25,46 @@ def load_json(path: str) -> dict | None:
     p = Path(path)
     if not p.exists():
         return None
-    with open(p, "r", encoding="utf-8") as f:
+    with open(p, encoding="utf-8") as f:
         return json.load(f)
+
+
+def _pct(x, nd: int = 1) -> str:
+    return f"{x:.{nd}%}" if isinstance(x, (int, float)) else "n/a"
+
+
+def _ms(m, pct: bool = False) -> str:
+    """Format a metric as '0.379±0.012' / '37.9%'. Accepts {mean, std} dicts,
+    plain numbers, or None (→ 'n/a')."""
+    if m is None:
+        return "n/a"
+    if isinstance(m, (int, float)):
+        return f"{m:.1%}" if pct else f"{m:.3f}"
+    if not m or "mean" not in m:
+        return "n/a"
+    if pct:
+        return f"{m['mean']:.1%}"
+    return f"{m['mean']:.3f}±{m['std']:.3f}" if "std" in m else f"{m['mean']:.3f}"
+
+
+def _hits(m: dict, k: int) -> dict | None:
+    return m.get(f"hits_at_{k}") if m else None
+
+
+def _hits_row(label: str, m: dict | None) -> str:
+    cells = [_ms(_hits(m, k)) for k in [1, 5, 10]]
+    return f"| {label} | {cells[0]} | {cells[1]} | {cells[2]} |"
+
+
+def _hits_row_pct(label: str, m: dict | None) -> str:
+    cells = [_ms(_hits(m, k), pct=True) for k in [1, 5, 10]]
+    return f"| {label} | {cells[0]} | {cells[1]} | {cells[2]} |"
+
+
+def _hits_row_flat(label: str, d: dict | None) -> str:
+    """Row for a flat {"1": x, "5": y, "10": z} metric dict (e.g. holdout)."""
+    cells = [_ms((d or {}).get(str(k)), pct=True) for k in [1, 5, 10]]
+    return f"| {label} | {cells[0]} | {cells[1]} | {cells[2]} |"
 
 
 def generate_paper(results_dir: str = "results", output_path: str = "paper/paper.md") -> None:
@@ -23,28 +74,74 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     analogy = load_json(f"{results_dir}/analogy_eval.json")
     report = load_json(f"{results_dir}/analysis_report.json")
     reranker = load_json(f"{results_dir}/reranker_eval.json")
+    leakfree = load_json(f"{results_dir}/leakfree_comparison.json")
+    ica_meta = (load_json(f"{results_dir}/ica_space.json") or {}).get("meta", {})
+
+    warnings: list[str] = []
+    for name in RESULT_FILES:
+        if load_json(f"{results_dir}/{name}") is None:
+            warnings.append(f"missing {results_dir}/{name} — affected sections show n/a")
 
     lines = []
 
     def w(text: str = "") -> None:
         lines.append(text)
 
+    # ------------------------------------------------------------------ #
+    # Header & abstract                                                   #
+    # ------------------------------------------------------------------ #
+    rer_cv = (reranker or {}).get("cv", {}).get("metrics", {})
+    n_pairs = (antonym_retrieval or {}).get("total_valid_pairs") or (reranker or {}).get(
+        "cv", {}
+    ).get("total_pairs")
+    oracle_m = (antonym_retrieval or {}).get("metrics", {})
+    full_at1 = rer_cv.get("reranker", {}).get("hits_at_1")
+    mlp_at1 = rer_cv.get("mlp", {}).get("hits_at_1")
+    oracle_at1 = oracle_m.get("hits_at_1")
+
     w("# Axis-wise Semantic Inversion via ICA-decomposed Embedding Spaces")
     w()
     w("## Abstract")
     w()
     w("We propose a pipeline for lexical antonym retrieval using ICA-decomposed word embedding")
-    w("spaces. GloVe-100 vectors are first adjusted via counter-fitting (Mrkšić et al., 2016)")
-    w("to push antonym vectors apart, then decomposed with FastICA into statistically")
-    w("independent semantic axes. An MLP classifier trained on axis-wise features")
-    w("(|s1−s2| ∥ s1⊙s2) retrieves antonym candidates, and a lightweight logistic reranker")
-    w("re-orders them using ICA cosine, word frequency, and MLP rank signals.")
-    w("On 1,121 WordNet antonym pairs with 5-fold cross-validation, the full pipeline")
-    w("achieves 37.9% Hits@1, more than doubling both the classifier alone (17.7%)")
-    w("and the oracle axis-inversion baseline (25.2%).")
+    w("spaces. GloVe-100 vectors are decomposed with FastICA into statistically independent")
+    w("semantic axes. An MLP classifier trained on axis-wise features (|s1−s2| ∥ s1⊙s2)")
+    w("retrieves antonym candidates, and a lightweight logistic reranker re-orders them using")
+    w("ICA cosine, word frequency, and MLP rank signals. The deployed pipeline uses no")
+    w("counter-fitting and no label information outside its training split.")
+    if n_pairs:
+        w(f"On {n_pairs:,} WordNet antonym pairs with 5-fold cross-validation, the full pipeline")
+        w(
+            f"achieves {_pct(full_at1.get('mean'))} Hits@1"
+            if full_at1
+            else "The full pipeline achieves n/a Hits@1"
+        )
+        w(
+            f"versus {_pct(mlp_at1.get('mean'))} for the classifier alone;"
+            if mlp_at1
+            else "versus n/a for the classifier alone;"
+        )
+        w(
+            f"an oracle axis-inversion baseline that knows the target word reaches"
+            f" {_pct(oracle_at1.get('mean'))}."
+            if oracle_at1
+            else "the oracle axis-inversion baseline: n/a."
+        )
+    else:
+        w("Retrieval metrics: n/a (result files missing).")
+    if leakfree:
+        s = leakfree.get("summary", {})
+        lr = s.get("linear_raw", {}).get("1", {})
+        w("A leak-free counter-fitting protocol is also evaluated and rejected: per-fold")
+        w(
+            f"counter-fitting collapses retrieval to near zero ({_pct(lr.get('mean'))} Hits@1 for the"
+        )
+        w("same heuristic on raw GloVe), so counter-fitting is excluded from all headline results.")
     w()
 
-    # Method
+    # ------------------------------------------------------------------ #
+    # Method                                                              #
+    # ------------------------------------------------------------------ #
     w("## Method")
     w()
     w("### ICA Decomposition")
@@ -53,6 +150,8 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("we apply FastICA to obtain a score matrix $S \\in \\mathbb{R}^{n \\times k}$ where each")
     w("column represents a statistically independent component. Unlike PCA, which maximizes")
     w("variance, ICA maximizes statistical independence, yielding more interpretable axes.")
+    w("All headline results decompose the **raw GloVe-100** space (top 50k valid English")
+    w("words, FastICA with 100 components, random_state=42).")
     w()
     w("### Axis Labeling")
     w()
@@ -61,24 +160,54 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("with the largest difference. Axes accumulating many pairs from the same semantic category")
     w("(e.g., male/female, king/queen -> gender) receive that category label.")
     w()
-    w("### Counter-fitting")
+
+    w("### Counter-fitting (investigated, not used)")
     w()
     w("Raw GloVe vectors encode distributional similarity: antonyms such as *hot* and *cold*")
     w("appear in identical contexts and therefore cluster together (cosine ≈ +0.47).")
-    w("Counter-fitting (Mrkšić et al., 2016) corrects this by minimising two objectives:")
+    w("Counter-fitting (Mrkšić et al., 2016) pushes antonym pairs below a target cosine")
+    w("(−0.3 in our runs) while a vector-space-preservation term (λ = 0.1) limits drift.")
+    w("In a global fit over all antonym pairs, mean antonym cosine drops from +0.47 to −0.23.")
     w()
-    w("- **Antonym Repel (AR)**: gradient steps that push antonym pairs below a target")
-    w("  cosine of −0.3, applied only to the words involved in constraints.")
-    w("- **Vector Space Preservation (VSP)**: a pull-back term (λ = 0.1) that prevents")
-    w("  unconstrained drift from the original embedding geometry.")
+    w("However, a global counter-fit consumes antonym labels across the whole vocabulary —")
+    w("a form of label leakage when those same pairs are used for evaluation. In the")
+    w("leak-free protocol (counter-fitting re-fit per fold on training pairs only,")
+    w("`scripts/eval_leakfree.py`), CF-based retrieval collapses:")
     w()
-    w("After 100 iterations, mean antonym cosine drops from +0.47 to −0.23,")
-    w("while the neighbourhood structure of unconstrained words is unchanged.")
+    if leakfree:
+        s = leakfree.get("summary", {})
+        cfg = leakfree.get("config", {})
+        w("| Method (5-fold, leak-free) | Hits@1 |")
+        w("|--------|--------|")
+        desc = {
+            "linear_raw": "least-squares map on raw GloVe (no CF)",
+            "linear_cf": "least-squares map on per-fold counter-fitted vectors",
+            "negcos_cf": "nearest neighbour of −v(src) in CF space",
+            "mlp_ica": "MLP on per-fold CF+ICA features",
+            "oracle_1ax": "oracle single-axis inversion (knows target)",
+        }
+        for key, label in desc.items():
+            m = s.get(key, {}).get("1")
+            if m is not None:
+                w(f"| {label} | {_ms(m)} |")
+        if cfg:
+            w()
+            w(
+                f"(folds={cfg.get('folds')}, vocab={cfg.get('vocab_limit')}, "
+                f"CF iters={cfg.get('cf_iters')}, seed={cfg.get('seed')})"
+            )
+    else:
+        w("n/a — leakfree_comparison.json not found.")
     w()
+    w("Because counter-fitting either leaks labels (global fit) or destroys the retrieval")
+    w("signal (leak-free per-fold fit), **all headline results below use raw GloVe + ICA")
+    w("without counter-fitting**. The counter-fitting code is retained as an experimental")
+    w("option (`run_pipeline.py --counter-fit`).")
+    w()
+
     w("### ICA Feature Classifier")
     w()
-    w("The counter-fitted vectors are decomposed with FastICA into 100 independent")
-    w("components, yielding score matrix S ∈ ℝ^{n×100}.")
+    w("The ICA score matrix S ∈ ℝ^{n×100} turns each word into a vector of 100 axis scores.")
     w("For each candidate word pair (w1, w2), we form a 200-dimensional feature vector:")
     w()
     w("  φ(w1, w2) = [ |s1 − s2|, s1 ⊙ s2 ]")
@@ -103,19 +232,24 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("| interaction | mlp_score × (−ica_cosine) |")
     w("| inv_rank | 1 / mlp_rank |")
     w()
-    w("The reranker is trained on a held-out validation fold's MLP predictions,")
-    w("so the test set never leaks into any training stage.")
+    w("Training protocol: in each CV fold, the reranker is trained on the fold's MLP")
+    w("predictions over that fold's **training pairs only**; test pairs never enter any")
+    w("training stage. Because those MLP predictions are in-sample, we additionally report")
+    w("a stricter 70/15/15 holdout split where the reranker is trained on a truly held-out")
+    w("validation split (see Results).")
     w()
     w("### Oracle Axis Inversion (Baseline)")
     w()
-    w("As an upper-bound baseline, given the true target word we identify the single")
+    w("As a baseline, given the true target word we identify the single")
     w("ICA axis with the largest normalised score difference |s1−s2|/σ, negate that")
     w("axis in the source word's score vector, reconstruct, and retrieve the nearest")
     w("neighbour. This requires knowledge of the target word and is not deployable")
-    w("in practice.")
+    w("in practice; it measures how far axis geometry alone can go.")
     w()
 
-    # Results
+    # ------------------------------------------------------------------ #
+    # Results                                                             #
+    # ------------------------------------------------------------------ #
     w("## Results")
     w()
 
@@ -132,71 +266,92 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
         w()
 
     if qualitative:
-        w("### Qualitative Evaluation")
+        w("### Qualitative Evaluation (blind)")
         w()
-        metrics = qualitative.get("metrics", {})
-        w(f"On {qualitative.get('evaluated', 0)} canonical test cases:")
+        blind = qualitative.get("blind", {})
+        blind_label = blind.get("label", {})
+        blind_auto = blind.get("auto", {})
+        oracle_q = qualitative.get("oracle", {})
+        w(f"On {blind_label.get('total_cases', len(blind_label.get('cases', [])))} canonical")
+        w("test cases (king->queen, hot->cold, ...). The **blind** protocol never consults")
+        w("the expected target word: the *label* variant inverts all axes carrying the")
+        w("declared semantic label (part of the task spec), and the *auto* variant inverts")
+        w("the source word's single highest-|z| axis. The oracle protocol picks the best")
+        w("axis using the target word and is not deployable; it shows how far axis")
+        w("selection with full information can go.")
         w()
-        w(f"| Metric | Score |")
-        w(f"|--------|-------|")
-        for k_str in ["hits_at_1", "hits_at_5", "hits_at_10"]:
-            val = metrics.get(k_str, 0)
-            w(f"| {k_str.replace('_', ' ').title()} | {val:.1%} |")
+        w("| Protocol | Hits@1 | Hits@5 | Hits@10 |")
+        w("|----------|--------|--------|---------|")
+        w(_hits_row_pct("Blind (declared label group)", blind_label.get("metrics")))
+        w(_hits_row_pct("Blind (auto, source top-1 axis)", blind_auto.get("metrics")))
+        w(_hits_row_pct("Oracle axis selection (upper bound)", oracle_q.get("metrics")))
         w()
 
-        # Show some examples
-        w("**Selected examples:**")
-        w()
-        w("| Input | Axis | Expected | Top-3 Results | Rank |")
-        w("|-------|------|----------|---------------|------|")
-        for case in qualitative.get("cases", [])[:10]:
-            if case.get("status") == "word_not_found":
-                continue
-            top3 = ", ".join(n["word"] for n in case.get("neighbors", [])[:3])
-            rank = case.get("best_rank", "-")
-            if rank is None:
-                rank = "-"
-            w(f"| {case['word']} | {case['axis_label']} | {case['expected']} | {top3} | {rank} |")
-        w()
+        cases = blind_label.get("cases", [])
+        if cases:
+            w("**Blind (declared label) examples:**")
+            w()
+            w("| Input | Axis label | Expected | Top-3 Results | Rank |")
+            w("|-------|------------|----------|---------------|------|")
+            for case in cases[:10]:
+                top3 = ", ".join(n["word"] for n in case.get("neighbors", [])[:3])
+                rank = case.get("rank")
+                w(
+                    f"| {case['word']} | {case['axis_label']} | {case['expected']} "
+                    f"| {top3 or '-'} | {rank if rank is not None else '-'} |"
+                )
+            w()
+
+        ac = qualitative.get("analogy_comparison", {}).get("comparisons", [])
+        if ac:
+            w("**Blind ICA inversion vs traditional analogy** (note: the analogy baseline")
+            w("uses an unrelated word pair a:b, so it is a different task setup rather than")
+            w("a like-for-like comparison):")
+            w()
+            w("| Query | Expected | ICA rank (blind) | Analogy rank | Analogy top-5 |")
+            w("|-------|----------|------------------|--------------|---------------|")
+            for c in ac:
+                ica_rank = c.get("ica_rank")
+                ana_rank = c.get("analogy_rank")
+                w(
+                    f"| {c['word']} | {c['expected']} "
+                    f"| {ica_rank if ica_rank is not None else '-'} "
+                    f"| {ana_rank if ana_rank is not None else '-'} "
+                    f"| {', '.join(c.get('analogy_top5', [])[:5])} |"
+                )
+            w()
 
     if antonym_retrieval or reranker:
         w("### Antonym Retrieval (5-fold CV)")
         w()
-        n_pairs = (antonym_retrieval or {}).get("total_valid_pairs", 0) or \
-                  (reranker or {}).get("cv", {}).get("total_pairs", 0)
-        w(f"Cross-validated on {n_pairs} WordNet antonym pairs:")
+        w(
+            f"Cross-validated on {n_pairs:,} WordNet antonym pairs:"
+            if n_pairs
+            else "Cross-validated antonym retrieval:"
+        )
         w()
         w("| Method | Hits@1 | Hits@5 | Hits@10 |")
         w("|--------|--------|--------|---------|")
-
         if antonym_retrieval:
-            m = antonym_retrieval.get("metrics", {})
-            h1 = m.get("hits_at_1", {})
-            h5 = m.get("hits_at_5", {})
-            h10 = m.get("hits_at_10", {})
-            w(f"| Oracle axis inversion† | "
-              f"{h1.get('mean', 0):.3f}±{h1.get('std', 0):.3f} | "
-              f"{h5.get('mean', 0):.3f}±{h5.get('std', 0):.3f} | "
-              f"{h10.get('mean', 0):.3f}±{h10.get('std', 0):.3f} |")
-
+            w(_hits_row("Oracle axis inversion†", antonym_retrieval.get("metrics")))
         if reranker and "cv" in reranker:
             cv_m = reranker["cv"]["metrics"]
-            for method_label, method_key in [
-                ("MLP classifier", "mlp"),
-                ("MLP + Reranker", "reranker"),
-            ]:
-                m = cv_m.get(method_key, {})
-                h1 = m.get("hits_at_1", {})
-                h5 = m.get("hits_at_5", {})
-                h10 = m.get("hits_at_10", {})
-                w(f"| {method_label} | "
-                  f"{h1.get('mean', 0):.3f}±{h1.get('std', 0):.3f} | "
-                  f"{h5.get('mean', 0):.3f}±{h5.get('std', 0):.3f} | "
-                  f"{h10.get('mean', 0):.3f}±{h10.get('std', 0):.3f} |")
-
+            w(_hits_row("MLP classifier", cv_m.get("mlp")))
+            w(_hits_row("MLP + Reranker", cv_m.get("reranker")))
         w()
-        w("† Oracle: knows the target word to select the best axis (upper bound, not deployable).")
+        w("† Oracle: selects the axis using the target word (not deployable; measures axis")
+        w("  geometry alone).")
         w()
+        holdout = (reranker or {}).get("holdout")
+        if holdout:
+            w("Stricter 70/15/15 holdout split (reranker trained on a genuinely held-out")
+            w("validation split; single split, so no ±std):")
+            w()
+            w("| Method | Hits@1 | Hits@5 | Hits@10 |")
+            w("|--------|--------|--------|---------|")
+            w(_hits_row_flat("MLP classifier", holdout.get("mlp")))
+            w(_hits_row_flat("MLP + Reranker", holdout.get("reranker")))
+            w()
 
     if analogy:
         w("### Google Analogy Dataset")
@@ -204,20 +359,21 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
         overall = analogy.get("overall", {})
         w(f"Evaluated {overall.get('evaluated', 0)} analogy questions:")
         w()
-        w(f"| Method | Accuracy |")
-        w(f"|--------|----------|")
+        w("| Method | Accuracy |")
+        w("|--------|----------|")
         w(f"| ICA Inversion | {overall.get('ica_accuracy', 0):.1%} |")
         w(f"| Traditional (b-a+c) | {overall.get('traditional_accuracy', 0):.1%} |")
         w()
 
-        # Per-category breakdown
         w("**Per-category results:**")
         w()
         w("| Category | ICA | Traditional | n |")
         w("|----------|-----|-------------|---|")
         for cat, data in analogy.get("per_category", {}).items():
-            w(f"| {cat} | {data['ica_accuracy']:.1%} | "
-              f"{data['traditional_accuracy']:.1%} | {data['evaluated']} |")
+            w(
+                f"| {cat} | {data['ica_accuracy']:.1%} | "
+                f"{data['traditional_accuracy']:.1%} | {data['evaluated']} |"
+            )
         w()
 
     if report and "per_axis_success" in report:
@@ -236,13 +392,38 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
             w("![Bias Visualization](figures/bias_gender.png)")
             w()
 
-    if report and "reconstruction_quality" in report:
-        recon = report["reconstruction_quality"]
+    recon = (report or {}).get("reconstruction_quality")
+    if recon and "by_kept_components" in recon:
         w("### Reconstruction Quality")
         w()
-        w(f"- Mean relative error: {recon['mean_relative_error']:.4f}")
-        w(f"- Median relative error: {recon['median_relative_error']:.4f}")
-        w(f"- 95th percentile: {recon['p95_relative_error']:.4f}")
+        w("Keeping all k = d components is a lossless change of basis, so the roundtrip")
+        w("error is float noise by construction. The meaningful question is how much")
+        w("information survives with fewer components; we reconstruct from the k")
+        w("highest-energy components and report the relative error:")
+        w()
+        w("| Components kept | Mean rel. error | Median | 95th pct |")
+        w("|-----------------|-----------------|--------|----------|")
+        for k in sorted(recon["by_kept_components"].keys(), key=int):
+            b = recon["by_kept_components"][k]
+            w(
+                f"| {k} | {b['mean_relative_error']:.4f} "
+                f"| {b['median_relative_error']:.4f} "
+                f"| {b['p95_relative_error']:.4f} |"
+            )
+        w()
+        w(
+            f"(sampled words: {recon.get('n_samples')}, total components: "
+            f"{recon.get('n_components_total')})"
+        )
+        w()
+        w("![Reconstruction Quality](figures/reconstruction_quality.png)")
+        w()
+    elif recon:
+        w("### Reconstruction Quality")
+        w()
+        w(f"- Mean relative error: {_ms(recon.get('mean_relative_error'))}")
+        w(f"- Median relative error: {_ms(recon.get('median_relative_error'))}")
+        w(f"- 95th percentile: {_ms(recon.get('p95_relative_error'))}")
         w()
         w("![Reconstruction Quality](figures/reconstruction_quality.png)")
         w()
@@ -250,60 +431,106 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     if reranker and "feature_weights" in reranker:
         w("### Reranker Feature Analysis")
         w()
-        w("Logistic regression coefficients (trained on 168 validation pairs):")
+        weights = reranker["feature_weights"]
+        w("Logistic regression coefficients:")
         w()
         w("| Feature | Coefficient | Interpretation |")
         w("|---------|-------------|----------------|")
-        weights = reranker["feature_weights"]
         interpretations = {
-            "freq_ratio":   "penalises rare noise candidates",
-            "ica_cosine":   "prefers negative ICA cosine (semantic opposites)",
-            "interaction":  "synergy: high MLP score + negative cosine",
-            "mlp_rank":     "higher-ranked candidates preferred",
-            "inv_rank":     "1/rank bonus",
-            "mlp_score":    "raw MLP probability",
+            "freq_ratio": "negative: penalises candidates much rarer than the query",
+            "ica_cosine": "positive: prefers positive ICA cosine (antonyms cluster in raw GloVe)",
+            "interaction": "mlp_score × (−ica_cosine); sign flips with ica_cosine",
+            "mlp_rank": "higher-ranked MLP candidates preferred",
+            "inv_rank": "1/rank bonus",
+            "mlp_score": "raw MLP probability",
         }
         for feat, coef in sorted(weights.items(), key=lambda x: abs(x[1]), reverse=True):
             interp = interpretations.get(feat, "")
             w(f"| {feat} | {coef:+.3f} | {interp} |")
         w()
-        w("The dominant signal is `freq_ratio` (−1.48): the MLP tends to rank rare")
-        w("vocabulary items highly because their extreme ICA scores superficially")
-        w("resemble antonym features. The reranker suppresses these by penalising")
-        w("candidates that are much rarer than the query word.")
-        w()
+        if weights:
+            dom_feat, dom_coef = max(weights.items(), key=lambda x: abs(x[1]))
+            w(f"The dominant signal is `{dom_feat}` ({dom_coef:+.2f}). On the raw space the")
+            w("strongest reranker signals are the ICA-cosine pair (`ica_cosine` and its")
+            w("`interaction` with the MLP score) together with the rarity penalty")
+            w("(`freq_ratio`): rare vocabulary items with extreme ICA scores attract high")
+            w("MLP scores, and the reranker suppresses them while exploiting the fact")
+            w("that antonyms sit in related regions of the raw embedding space.")
+            w()
 
+    # ------------------------------------------------------------------ #
+    # Discussion                                                          #
+    # ------------------------------------------------------------------ #
+    rer_h1 = _ms(rer_cv.get("reranker", {}).get("hits_at_1"))
+    ora_h1 = _ms(oracle_m.get("hits_at_1"))
     w("## Discussion")
     w()
-    w("**Why does the reranker outperform the oracle baseline (37.9% vs 25.2%)?**")
-    w("The oracle baseline only flips the single most-discriminative ICA axis, then")
-    w("retrieves the nearest neighbour to the reconstructed vector. Reconstruction")
-    w("noise from ICA round-tripping limits precision. The MLP classifier avoids")
-    w("reconstruction altogether by scoring candidates directly from ICA features;")
-    w("the reranker then filters residual noise using frequency and ICA cosine signals.")
+    w(f"**Informed axis inversion ({ora_h1}) vs the deployable pipeline ({rer_h1}).**")
+    w("The oracle baseline — which knows the target word and flips the single")
+    w("most-discriminative ICA axis — remains the strongest retrieval strategy on")
+    w("this space, so interpretable axis geometry carries real antonym signal.")
+    w("It is not deployable, however: without the target, blind axis selection")
+    w("performs poorly (qualitative table). The MLP classifier avoids reconstruction")
+    w("and needs no oracle, and the reranker adds a consistent gain over the MLP")
+    w("alone; closing the gap to informed inversion without oracle knowledge is")
+    w("open future work.")
     w()
-    w("**Counter-fitting is essential.** Without CF, antonym pairs cluster together")
-    w("in GloVe space (cosine ≈ +0.47), providing no discriminative signal for the")
-    w("classifier. CF pushes antonyms below −0.3 cosine, making `ica_cosine` a")
-    w("reliable reranker feature and improving MLP feature separability.")
+    w("**Counter-fitting was rejected.** The initial hypothesis was that pushing antonym")
+    w("vectors apart (Mrkšić et al., 2016) is a prerequisite for antonym retrieval, since")
+    w("raw GloVe gives antonyms a high cosine (≈ +0.47). The leak-free experiment shows")
+    w("the opposite: when counter-fitting is re-fit per fold without label leakage, all")
+    w("CF-based methods collapse to near-zero Hits@1 while raw-GloVe methods keep their")
+    w("performance (table in Method). An earlier draft of this report reported stronger")
+    w("numbers (Hits@1 37.9%) computed on a globally counter-fitted space; those results")
+    w("depended on antonym labels shaping the entire embedding space and are not")
+    w("comparable to leak-free evaluation. We therefore report all headline results")
+    w("without counter-fitting.")
     w()
-    w("**Multi-sense limitation.** The method retrieves one antonym per query;")
-    w("polysemous words (e.g., *light* = weight/brightness/mood) may return the")
-    w("antonym for an unintended sense. Future work could use the per-axis inversion")
-    w("to offer multiple sense-specific opposites simultaneously.")
+    w("**Qualitative numbers are blind.** Earlier versions of this report selected")
+    w("inversion axes using the expected answer, inflating Hits@k to identical values")
+    w("(every found target ranked exactly first). The qualitative table now leads with")
+    w("blind protocols; the oracle row remains only as a stated non-deployable")
+    w("reference.")
     w()
+    w("**Multi-sense limitation.** The retrieval pipeline returns one ranking per query;")
+    w("polysemous words (e.g., *light* = weight/brightness/mood) may return the antonym")
+    w("for an unintended sense. The per-axis inversion mode")
+    w("(`SemanticOperator.invert_by_attributes`) can offer multiple sense-specific")
+    w("opposites simultaneously.")
+    w()
+    rer_h10 = rer_cv.get("reranker", {}).get("hits_at_10", {}).get("mean")
     w("**Comparison with LLM-based antonym retrieval.** Large language models")
     w("can reliably retrieve antonyms for most common words. The statistical pipeline")
-    w("here shows that a principled embedding-space approach is competitive for")
-    w("common-vocabulary antonymy (49.5% Hits@10), without requiring generation")
-    w("or prompting infrastructure.")
+    w("here reaches")
+    w(f"{_pct(rer_h10)} Hits@10 on this vocabulary without requiring generation")
+    w("or prompting infrastructure, but remains far from generation-based systems.")
     w()
 
-    # Write output
+    # ------------------------------------------------------------------ #
+    # Reproducibility                                                     #
+    # ------------------------------------------------------------------ #
+    w("## Reproducibility")
+    w()
+    w("- All stochastic stages are seeded with `random_state=42` (FastICA, MLP,")
+    w("  logistic reranker, fold shuffling, counter-fitting is deterministic).")
+    if ica_meta:
+        w(
+            "- Cached ICA space provenance: "
+            + ", ".join(f"{k}={v}" for k, v in ica_meta.items() if k not in ("created_at",))
+            + (f" (created {ica_meta['created_at']})" if ica_meta.get("created_at") else "")
+        )
+    else:
+        w("- Cached ICA space provenance: not recorded (space created before metadata")
+        w("  was added; re-run `task run:ica` to regenerate with provenance).")
+    w("- Full pipeline: `task run:all`; evaluations: see `task --list` and `scripts/`.")
+    w()
+
     Path(output_path).parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
     print(f"Generated paper at {output_path}")
+    for msg in warnings:
+        print(f"WARNING: {msg}")
 
 
 if __name__ == "__main__":

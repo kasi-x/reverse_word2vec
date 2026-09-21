@@ -3,14 +3,18 @@
 ## Abstract
 
 We propose a pipeline for lexical antonym retrieval using ICA-decomposed word embedding
-spaces. GloVe-100 vectors are first adjusted via counter-fitting (Mrkšić et al., 2016)
-to push antonym vectors apart, then decomposed with FastICA into statistically
-independent semantic axes. An MLP classifier trained on axis-wise features
-(|s1−s2| ∥ s1⊙s2) retrieves antonym candidates, and a lightweight logistic reranker
-re-orders them using ICA cosine, word frequency, and MLP rank signals.
+spaces. GloVe-100 vectors are decomposed with FastICA into statistically independent
+semantic axes. An MLP classifier trained on axis-wise features (|s1−s2| ∥ s1⊙s2)
+retrieves antonym candidates, and a lightweight logistic reranker re-orders them using
+ICA cosine, word frequency, and MLP rank signals. The deployed pipeline uses no
+counter-fitting and no label information outside its training split.
 On 1,121 WordNet antonym pairs with 5-fold cross-validation, the full pipeline
-achieves 37.9% Hits@1, more than doubling both the classifier alone (17.7%)
-and the oracle axis-inversion baseline (25.2%).
+achieves 19.0% Hits@1
+versus 16.7% for the classifier alone;
+an oracle axis-inversion baseline that knows the target word reaches 25.2%.
+A leak-free counter-fitting protocol is also evaluated and rejected: per-fold
+counter-fitting collapses retrieval to near zero (21.8% Hits@1 for the
+same heuristic on raw GloVe), so counter-fitting is excluded from all headline results.
 
 ## Method
 
@@ -20,6 +24,8 @@ Given a word embedding matrix $X \in \mathbb{R}^{n \times d}$ (n words, d dimens
 we apply FastICA to obtain a score matrix $S \in \mathbb{R}^{n \times k}$ where each
 column represents a statistically independent component. Unlike PCA, which maximizes
 variance, ICA maximizes statistical independence, yielding more interpretable axes.
+All headline results decompose the **raw GloVe-100** space (top 50k valid English
+words, FastICA with 100 components, random_state=42).
 
 ### Axis Labeling
 
@@ -28,24 +34,37 @@ we compute the ICA score difference |S[w1] - S[w2]| and assign the pair to the a
 with the largest difference. Axes accumulating many pairs from the same semantic category
 (e.g., male/female, king/queen -> gender) receive that category label.
 
-### Counter-fitting
+### Counter-fitting (investigated, not used)
 
 Raw GloVe vectors encode distributional similarity: antonyms such as *hot* and *cold*
 appear in identical contexts and therefore cluster together (cosine ≈ +0.47).
-Counter-fitting (Mrkšić et al., 2016) corrects this by minimising two objectives:
+Counter-fitting (Mrkšić et al., 2016) pushes antonym pairs below a target cosine
+(−0.3 in our runs) while a vector-space-preservation term (λ = 0.1) limits drift.
+In a global fit over all antonym pairs, mean antonym cosine drops from +0.47 to −0.23.
 
-- **Antonym Repel (AR)**: gradient steps that push antonym pairs below a target
-  cosine of −0.3, applied only to the words involved in constraints.
-- **Vector Space Preservation (VSP)**: a pull-back term (λ = 0.1) that prevents
-  unconstrained drift from the original embedding geometry.
+However, a global counter-fit consumes antonym labels across the whole vocabulary —
+a form of label leakage when those same pairs are used for evaluation. In the
+leak-free protocol (counter-fitting re-fit per fold on training pairs only,
+`scripts/eval_leakfree.py`), CF-based retrieval collapses:
 
-After 100 iterations, mean antonym cosine drops from +0.47 to −0.23,
-while the neighbourhood structure of unconstrained words is unchanged.
+| Method (5-fold, leak-free) | Hits@1 |
+|--------|--------|
+| least-squares map on raw GloVe (no CF) | 0.218±0.033 |
+| least-squares map on per-fold counter-fitted vectors | 0.003±0.002 |
+| nearest neighbour of −v(src) in CF space | 0.000±0.000 |
+| MLP on per-fold CF+ICA features | 0.000±0.000 |
+| oracle single-axis inversion (knows target) | 0.245±0.042 |
+
+(folds=5, vocab=50000, CF iters=50, seed=42)
+
+Because counter-fitting either leaks labels (global fit) or destroys the retrieval
+signal (leak-free per-fold fit), **all headline results below use raw GloVe + ICA
+without counter-fitting**. The counter-fitting code is retained as an experimental
+option (`run_pipeline.py --counter-fit`).
 
 ### ICA Feature Classifier
 
-The counter-fitted vectors are decomposed with FastICA into 100 independent
-components, yielding score matrix S ∈ ℝ^{n×100}.
+The ICA score matrix S ∈ ℝ^{n×100} turns each word into a vector of 100 axis scores.
 For each candidate word pair (w1, w2), we form a 200-dimensional feature vector:
 
   φ(w1, w2) = [ |s1 − s2|, s1 ⊙ s2 ]
@@ -70,16 +89,19 @@ re-orders candidates using six signals:
 | interaction | mlp_score × (−ica_cosine) |
 | inv_rank | 1 / mlp_rank |
 
-The reranker is trained on a held-out validation fold's MLP predictions,
-so the test set never leaks into any training stage.
+Training protocol: in each CV fold, the reranker is trained on the fold's MLP
+predictions over that fold's **training pairs only**; test pairs never enter any
+training stage. Because those MLP predictions are in-sample, we additionally report
+a stricter 70/15/15 holdout split where the reranker is trained on a truly held-out
+validation split (see Results).
 
 ### Oracle Axis Inversion (Baseline)
 
-As an upper-bound baseline, given the true target word we identify the single
+As a baseline, given the true target word we identify the single
 ICA axis with the largest normalised score difference |s1−s2|/σ, negate that
 axis in the source word's score vector, reconstruct, and retrieve the nearest
 neighbour. This requires knowledge of the target word and is not deployable
-in practice.
+in practice; it measures how far axis geometry alone can go.
 
 ## Results
 
@@ -92,42 +114,68 @@ in practice.
 
 ![Kurtosis Distribution](figures/kurtosis_distribution.png)
 
-### Qualitative Evaluation
+### Qualitative Evaluation (blind)
 
-On 15 canonical test cases:
+On 15 canonical
+test cases (king->queen, hot->cold, ...). The **blind** protocol never consults
+the expected target word: the *label* variant inverts all axes carrying the
+declared semantic label (part of the task spec), and the *auto* variant inverts
+the source word's single highest-|z| axis. The oracle protocol picks the best
+axis using the target word and is not deployable; it shows how far axis
+selection with full information can go.
 
-| Metric | Score |
-|--------|-------|
-| Hits At 1 | 66.7% |
-| Hits At 5 | 66.7% |
-| Hits At 10 | 66.7% |
+| Protocol | Hits@1 | Hits@5 | Hits@10 |
+|----------|--------|--------|---------|
+| Blind (declared label group) | 0.0% | 26.7% | 33.3% |
+| Blind (auto, source top-1 axis) | 6.7% | 6.7% | 6.7% |
+| Oracle axis selection (upper bound) | 66.7% | 66.7% | 66.7% |
 
-**Selected examples:**
+**Blind (declared label) examples:**
 
-| Input | Axis | Expected | Top-3 Results | Rank |
-|-------|------|----------|---------------|------|
-| king | gender | queen | queen, monarch, kingdom | 1 |
-| boy | gender | girl | girl, man, kid | 1 |
-| father | gender | mother | mother, son, brother | 1 |
-| husband | gender | wife | wife, daughter, mother | 1 |
-| happy | sentiment | sad | i, we, want | - |
-| good | sentiment | bad | n't, just, get | - |
-| love | sentiment | hate | loves, longing, passion | - |
-| hot | temperature | cold | cold, dry, cool | 1 |
-| warm | temperature | cool | cool, dry, cold | 1 |
-| big | size | small | huge, biggest, large | 1 |
+| Input | Axis label | Expected | Top-3 Results | Rank |
+|-------|------------|----------|---------------|------|
+| king | gender | queen | prince, queen, brother | 2 |
+| boy | gender | girl | kid, man, girl | 3 |
+| father | gender | mother | brother, son, grandfather | - |
+| husband | gender | wife | himself, him, his | - |
+| happy | sentiment | sad | feel, i, glad | - |
+| good | sentiment | bad | n't, going, just | 8 |
+| love | sentiment | hate | song, me, crazy | - |
+| hot | temperature | cold | night, days, weather | - |
+| warm | temperature | cool | warmer, chilly, sunny | - |
+| big | size | small | huge, small, large | 2 |
+
+**Blind ICA inversion vs traditional analogy** (note: the analogy baseline
+uses an unrelated word pair a:b, so it is a different task setup rather than
+a like-for-like comparison):
+
+| Query | Expected | ICA rank (blind) | Analogy rank | Analogy top-5 |
+|-------|----------|------------------|--------------|---------------|
+| king | queen | 2 | 1 | queen, monarch, throne, daughter, prince |
+| boy | girl | 3 | 1 | girl, mother, child, pregnant, girls |
+| father | mother | - | 1 | mother, daughter, wife, husband, grandmother |
+| husband | wife | - | 1 | wife, mother, daughter, married, girlfriend |
 
 ### Antonym Retrieval (5-fold CV)
 
-Cross-validated on 1121 WordNet antonym pairs:
+Cross-validated on 1,121 WordNet antonym pairs:
 
 | Method | Hits@1 | Hits@5 | Hits@10 |
 |--------|--------|--------|---------|
-| Oracle axis inversion† | 0.252±0.015 | 0.391±0.014 | 0.450±0.018 |
-| MLP classifier | 0.177±0.012 | 0.406±0.032 | 0.495±0.035 |
-| MLP + Reranker | 0.379±0.039 | 0.480±0.039 | 0.495±0.035 |
+| Oracle axis inversion† | 0.252±0.028 | 0.391±0.036 | 0.450±0.040 |
+| MLP classifier | 0.167±0.020 | 0.314±0.033 | 0.383±0.035 |
+| MLP + Reranker | 0.190±0.029 | 0.332±0.034 | 0.383±0.035 |
 
-† Oracle: knows the target word to select the best axis (upper bound, not deployable).
+† Oracle: selects the axis using the target word (not deployable; measures axis
+  geometry alone).
+
+Stricter 70/15/15 holdout split (reranker trained on a genuinely held-out
+validation split; single split, so no ±std):
+
+| Method | Hits@1 | Hits@5 | Hits@10 |
+|--------|--------|--------|---------|
+| MLP classifier | 16.6% | 28.4% | 33.1% |
+| MLP + Reranker | 18.3% | 27.8% | 33.1% |
 
 ### Google Analogy Dataset
 
@@ -169,51 +217,88 @@ Distribution of profession words along the 'gender' axis:
 
 ### Reconstruction Quality
 
-- Mean relative error: 0.0000
-- Median relative error: 0.0000
-- 95th percentile: 0.0000
+Keeping all k = d components is a lossless change of basis, so the roundtrip
+error is float noise by construction. The meaningful question is how much
+information survives with fewer components; we reconstruct from the k
+highest-energy components and report the relative error:
+
+| Components kept | Mean rel. error | Median | 95th pct |
+|-----------------|-----------------|--------|----------|
+| 5 | 0.9437 | 0.9572 | 1.0026 |
+| 10 | 0.9078 | 0.9256 | 0.9851 |
+| 25 | 0.8028 | 0.8197 | 0.9243 |
+| 50 | 0.6175 | 0.6187 | 0.7864 |
+| 75 | 0.3846 | 0.3745 | 0.5663 |
+| 100 | 0.0000 | 0.0000 | 0.0000 |
+
+(sampled words: 1000, total components: 100)
 
 ![Reconstruction Quality](figures/reconstruction_quality.png)
 
 ### Reranker Feature Analysis
 
-Logistic regression coefficients (trained on 168 validation pairs):
+Logistic regression coefficients:
 
 | Feature | Coefficient | Interpretation |
 |---------|-------------|----------------|
-| freq_ratio | -1.481 | penalises rare noise candidates |
-| ica_cosine | -1.020 | prefers negative ICA cosine (semantic opposites) |
-| interaction | +1.020 | synergy: high MLP score + negative cosine |
-| mlp_rank | -0.474 | higher-ranked candidates preferred |
-| inv_rank | -0.098 | 1/rank bonus |
-| mlp_score | -0.043 | raw MLP probability |
+| interaction | -0.404 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
+| ica_cosine | +0.404 | positive: prefers positive ICA cosine (antonyms cluster in raw GloVe) |
+| freq_ratio | -0.338 | negative: penalises candidates much rarer than the query |
+| mlp_rank | -0.191 | higher-ranked MLP candidates preferred |
+| inv_rank | +0.161 | 1/rank bonus |
+| mlp_score | +0.082 | raw MLP probability |
 
-The dominant signal is `freq_ratio` (−1.48): the MLP tends to rank rare
-vocabulary items highly because their extreme ICA scores superficially
-resemble antonym features. The reranker suppresses these by penalising
-candidates that are much rarer than the query word.
+The dominant signal is `interaction` (-0.40). On the raw space the
+strongest reranker signals are the ICA-cosine pair (`ica_cosine` and its
+`interaction` with the MLP score) together with the rarity penalty
+(`freq_ratio`): rare vocabulary items with extreme ICA scores attract high
+MLP scores, and the reranker suppresses them while exploiting the fact
+that antonyms sit in related regions of the raw embedding space.
 
 ## Discussion
 
-**Why does the reranker outperform the oracle baseline (37.9% vs 25.2%)?**
-The oracle baseline only flips the single most-discriminative ICA axis, then
-retrieves the nearest neighbour to the reconstructed vector. Reconstruction
-noise from ICA round-tripping limits precision. The MLP classifier avoids
-reconstruction altogether by scoring candidates directly from ICA features;
-the reranker then filters residual noise using frequency and ICA cosine signals.
+**Informed axis inversion (0.252±0.028) vs the deployable pipeline (0.190±0.029).**
+The oracle baseline — which knows the target word and flips the single
+most-discriminative ICA axis — remains the strongest retrieval strategy on
+this space, so interpretable axis geometry carries real antonym signal.
+It is not deployable, however: without the target, blind axis selection
+performs poorly (qualitative table). The MLP classifier avoids reconstruction
+and needs no oracle, and the reranker adds a consistent gain over the MLP
+alone; closing the gap to informed inversion without oracle knowledge is
+open future work.
 
-**Counter-fitting is essential.** Without CF, antonym pairs cluster together
-in GloVe space (cosine ≈ +0.47), providing no discriminative signal for the
-classifier. CF pushes antonyms below −0.3 cosine, making `ica_cosine` a
-reliable reranker feature and improving MLP feature separability.
+**Counter-fitting was rejected.** The initial hypothesis was that pushing antonym
+vectors apart (Mrkšić et al., 2016) is a prerequisite for antonym retrieval, since
+raw GloVe gives antonyms a high cosine (≈ +0.47). The leak-free experiment shows
+the opposite: when counter-fitting is re-fit per fold without label leakage, all
+CF-based methods collapse to near-zero Hits@1 while raw-GloVe methods keep their
+performance (table in Method). An earlier draft of this report reported stronger
+numbers (Hits@1 37.9%) computed on a globally counter-fitted space; those results
+depended on antonym labels shaping the entire embedding space and are not
+comparable to leak-free evaluation. We therefore report all headline results
+without counter-fitting.
 
-**Multi-sense limitation.** The method retrieves one antonym per query;
-polysemous words (e.g., *light* = weight/brightness/mood) may return the
-antonym for an unintended sense. Future work could use the per-axis inversion
-to offer multiple sense-specific opposites simultaneously.
+**Qualitative numbers are blind.** Earlier versions of this report selected
+inversion axes using the expected answer, inflating Hits@k to identical values
+(every found target ranked exactly first). The qualitative table now leads with
+blind protocols; the oracle row remains only as a stated non-deployable
+reference.
+
+**Multi-sense limitation.** The retrieval pipeline returns one ranking per query;
+polysemous words (e.g., *light* = weight/brightness/mood) may return the antonym
+for an unintended sense. The per-axis inversion mode
+(`SemanticOperator.invert_by_attributes`) can offer multiple sense-specific
+opposites simultaneously.
 
 **Comparison with LLM-based antonym retrieval.** Large language models
 can reliably retrieve antonyms for most common words. The statistical pipeline
-here shows that a principled embedding-space approach is competitive for
-common-vocabulary antonymy (49.5% Hits@10), without requiring generation
-or prompting infrastructure.
+here reaches
+38.3% Hits@10 on this vocabulary without requiring generation
+or prompting infrastructure, but remains far from generation-based systems.
+
+## Reproducibility
+
+- All stochastic stages are seeded with `random_state=42` (FastICA, MLP,
+  logistic reranker, fold shuffling, counter-fitting is deterministic).
+- Cached ICA space provenance: model=glove-100, counter_fitted=False, vocab_limit=50000, n_components=100, random_state=42 (created 2026-09-21T00:23:24.642937+00:00)
+- Full pipeline: `task run:all`; evaluations: see `task --list` and `scripts/`.

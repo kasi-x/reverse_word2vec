@@ -4,16 +4,13 @@ ICA Semantic Inversion Pipeline.
 Usage:
     pixi run python run_pipeline.py                    # Run all phases
     pixi run python run_pipeline.py --phase 1          # Phase 1 only (ICA fit + labeling)
-    pixi run python run_pipeline.py --phase 3          # Qualitative eval
+    pixi run python run_pipeline.py --phase 3          # Quantitative eval
     pixi run python run_pipeline.py --load-space       # Load cached ICA space
     pixi run python run_pipeline.py --model glove-300  # Use GloVe-300
 """
-import argparse
-import json
-import sys
-from pathlib import Path
 
-import numpy as np
+import argparse
+from pathlib import Path
 
 
 def parse_args() -> argparse.Namespace:
@@ -41,6 +38,11 @@ def parse_args() -> argparse.Namespace:
         "--load-space",
         action="store_true",
         help="Load cached ICA space from results/ica_space instead of fitting",
+    )
+    parser.add_argument(
+        "--relabel",
+        action="store_true",
+        help="Re-run axis labeling on the cached ICA space (no refit) and exit",
     )
     parser.add_argument(
         "--vocab-limit",
@@ -71,6 +73,7 @@ def parse_args() -> argparse.Namespace:
 def load_model(model_name: str):
     """Load word embedding model."""
     from src.word2vec_loader import Word2VecLoader
+
     loader = Word2VecLoader()
     if model_name == "google-news":
         return loader.load_google_news()
@@ -91,7 +94,8 @@ def phase1_ica(model, args) -> tuple:
 
     # Optional counter-fitting before ICA
     if args.counter_fit:
-        from src.counter_fitting import CounterFitter, CounterFitConfig
+        from src.counter_fitting import CounterFitConfig, CounterFitter
+
         print("\nApplying counter-fitting...")
         pairs_for_cf = extract_antonym_pairs()
         cfg = CounterFitConfig(
@@ -110,8 +114,18 @@ def phase1_ica(model, args) -> tuple:
         vocab_limit=args.vocab_limit,
     )
 
-    # Save ICA space
-    save_ica_space(space, "results/ica_space")
+    # Save ICA space (with provenance so results are reproducible/traceable)
+    save_ica_space(
+        space,
+        "results/ica_space",
+        meta={
+            "model": args.model,
+            "counter_fitted": bool(args.counter_fit),
+            "vocab_limit": args.vocab_limit,
+            "n_components": space.n_components,
+            "random_state": 42,
+        },
+    )
 
     # Load antonym pairs for labeling
     print("\nExtracting WordNet antonym pairs...")
@@ -120,7 +134,8 @@ def phase1_ica(model, args) -> tuple:
 
     # Filter to pairs in ICA vocabulary
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
     print(f"Valid pairs in ICA space: {len(valid_pairs)}")
@@ -148,19 +163,29 @@ def phase2_qualitative(model, space, profiles) -> dict:
     evaluator = QualitativeEvaluator(operator, space, profiles)
 
     results = evaluator.run_all()
-    print(f"\nResults: {results['evaluated']} cases evaluated")
-    for k_str, val in results["metrics"].items():
+
+    blind = results["blind"]["label"]
+    auto = results["blind"]["auto"]
+    oracle = results["oracle"]
+    print(f"\nBlind (declared label): {blind['evaluated']} cases evaluated")
+    for k_str, val in blind["metrics"].items():
+        print(f"  {k_str}: {val:.1%}")
+    print(f"Blind (auto, source top-1 axis): {auto['evaluated']} cases evaluated")
+    for k_str, val in auto["metrics"].items():
+        print(f"  {k_str}: {val:.1%}")
+    print(f"Oracle upper bound: {oracle['evaluated']} cases evaluated")
+    for k_str, val in oracle["metrics"].items():
         print(f"  {k_str}: {val:.1%}")
 
-    # Compare with traditional analogy
+    # Compare with traditional analogy (blind ICA side)
     comparison = evaluator.compare_with_analogy()
     results["analogy_comparison"] = comparison
 
-    # Failure analysis
-    failures = evaluator.failure_analysis(results)
+    # Failure analysis on the oracle run (diagnostic only)
+    failures = evaluator.failure_analysis(oracle)
     results["failure_analysis"] = failures
     if failures["total_failures"] > 0:
-        print(f"\n{failures['total_failures']} failures:")
+        print(f"\n{failures['total_failures']} oracle failures (diagnostic):")
         for f in failures["failures"][:5]:
             reason = f.get("reason", f"top-3: {f.get('actual_top3', [])}")
             print(f"  {f['word']} -> {f['expected']}: {reason}")
@@ -238,8 +263,38 @@ def phase5_paper() -> None:
     generate_paper()
 
 
+def relabel_axes() -> None:
+    """Re-run axis labeling on the cached ICA space (no refit, no model load)."""
+    from src.antonym_loader import extract_antonym_pairs
+    from src.axis_labeler import AxisLabeler
+    from src.ica_transformer import load_ica_space
+
+    print("\n" + "=" * 60)
+    print("RELABEL: axis labeling on cached ICA space")
+    print("=" * 60)
+
+    space = load_ica_space("results/ica_space")
+    antonym_pairs = extract_antonym_pairs()
+    valid_pairs = [
+        (w1, w2)
+        for w1, w2 in antonym_pairs
+        if space.score(w1) is not None and space.score(w2) is not None
+    ]
+    print(f"Valid pairs in ICA space: {len(valid_pairs)}")
+
+    labeler = AxisLabeler(space)
+    profiles = labeler.profile_all_axes()
+    profiles = labeler.auto_label(valid_pairs, profiles)
+    labeler.print_summary(profiles)
+    labeler.save_profiles(profiles, "results/axis_profiles.json")
+
+
 def main() -> None:
     args = parse_args()
+
+    if args.relabel:
+        relabel_axes()
+        return
 
     print(f"Model: {args.model}")
     print(f"Components: {args.components or 'auto (model dim)'}")
@@ -250,9 +305,9 @@ def main() -> None:
 
     # Load or fit ICA space
     if args.load_space:
+        from src.antonym_loader import extract_antonym_pairs
         from src.axis_labeler import AxisLabeler
         from src.ica_transformer import load_ica_space
-        from src.antonym_loader import extract_antonym_pairs
 
         print("\nLoading cached ICA space...")
         space = load_ica_space("results/ica_space")
@@ -260,7 +315,8 @@ def main() -> None:
         profiles = labeler.load_profiles("results/axis_profiles.json")
         antonym_pairs = extract_antonym_pairs()
         valid_pairs = [
-            (w1, w2) for w1, w2 in antonym_pairs
+            (w1, w2)
+            for w1, w2 in antonym_pairs
             if space.score(w1) is not None and space.score(w2) is not None
         ]
     else:
@@ -268,16 +324,17 @@ def main() -> None:
             space, profiles, valid_pairs = phase1_ica(model, args)
         else:
             # Need ICA space for later phases
+            from src.antonym_loader import extract_antonym_pairs
             from src.axis_labeler import AxisLabeler
             from src.ica_transformer import load_ica_space
-            from src.antonym_loader import extract_antonym_pairs
 
             space = load_ica_space("results/ica_space")
             labeler = AxisLabeler(space)
             profiles = labeler.load_profiles("results/axis_profiles.json")
             antonym_pairs = extract_antonym_pairs()
             valid_pairs = [
-                (w1, w2) for w1, w2 in antonym_pairs
+                (w1, w2)
+                for w1, w2 in antonym_pairs
                 if space.score(w1) is not None and space.score(w2) is not None
             ]
 

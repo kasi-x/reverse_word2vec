@@ -4,11 +4,12 @@ ICA (Independent Component Analysis) transformation of word embedding spaces.
 Decomposes word vectors into statistically independent components,
 each potentially corresponding to an interpretable semantic axis.
 """
+
 import json
 import re
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 from gensim.models import KeyedVectors
@@ -26,8 +27,9 @@ class ICASpace:
     unmixing_matrix: np.ndarray  # (n_components, n_features) W in S = X @ W.T
     mean_vector: np.ndarray  # (n_features,) mean subtracted before ICA
     n_components: int
+    meta: dict = field(default_factory=dict)  # provenance (model, seed, CF, ...)
 
-    def score(self, word: str) -> Optional[np.ndarray]:
+    def score(self, word: str) -> np.ndarray | None:
         """Get ICA score vector for a word. Returns None if not found."""
         idx = self.word_to_idx.get(word)
         if idx is None:
@@ -50,7 +52,7 @@ class ICATransformer:
     def fit(
         self,
         model: KeyedVectors,
-        n_components: Optional[int] = None,
+        n_components: int | None = None,
         vocab_limit: int = 50000,
         random_state: int = 42,
         max_iter: int = 1000,
@@ -104,9 +106,7 @@ class ICATransformer:
         print(f"ICA fit complete. Score matrix shape: {S.shape}")
         return space
 
-    def transform_word(
-        self, word: str, model: KeyedVectors, space: ICASpace
-    ) -> Optional[np.ndarray]:
+    def transform_word(self, word: str, model: KeyedVectors, space: ICASpace) -> np.ndarray | None:
         """Transform a single word (possibly OOV for the ICA space) into ICA scores."""
         if word in space.word_to_idx:
             return space.S[space.word_to_idx[word]]
@@ -120,8 +120,16 @@ class ICATransformer:
         return ica_scores @ space.mixing_matrix.T + space.mean_vector
 
 
-def save_ica_space(space: ICASpace, path: str) -> None:
-    """Save ICA space to disk (npz for arrays, json for metadata)."""
+def save_ica_space(space: ICASpace, path: str, meta: dict | None = None) -> None:
+    """
+    Save ICA space to disk (npz for arrays, json for metadata).
+
+    Args:
+        space: The fitted ICASpace.
+        path: Base path (suffixes .npz/.json are appended).
+        meta: Provenance metadata (model name, counter_fitted, vocab_limit,
+            random_state, ...). A creation timestamp is added automatically.
+    """
     base = Path(path)
     np.savez_compressed(
         str(base.with_suffix(".npz")),
@@ -130,12 +138,16 @@ def save_ica_space(space: ICASpace, path: str) -> None:
         unmixing_matrix=space.unmixing_matrix,
         mean_vector=space.mean_vector,
     )
-    meta = {
+    provenance = {"created_at": datetime.now(UTC).isoformat()}
+    provenance.update(meta or {})
+    provenance.update(space.meta)
+    meta_out = {
         "words": space.words,
         "n_components": space.n_components,
+        "meta": provenance,
     }
     with open(str(base.with_suffix(".json")), "w", encoding="utf-8") as f:
-        json.dump(meta, f, ensure_ascii=False)
+        json.dump(meta_out, f, ensure_ascii=False)
     print(f"Saved ICA space to {base.with_suffix('.npz')} + {base.with_suffix('.json')}")
 
 
@@ -143,7 +155,7 @@ def load_ica_space(path: str) -> ICASpace:
     """Load ICA space from disk."""
     base = Path(path)
     data = np.load(str(base.with_suffix(".npz")))
-    with open(str(base.with_suffix(".json")), "r", encoding="utf-8") as f:
+    with open(str(base.with_suffix(".json")), encoding="utf-8") as f:
         meta = json.load(f)
 
     words = meta["words"]
@@ -156,6 +168,7 @@ def load_ica_space(path: str) -> ICASpace:
         unmixing_matrix=data["unmixing_matrix"],
         mean_vector=data["mean_vector"],
         n_components=meta["n_components"],
+        meta=meta.get("meta", {}),
     )
     print(f"Loaded ICA space: {len(words)} words, {space.n_components} components")
     return space

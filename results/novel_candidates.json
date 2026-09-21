@@ -1,0 +1,1766 @@
+{
+  "candidates": [
+    {
+      "query": "buenos",
+      "q_rank": 7152,
+      "top1": "aires",
+      "cos1": 0.9611,
+      "margin": 0.2321,
+      "morph": "",
+      "top3": [
+        {
+          "w": "aires",
+          "cos": 0.9611
+        },
+        {
+          "w": "caracas",
+          "cos": 0.729
+        },
+        {
+          "w": "montevideo",
+          "cos": 0.7061
+        }
+      ]
+    },
+    {
+      "query": "aires",
+      "q_rank": 7131,
+      "top1": "buenos",
+      "cos1": 0.9611,
+      "margin": 0.228,
+      "morph": "",
+      "top3": [
+        {
+          "w": "buenos",
+          "cos": 0.9611
+        },
+        {
+          "w": "caracas",
+          "cos": 0.7331
+        },
+        {
+          "w": "montevideo",
+          "cos": 0.7096
+        }
+      ]
+    },
+    {
+      "query": "republicans",
+      "q_rank": 1338,
+      "top1": "democrats",
+      "cos1": 0.9254,
+      "margin": 0.0861,
+      "morph": "",
+      "top3": [
+        {
+          "w": "democrats",
+          "cos": 0.9254
+        },
+        {
+          "w": "republican",
+          "cos": 0.8393
+        },
+        {
+          "w": "gop",
+          "cos": 0.8299
+        }
+      ]
+    },
+    {
+      "query": "democrats",
+      "q_rank": 1066,
+      "top1": "republicans",
+      "cos1": 0.9254,
+      "margin": 0.0851,
+      "morph": "",
+      "top3": [
+        {
+          "w": "republicans",
+          "cos": 0.9254
+        },
+        {
+          "w": "republican",
+          "cos": 0.8403
+        },
+        {
+          "w": "conservatives",
+          "cos": 0.8365
+        }
+      ]
+    },
+    {
+      "query": "lama",
+      "q_rank": 6709,
+      "top1": "dalai",
+      "cos1": 0.9138,
+      "margin": 0.2697,
+      "morph": "",
+      "top3": [
+        {
+          "w": "dalai",
+          "cos": 0.9138
+        },
+        {
+          "w": "tibet",
+          "cos": 0.6441
+        },
+        {
+          "w": "tibetans",
+          "cos": 0.6437
+        }
+      ]
+    },
+    {
+      "query": "dalai",
+      "q_rank": 7307,
+      "top1": "lama",
+      "cos1": 0.9138,
+      "margin": 0.2364,
+      "morph": "",
+      "top3": [
+        {
+          "w": "lama",
+          "cos": 0.9138
+        },
+        {
+          "w": "tibetans",
+          "cos": 0.6774
+        },
+        {
+          "w": "tibet",
+          "cos": 0.6649
+        }
+      ]
+    },
+    {
+      "query": "imports",
+      "q_rank": 3097,
+      "top1": "exports",
+      "cos1": 0.9088,
+      "margin": 0.0767,
+      "morph": "",
+      "top3": [
+        {
+          "w": "exports",
+          "cos": 0.9088
+        },
+        {
+          "w": "export",
+          "cos": 0.8321
+        },
+        {
+          "w": "import",
+          "cos": 0.8044
+        }
+      ]
+    },
+    {
+      "query": "exports",
+      "q_rank": 1897,
+      "top1": "imports",
+      "cos1": 0.9088,
+      "margin": 0.0477,
+      "morph": "",
+      "top3": [
+        {
+          "w": "imports",
+          "cos": 0.9088
+        },
+        {
+          "w": "export",
+          "cos": 0.8611
+        },
+        {
+          "w": "import",
+          "cos": 0.7376
+        }
+      ]
+    },
+    {
+      "query": "daughter",
+      "q_rank": 1131,
+      "top1": "wife",
+      "cos1": 0.9048,
+      "margin": 0.0111,
+      "morph": "",
+      "top3": [
+        {
+          "w": "wife",
+          "cos": 0.9048
+        },
+        {
+          "w": "mother",
+          "cos": 0.8937
+        },
+        {
+          "w": "son",
+          "cos": 0.8592
+        }
+      ]
+    },
+    {
+      "query": "sampras",
+      "q_rank": 7359,
+      "top1": "agassi",
+      "cos1": 0.9039,
+      "margin": 0.0746,
+      "morph": "",
+      "top3": [
+        {
+          "w": "agassi",
+          "cos": 0.9039
+        },
+        {
+          "w": "federer",
+          "cos": 0.8294
+        },
+        {
+          "w": "roddick",
+          "cos": 0.8247
+        }
+      ]
+    },
+    {
+      "query": "agassi",
+      "q_rank": 7320,
+      "top1": "sampras",
+      "cos1": 0.9039,
+      "margin": 0.0519,
+      "morph": "",
+      "top3": [
+        {
+          "w": "sampras",
+          "cos": 0.9039
+        },
+        {
+          "w": "roddick",
+          "cos": 0.852
+        },
+        {
+          "w": "federer",
+          "cos": 0.8417
+        }
+      ]
+    },
+    {
+      "query": "days",
+      "q_rank": 249,
+      "top1": "weeks",
+      "cos1": 0.9021,
+      "margin": 0.0298,
+      "morph": "",
+      "top3": [
+        {
+          "w": "weeks",
+          "cos": 0.9021
+        },
+        {
+          "w": "months",
+          "cos": 0.8722
+        },
+        {
+          "w": "day",
+          "cos": 0.8631
+        }
+      ]
+    },
+    {
+      "query": "weeks",
+      "q_rank": 517,
+      "top1": "days",
+      "cos1": 0.9021,
+      "margin": 0.0003,
+      "morph": "",
+      "top3": [
+        {
+          "w": "days",
+          "cos": 0.9021
+        },
+        {
+          "w": "months",
+          "cos": 0.9018
+        },
+        {
+          "w": "week",
+          "cos": 0.8716
+        }
+      ]
+    },
+    {
+      "query": "months",
+      "q_rank": 265,
+      "top1": "weeks",
+      "cos1": 0.9018,
+      "margin": 0.0295,
+      "morph": "",
+      "top3": [
+        {
+          "w": "weeks",
+          "cos": 0.9018
+        },
+        {
+          "w": "days",
+          "cos": 0.8722
+        },
+        {
+          "w": "month",
+          "cos": 0.8701
+        }
+      ]
+    },
+    {
+      "query": "nadal",
+      "q_rank": 7639,
+      "top1": "federer",
+      "cos1": 0.9007,
+      "margin": 0.0605,
+      "morph": "",
+      "top3": [
+        {
+          "w": "federer",
+          "cos": 0.9007
+        },
+        {
+          "w": "djokovic",
+          "cos": 0.8401
+        },
+        {
+          "w": "roddick",
+          "cos": 0.8353
+        }
+      ]
+    },
+    {
+      "query": "federer",
+      "q_rank": 5742,
+      "top1": "nadal",
+      "cos1": 0.9007,
+      "margin": 0.0413,
+      "morph": "",
+      "top3": [
+        {
+          "w": "nadal",
+          "cos": 0.9007
+        },
+        {
+          "w": "roddick",
+          "cos": 0.8593
+        },
+        {
+          "w": "djokovic",
+          "cos": 0.8569
+        }
+      ]
+    },
+    {
+      "query": "estimate",
+      "q_rank": 3470,
+      "top1": "estimates",
+      "cos1": 0.9006,
+      "margin": 0.1466,
+      "morph": "",
+      "top3": [
+        {
+          "w": "estimates",
+          "cos": 0.9006
+        },
+        {
+          "w": "estimated",
+          "cos": 0.7539
+        },
+        {
+          "w": "forecast",
+          "cos": 0.7176
+        }
+      ]
+    },
+    {
+      "query": "estimates",
+      "q_rank": 2886,
+      "top1": "estimate",
+      "cos1": 0.9006,
+      "margin": 0.134,
+      "morph": "",
+      "top3": [
+        {
+          "w": "estimate",
+          "cos": 0.9006
+        },
+        {
+          "w": "estimated",
+          "cos": 0.7666
+        },
+        {
+          "w": "forecasts",
+          "cos": 0.7305
+        }
+      ]
+    },
+    {
+      "query": "brother",
+      "q_rank": 1201,
+      "top1": "father",
+      "cos1": 0.9004,
+      "margin": 0.0042,
+      "morph": "",
+      "top3": [
+        {
+          "w": "father",
+          "cos": 0.9004
+        },
+        {
+          "w": "son",
+          "cos": 0.8962
+        },
+        {
+          "w": "uncle",
+          "cos": 0.8485
+        }
+      ]
+    },
+    {
+      "query": "kph",
+      "q_rank": 9608,
+      "top1": "mph",
+      "cos1": 0.8994,
+      "margin": 0.1946,
+      "morph": "",
+      "top3": [
+        {
+          "w": "mph",
+          "cos": 0.8994
+        },
+        {
+          "w": "winds",
+          "cos": 0.7048
+        },
+        {
+          "w": "gusts",
+          "cos": 0.7044
+        }
+      ]
+    },
+    {
+      "query": "mph",
+      "q_rank": 5135,
+      "top1": "kph",
+      "cos1": 0.8994,
+      "margin": 0.1779,
+      "morph": "",
+      "top3": [
+        {
+          "w": "kph",
+          "cos": 0.8994
+        },
+        {
+          "w": "winds",
+          "cos": 0.7215
+        },
+        {
+          "w": "gusts",
+          "cos": 0.7126
+        }
+      ]
+    },
+    {
+      "query": "forecast",
+      "q_rank": 2635,
+      "top1": "forecasts",
+      "cos1": 0.899,
+      "margin": 0.1529,
+      "morph": "",
+      "top3": [
+        {
+          "w": "forecasts",
+          "cos": 0.899
+        },
+        {
+          "w": "projections",
+          "cos": 0.7461
+        },
+        {
+          "w": "predicted",
+          "cos": 0.7433
+        }
+      ]
+    },
+    {
+      "query": "forecasts",
+      "q_rank": 5682,
+      "top1": "forecast",
+      "cos1": 0.899,
+      "margin": 0.1066,
+      "morph": "",
+      "top3": [
+        {
+          "w": "forecast",
+          "cos": 0.899
+        },
+        {
+          "w": "projections",
+          "cos": 0.7925
+        },
+        {
+          "w": "predictions",
+          "cos": 0.7763
+        }
+      ]
+    },
+    {
+      "query": "miles",
+      "q_rank": 679,
+      "top1": "kilometers",
+      "cos1": 0.899,
+      "margin": 0.0761,
+      "morph": "",
+      "top3": [
+        {
+          "w": "kilometers",
+          "cos": 0.899
+        },
+        {
+          "w": "kilometres",
+          "cos": 0.8229
+        },
+        {
+          "w": "northeast",
+          "cos": 0.7483
+        }
+      ]
+    },
+    {
+      "query": "kilometers",
+      "q_rank": 1345,
+      "top1": "miles",
+      "cos1": 0.899,
+      "margin": 0.0217,
+      "morph": "",
+      "top3": [
+        {
+          "w": "miles",
+          "cos": 0.899
+        },
+        {
+          "w": "kilometres",
+          "cos": 0.8773
+        },
+        {
+          "w": "kms",
+          "cos": 0.7702
+        }
+      ]
+    },
+    {
+      "query": "mother",
+      "q_rank": 808,
+      "top1": "wife",
+      "cos1": 0.8988,
+      "margin": 0.0051,
+      "morph": "",
+      "top3": [
+        {
+          "w": "wife",
+          "cos": 0.8988
+        },
+        {
+          "w": "daughter",
+          "cos": 0.8937
+        },
+        {
+          "w": "father",
+          "cos": 0.8755
+        }
+      ]
+    },
+    {
+      "query": "semifinal",
+      "q_rank": 7004,
+      "top1": "quarterfinal",
+      "cos1": 0.8982,
+      "margin": 0.0586,
+      "morph": "",
+      "top3": [
+        {
+          "w": "quarterfinal",
+          "cos": 0.8982
+        },
+        {
+          "w": "semifinals",
+          "cos": 0.8395
+        },
+        {
+          "w": "quarterfinals",
+          "cos": 0.8117
+        }
+      ]
+    },
+    {
+      "query": "convince",
+      "q_rank": 5716,
+      "top1": "persuade",
+      "cos1": 0.8958,
+      "margin": 0.1248,
+      "morph": "",
+      "top3": [
+        {
+          "w": "persuade",
+          "cos": 0.8958
+        },
+        {
+          "w": "persuaded",
+          "cos": 0.771
+        },
+        {
+          "w": "persuading",
+          "cos": 0.75
+        }
+      ]
+    },
+    {
+      "query": "persuade",
+      "q_rank": 5448,
+      "top1": "convince",
+      "cos1": 0.8958,
+      "margin": 0.1087,
+      "morph": "",
+      "top3": [
+        {
+          "w": "convince",
+          "cos": 0.8958
+        },
+        {
+          "w": "persuaded",
+          "cos": 0.7871
+        },
+        {
+          "w": "persuading",
+          "cos": 0.7864
+        }
+      ]
+    },
+    {
+      "query": "bhutto",
+      "q_rank": 6966,
+      "top1": "benazir",
+      "cos1": 0.8953,
+      "margin": 0.1202,
+      "morph": "",
+      "top3": [
+        {
+          "w": "benazir",
+          "cos": 0.8953
+        },
+        {
+          "w": "sharif",
+          "cos": 0.7751
+        },
+        {
+          "w": "zardari",
+          "cos": 0.7644
+        }
+      ]
+    },
+    {
+      "query": "hussein",
+      "q_rank": 2315,
+      "top1": "saddam",
+      "cos1": 0.8946,
+      "margin": 0.2017,
+      "morph": "",
+      "top3": [
+        {
+          "w": "saddam",
+          "cos": 0.8946
+        },
+        {
+          "w": "iraqi",
+          "cos": 0.6929
+        },
+        {
+          "w": "iraq",
+          "cos": 0.679
+        }
+      ]
+    },
+    {
+      "query": "saddam",
+      "q_rank": 1639,
+      "top1": "hussein",
+      "cos1": 0.8946,
+      "margin": 0.1403,
+      "morph": "",
+      "top3": [
+        {
+          "w": "hussein",
+          "cos": 0.8946
+        },
+        {
+          "w": "iraq",
+          "cos": 0.7543
+        },
+        {
+          "w": "iraqi",
+          "cos": 0.7435
+        }
+      ]
+    },
+    {
+      "query": "particularly",
+      "q_rank": 1113,
+      "top1": "especially",
+      "cos1": 0.8938,
+      "margin": 0.1189,
+      "morph": "",
+      "top3": [
+        {
+          "w": "especially",
+          "cos": 0.8938
+        },
+        {
+          "w": "most",
+          "cos": 0.7749
+        },
+        {
+          "w": "though",
+          "cos": 0.7688
+        }
+      ]
+    },
+    {
+      "query": "especially",
+      "q_rank": 858,
+      "top1": "particularly",
+      "cos1": 0.8938,
+      "margin": 0.086,
+      "morph": "",
+      "top3": [
+        {
+          "w": "particularly",
+          "cos": 0.8938
+        },
+        {
+          "w": "even",
+          "cos": 0.8079
+        },
+        {
+          "w": "because",
+          "cos": 0.7988
+        }
+      ]
+    },
+    {
+      "query": "lumpur",
+      "q_rank": 6682,
+      "top1": "kuala",
+      "cos1": 0.8933,
+      "margin": 0.1806,
+      "morph": "",
+      "top3": [
+        {
+          "w": "kuala",
+          "cos": 0.8933
+        },
+        {
+          "w": "bangkok",
+          "cos": 0.7127
+        },
+        {
+          "w": "jakarta",
+          "cos": 0.7049
+        }
+      ]
+    },
+    {
+      "query": "kuala",
+      "q_rank": 6468,
+      "top1": "lumpur",
+      "cos1": 0.8933,
+      "margin": 0.1631,
+      "morph": "",
+      "top3": [
+        {
+          "w": "lumpur",
+          "cos": 0.8933
+        },
+        {
+          "w": "bangkok",
+          "cos": 0.7303
+        },
+        {
+          "w": "jakarta",
+          "cos": 0.7059
+        }
+      ]
+    },
+    {
+      "query": "liberals",
+      "q_rank": 8193,
+      "top1": "conservatives",
+      "cos1": 0.8922,
+      "margin": 0.0845,
+      "morph": "",
+      "top3": [
+        {
+          "w": "conservatives",
+          "cos": 0.8922
+        },
+        {
+          "w": "liberal",
+          "cos": 0.8077
+        },
+        {
+          "w": "socialists",
+          "cos": 0.7611
+        }
+      ]
+    },
+    {
+      "query": "conservatives",
+      "q_rank": 4189,
+      "top1": "liberals",
+      "cos1": 0.8922,
+      "margin": 0.0557,
+      "morph": "",
+      "top3": [
+        {
+          "w": "liberals",
+          "cos": 0.8922
+        },
+        {
+          "w": "democrats",
+          "cos": 0.8365
+        },
+        {
+          "w": "conservative",
+          "cos": 0.8318
+        }
+      ]
+    },
+    {
+      "query": "fourth",
+      "q_rank": 689,
+      "top1": "second",
+      "cos1": 0.8922,
+      "margin": 0.0008,
+      "morph": "",
+      "top3": [
+        {
+          "w": "second",
+          "cos": 0.8922
+        },
+        {
+          "w": "third",
+          "cos": 0.8914
+        },
+        {
+          "w": "fifth",
+          "cos": 0.8831
+        }
+      ]
+    },
+    {
+      "query": "decade",
+      "q_rank": 1652,
+      "top1": "decades",
+      "cos1": 0.8915,
+      "margin": 0.0922,
+      "morph": "",
+      "top3": [
+        {
+          "w": "decades",
+          "cos": 0.8915
+        },
+        {
+          "w": "years",
+          "cos": 0.7992
+        },
+        {
+          "w": "since",
+          "cos": 0.7739
+        }
+      ]
+    },
+    {
+      "query": "decades",
+      "q_rank": 1424,
+      "top1": "decade",
+      "cos1": 0.8915,
+      "margin": 0.0896,
+      "morph": "",
+      "top3": [
+        {
+          "w": "decade",
+          "cos": 0.8915
+        },
+        {
+          "w": "years",
+          "cos": 0.8019
+        },
+        {
+          "w": "since",
+          "cos": 0.7626
+        }
+      ]
+    },
+    {
+      "query": "quarterfinals",
+      "q_rank": 6253,
+      "top1": "semifinals",
+      "cos1": 0.8913,
+      "margin": 0.0796,
+      "morph": "",
+      "top3": [
+        {
+          "w": "semifinals",
+          "cos": 0.8913
+        },
+        {
+          "w": "semifinal",
+          "cos": 0.8117
+        },
+        {
+          "w": "semis",
+          "cos": 0.8078
+        }
+      ]
+    },
+    {
+      "query": "semifinals",
+      "q_rank": 5017,
+      "top1": "quarterfinals",
+      "cos1": 0.8913,
+      "margin": 0.0513,
+      "morph": "",
+      "top3": [
+        {
+          "w": "quarterfinals",
+          "cos": 0.8913
+        },
+        {
+          "w": "finals",
+          "cos": 0.84
+        },
+        {
+          "w": "semifinal",
+          "cos": 0.8395
+        }
+      ]
+    },
+    {
+      "query": "northwest",
+      "q_rank": 2234,
+      "top1": "southwest",
+      "cos1": 0.8907,
+      "margin": 0.0196,
+      "morph": "",
+      "top3": [
+        {
+          "w": "southwest",
+          "cos": 0.8907
+        },
+        {
+          "w": "northeast",
+          "cos": 0.8712
+        },
+        {
+          "w": "southeast",
+          "cos": 0.7986
+        }
+      ]
+    },
+    {
+      "query": "southwest",
+      "q_rank": 2736,
+      "top1": "northwest",
+      "cos1": 0.8907,
+      "margin": 0.0128,
+      "morph": "",
+      "top3": [
+        {
+          "w": "northwest",
+          "cos": 0.8907
+        },
+        {
+          "w": "northeast",
+          "cos": 0.8779
+        },
+        {
+          "w": "southeast",
+          "cos": 0.8009
+        }
+      ]
+    },
+    {
+      "query": "memoir",
+      "q_rank": 9782,
+      "top1": "autobiography",
+      "cos1": 0.8899,
+      "margin": 0.0774,
+      "morph": "",
+      "top3": [
+        {
+          "w": "autobiography",
+          "cos": 0.8899
+        },
+        {
+          "w": "memoirs",
+          "cos": 0.8124
+        },
+        {
+          "w": "biography",
+          "cos": 0.7686
+        }
+      ]
+    },
+    {
+      "query": "sunday",
+      "q_rank": 240,
+      "top1": "saturday",
+      "cos1": 0.8886,
+      "margin": 0.0624,
+      "morph": "",
+      "top3": [
+        {
+          "w": "saturday",
+          "cos": 0.8886
+        },
+        {
+          "w": "friday",
+          "cos": 0.8262
+        },
+        {
+          "w": "monday",
+          "cos": 0.8174
+        }
+      ]
+    },
+    {
+      "query": "saturday",
+      "q_rank": 277,
+      "top1": "sunday",
+      "cos1": 0.8886,
+      "margin": 0.0541,
+      "morph": "",
+      "top3": [
+        {
+          "w": "sunday",
+          "cos": 0.8886
+        },
+        {
+          "w": "friday",
+          "cos": 0.8345
+        },
+        {
+          "w": "thursday",
+          "cos": 0.8239
+        }
+      ]
+    },
+    {
+      "query": "kind",
+      "q_rank": 921,
+      "top1": "sort",
+      "cos1": 0.8882,
+      "margin": 0.0625,
+      "morph": "",
+      "top3": [
+        {
+          "w": "sort",
+          "cos": 0.8882
+        },
+        {
+          "w": "thing",
+          "cos": 0.8257
+        },
+        {
+          "w": "nothing",
+          "cos": 0.8253
+        }
+      ]
+    },
+    {
+      "query": "sort",
+      "q_rank": 2598,
+      "top1": "kind",
+      "cos1": 0.8882,
+      "margin": 0.0608,
+      "morph": "",
+      "top3": [
+        {
+          "w": "kind",
+          "cos": 0.8882
+        },
+        {
+          "w": "something",
+          "cos": 0.8275
+        },
+        {
+          "w": "nothing",
+          "cos": 0.8158
+        }
+      ]
+    },
+    {
+      "query": "elections",
+      "q_rank": 613,
+      "top1": "election",
+      "cos1": 0.8871,
+      "margin": 0.0749,
+      "morph": "",
+      "top3": [
+        {
+          "w": "election",
+          "cos": 0.8871
+        },
+        {
+          "w": "polls",
+          "cos": 0.8122
+        },
+        {
+          "w": "vote",
+          "cos": 0.7959
+        }
+      ]
+    },
+    {
+      "query": "election",
+      "q_rank": 367,
+      "top1": "elections",
+      "cos1": 0.8871,
+      "margin": 0.0678,
+      "morph": "",
+      "top3": [
+        {
+          "w": "elections",
+          "cos": 0.8871
+        },
+        {
+          "w": "polls",
+          "cos": 0.8192
+        },
+        {
+          "w": "vote",
+          "cos": 0.8097
+        }
+      ]
+    },
+    {
+      "query": "pervez",
+      "q_rank": 9267,
+      "top1": "musharraf",
+      "cos1": 0.8863,
+      "margin": 0.2136,
+      "morph": "",
+      "top3": [
+        {
+          "w": "musharraf",
+          "cos": 0.8863
+        },
+        {
+          "w": "vajpayee",
+          "cos": 0.6728
+        },
+        {
+          "w": "atal",
+          "cos": 0.6614
+        }
+      ]
+    },
+    {
+      "query": "musharraf",
+      "q_rank": 3820,
+      "top1": "pervez",
+      "cos1": 0.8863,
+      "margin": 0.1651,
+      "morph": "",
+      "top3": [
+        {
+          "w": "pervez",
+          "cos": 0.8863
+        },
+        {
+          "w": "zardari",
+          "cos": 0.7212
+        },
+        {
+          "w": "vajpayee",
+          "cos": 0.7098
+        }
+      ]
+    },
+    {
+      "query": "abducted",
+      "q_rank": 7385,
+      "top1": "kidnapped",
+      "cos1": 0.8858,
+      "margin": 0.1723,
+      "morph": "",
+      "top3": [
+        {
+          "w": "kidnapped",
+          "cos": 0.8858
+        },
+        {
+          "w": "freed",
+          "cos": 0.7135
+        },
+        {
+          "w": "hostages",
+          "cos": 0.6835
+        }
+      ]
+    },
+    {
+      "query": "kidnapped",
+      "q_rank": 4574,
+      "top1": "abducted",
+      "cos1": 0.8858,
+      "margin": 0.1706,
+      "morph": "",
+      "top3": [
+        {
+          "w": "abducted",
+          "cos": 0.8858
+        },
+        {
+          "w": "freed",
+          "cos": 0.7152
+        },
+        {
+          "w": "hostages",
+          "cos": 0.7123
+        }
+      ]
+    },
+    {
+      "query": "seventh",
+      "q_rank": 2420,
+      "top1": "eighth",
+      "cos1": 0.8858,
+      "margin": 0.0033,
+      "morph": "",
+      "top3": [
+        {
+          "w": "eighth",
+          "cos": 0.8858
+        },
+        {
+          "w": "sixth",
+          "cos": 0.8825
+        },
+        {
+          "w": "fifth",
+          "cos": 0.8796
+        }
+      ]
+    },
+    {
+      "query": "eighth",
+      "q_rank": 2729,
+      "top1": "seventh",
+      "cos1": 0.8858,
+      "margin": 0.0025,
+      "morph": "",
+      "top3": [
+        {
+          "w": "seventh",
+          "cos": 0.8858
+        },
+        {
+          "w": "ninth",
+          "cos": 0.8833
+        },
+        {
+          "w": "sixth",
+          "cos": 0.874
+        }
+      ]
+    },
+    {
+      "query": "averaged",
+      "q_rank": 7082,
+      "top1": "averaging",
+      "cos1": 0.8856,
+      "margin": 0.1421,
+      "morph": "",
+      "top3": [
+        {
+          "w": "averaging",
+          "cos": 0.8856
+        },
+        {
+          "w": "averages",
+          "cos": 0.7436
+        },
+        {
+          "w": "average",
+          "cos": 0.6558
+        }
+      ]
+    },
+    {
+      "query": "averaging",
+      "q_rank": 9254,
+      "top1": "averaged",
+      "cos1": 0.8856,
+      "margin": 0.1208,
+      "morph": "",
+      "top3": [
+        {
+          "w": "averaged",
+          "cos": 0.8856
+        },
+        {
+          "w": "averages",
+          "cos": 0.7648
+        },
+        {
+          "w": "average",
+          "cos": 0.6558
+        }
+      ]
+    },
+    {
+      "query": "ninth",
+      "q_rank": 3058,
+      "top1": "eighth",
+      "cos1": 0.8833,
+      "margin": 0.0166,
+      "morph": "",
+      "top3": [
+        {
+          "w": "eighth",
+          "cos": 0.8833
+        },
+        {
+          "w": "seventh",
+          "cos": 0.8667
+        },
+        {
+          "w": "sixth",
+          "cos": 0.8471
+        }
+      ]
+    },
+    {
+      "query": "fifth",
+      "q_rank": 1239,
+      "top1": "fourth",
+      "cos1": 0.8831,
+      "margin": 0.0004,
+      "morph": "",
+      "top3": [
+        {
+          "w": "fourth",
+          "cos": 0.8831
+        },
+        {
+          "w": "sixth",
+          "cos": 0.8827
+        },
+        {
+          "w": "seventh",
+          "cos": 0.8796
+        }
+      ]
+    },
+    {
+      "query": "sixth",
+      "q_rank": 1905,
+      "top1": "fifth",
+      "cos1": 0.8827,
+      "margin": 0.0002,
+      "morph": "",
+      "top3": [
+        {
+          "w": "fifth",
+          "cos": 0.8827
+        },
+        {
+          "w": "seventh",
+          "cos": 0.8825
+        },
+        {
+          "w": "eighth",
+          "cos": 0.874
+        }
+      ]
+    },
+    {
+      "query": "signal",
+      "q_rank": 3248,
+      "top1": "signals",
+      "cos1": 0.8822,
+      "margin": 0.202,
+      "morph": "",
+      "top3": [
+        {
+          "w": "signals",
+          "cos": 0.8822
+        },
+        {
+          "w": "frequency",
+          "cos": 0.6802
+        },
+        {
+          "w": "signaling",
+          "cos": 0.6575
+        }
+      ]
+    },
+    {
+      "query": "signals",
+      "q_rank": 5156,
+      "top1": "signal",
+      "cos1": 0.8822,
+      "margin": 0.1963,
+      "morph": "",
+      "top3": [
+        {
+          "w": "signal",
+          "cos": 0.8822
+        },
+        {
+          "w": "signaling",
+          "cos": 0.6859
+        },
+        {
+          "w": "signalling",
+          "cos": 0.6776
+        }
+      ]
+    },
+    {
+      "query": "wore",
+      "q_rank": 5051,
+      "top1": "wearing",
+      "cos1": 0.882,
+      "margin": 0.1045,
+      "morph": "",
+      "top3": [
+        {
+          "w": "wearing",
+          "cos": 0.882
+        },
+        {
+          "w": "wear",
+          "cos": 0.7775
+        },
+        {
+          "w": "wears",
+          "cos": 0.7682
+        }
+      ]
+    },
+    {
+      "query": "wearing",
+      "q_rank": 2758,
+      "top1": "wore",
+      "cos1": 0.882,
+      "margin": 0.0754,
+      "morph": "",
+      "top3": [
+        {
+          "w": "wore",
+          "cos": 0.882
+        },
+        {
+          "w": "wear",
+          "cos": 0.8065
+        },
+        {
+          "w": "dressed",
+          "cos": 0.8036
+        }
+      ]
+    },
+    {
+      "query": "surprised",
+      "q_rank": 3553,
+      "top1": "disappointed",
+      "cos1": 0.8807,
+      "margin": 0.0859,
+      "morph": "",
+      "top3": [
+        {
+          "w": "disappointed",
+          "cos": 0.8807
+        },
+        {
+          "w": "pleased",
+          "cos": 0.7947
+        },
+        {
+          "w": "shocked",
+          "cos": 0.7659
+        }
+      ]
+    },
+    {
+      "query": "disappointed",
+      "q_rank": 4254,
+      "top1": "surprised",
+      "cos1": 0.8807,
+      "margin": 0.0123,
+      "morph": "",
+      "top3": [
+        {
+          "w": "surprised",
+          "cos": 0.8807
+        },
+        {
+          "w": "pleased",
+          "cos": 0.8684
+        },
+        {
+          "w": "delighted",
+          "cos": 0.8016
+        }
+      ]
+    },
+    {
+      "query": "rates",
+      "q_rank": 864,
+      "top1": "rate",
+      "cos1": 0.8797,
+      "margin": 0.1123,
+      "morph": "",
+      "top3": [
+        {
+          "w": "rate",
+          "cos": 0.8797
+        },
+        {
+          "w": "inflation",
+          "cos": 0.7674
+        },
+        {
+          "w": "increases",
+          "cos": 0.7642
+        }
+      ]
+    },
+    {
+      "query": "revenue",
+      "q_rank": 1651,
+      "top1": "revenues",
+      "cos1": 0.8797,
+      "margin": 0.1067,
+      "morph": "",
+      "top3": [
+        {
+          "w": "revenues",
+          "cos": 0.8797
+        },
+        {
+          "w": "profits",
+          "cos": 0.773
+        },
+        {
+          "w": "net",
+          "cos": 0.7626
+        }
+      ]
+    },
+    {
+      "query": "rate",
+      "q_rank": 571,
+      "top1": "rates",
+      "cos1": 0.8797,
+      "margin": 0.106,
+      "morph": "",
+      "top3": [
+        {
+          "w": "rates",
+          "cos": 0.8797
+        },
+        {
+          "w": "increases",
+          "cos": 0.7737
+        },
+        {
+          "w": "rise",
+          "cos": 0.7665
+        }
+      ]
+    },
+    {
+      "query": "revenues",
+      "q_rank": 3655,
+      "top1": "revenue",
+      "cos1": 0.8797,
+      "margin": 0.1012,
+      "morph": "",
+      "top3": [
+        {
+          "w": "revenue",
+          "cos": 0.8797
+        },
+        {
+          "w": "profits",
+          "cos": 0.7786
+        },
+        {
+          "w": "sales",
+          "cos": 0.7254
+        }
+      ]
+    },
+    {
+      "query": "boyfriend",
+      "q_rank": 8254,
+      "top1": "girlfriend",
+      "cos1": 0.8786,
+      "margin": 0.0957,
+      "morph": "",
+      "top3": [
+        {
+          "w": "girlfriend",
+          "cos": 0.8786
+        },
+        {
+          "w": "husband",
+          "cos": 0.7829
+        },
+        {
+          "w": "friend",
+          "cos": 0.7747
+        }
+      ]
+    },
+    {
+      "query": "girlfriend",
+      "q_rank": 6315,
+      "top1": "boyfriend",
+      "cos1": 0.8786,
+      "margin": 0.0918,
+      "morph": "",
+      "top3": [
+        {
+          "w": "boyfriend",
+          "cos": 0.8786
+        },
+        {
+          "w": "fiancee",
+          "cos": 0.7868
+        },
+        {
+          "w": "husband",
+          "cos": 0.7842
+        }
+      ]
+    },
+    {
+      "query": "did",
+      "q_rank": 119,
+      "top1": "n't",
+      "cos1": 0.8777,
+      "margin": 0.015,
+      "morph": "",
+      "top3": [
+        {
+          "w": "n't",
+          "cos": 0.8777
+        },
+        {
+          "w": "not",
+          "cos": 0.8628
+        },
+        {
+          "w": "because",
+          "cos": 0.8485
+        }
+      ]
+    },
+    {
+      "query": "gop",
+      "q_rank": 3521,
+      "top1": "republican",
+      "cos1": 0.8776,
+      "margin": 0.0476,
+      "morph": "",
+      "top3": [
+        {
+          "w": "republican",
+          "cos": 0.8776
+        },
+        {
+          "w": "republicans",
+          "cos": 0.8299
+        },
+        {
+          "w": "democrats",
+          "cos": 0.82
+        }
+      ]
+    },
+    {
+      "query": "republican",
+      "q_rank": 742,
+      "top1": "gop",
+      "cos1": 0.8776,
+      "margin": 0.0372,
+      "morph": "",
+      "top3": [
+        {
+          "w": "gop",
+          "cos": 0.8776
+        },
+        {
+          "w": "democrats",
+          "cos": 0.8403
+        },
+        {
+          "w": "republicans",
+          "cos": 0.8393
+        }
+      ]
+    },
+    {
+      "query": "kilometres",
+      "q_rank": 4233,
+      "top1": "kilometers",
+      "cos1": 0.8773,
+      "margin": 0.0544,
+      "morph": "",
+      "top3": [
+        {
+          "w": "kilometers",
+          "cos": 0.8773
+        },
+        {
+          "w": "miles",
+          "cos": 0.8229
+        },
+        {
+          "w": "km",
+          "cos": 0.7583
+        }
+      ]
+    },
+    {
+      "query": "saudi",
+      "q_rank": 1643,
+      "top1": "arabia",
+      "cos1": 0.8769,
+      "margin": 0.088,
+      "morph": "",
+      "top3": [
+        {
+          "w": "arabia",
+          "cos": 0.8769
+        },
+        {
+          "w": "kuwait",
+          "cos": 0.789
+        },
+        {
+          "w": "qatar",
+          "cos": 0.7602
+        }
+      ]
+    }
+  ],
+  "n_novel": 7925,
+  "elapsed_s": 22.979427576065063
+}
