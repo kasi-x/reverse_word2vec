@@ -1,39 +1,22 @@
 """
 Comprehensive evaluation of all inversion approaches.
 """
+
 import json
-import numpy as np
 import sys
+
+import numpy as np
+
 sys.path.insert(0, ".")
 
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
 from src.axis_labeler import AxisLabeler
 from src.contrastive_retrieval import ContrastiveRetriever
+from src.eval_utils import compute_hits
 from src.ica_transformer import load_ica_space
 from src.semantic_operations import SemanticOperator
 from src.word2vec_loader import Word2VecLoader
-
-
-def compute_hits(pairs, retrieve_fn, top_n=10):
-    hits = {1: 0, 5: 0, 10: 0}
-    total = 0
-    for w1, w2 in pairs:
-        total += 1
-        best_rank = None
-        for src, tgt in [(w1, w2), (w2, w1)]:
-            results = retrieve_fn(src)
-            for j, word in enumerate(results[:top_n]):
-                if word == tgt:
-                    rank = j + 1
-                    if best_rank is None or rank < best_rank:
-                        best_rank = rank
-                    break
-        if best_rank is not None:
-            for k in [1, 5, 10]:
-                if best_rank <= k:
-                    hits[k] += 1
-    return {k: hits[k] / total for k in [1, 5, 10]}, total
 
 
 def main():
@@ -51,7 +34,8 @@ def main():
 
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
     print(f"Valid pairs: {len(valid_pairs)}")
@@ -62,7 +46,7 @@ def main():
     rng.shuffle(all_idx)
     n_train = int(len(valid_pairs) * 0.8)
     train_pairs = [valid_pairs[i] for i in all_idx[:n_train]]
-    test_pairs  = [valid_pairs[i] for i in all_idx[n_train:]]
+    test_pairs = [valid_pairs[i] for i in all_idx[n_train:]]
 
     # Sample for oracle evaluation (needs both words)
     sample_idx = rng.choice(len(valid_pairs), size=min(500, len(valid_pairs)), replace=False)
@@ -70,6 +54,7 @@ def main():
 
     # Tune lambda
     print("\nTuning contrastive lambda...")
+
     def oracle_axis_fn(w1, w2):
         s1, s2 = space.score(w1), space.score(w2)
         if s1 is None or s2 is None:
@@ -126,8 +111,8 @@ def main():
 
     # Oracle baselines on sample
     print("\nComputing oracle baselines on sample...")
-    oracle1_hits  = {1: 0, 5: 0, 10: 0}
-    oracle5_hits  = {1: 0, 5: 0, 10: 0}
+    oracle1_hits = {1: 0, 5: 0, 10: 0}
+    oracle5_hits = {1: 0, 5: 0, 10: 0}
     cr_oracle_hits = {1: 0, 5: 0, 10: 0}
     total_oracle = 0
 
@@ -142,25 +127,30 @@ def main():
             for j, n in enumerate(operator.axis_invert(src, best_k, top_n=TOP_N)):
                 if n.word == tgt:
                     for k in [1, 5, 10]:
-                        if j + 1 <= k: oracle1_hits[k] += 1
+                        if j + 1 <= k:
+                            oracle1_hits[k] += 1
                     break
             for j, n in enumerate(operator.multi_axis_invert(src, oracle_axes[:5], top_n=TOP_N)):
                 if n.word == tgt:
                     for k in [1, 5, 10]:
-                        if j + 1 <= k: oracle5_hits[k] += 1
+                        if j + 1 <= k:
+                            oracle5_hits[k] += 1
                     break
             for j, r in enumerate(retriever.search(src, best_k, top_n=TOP_N)):
                 if r.word == tgt:
                     for k in [1, 5, 10]:
-                        if j + 1 <= k: cr_oracle_hits[k] += 1
+                        if j + 1 <= k:
+                            cr_oracle_hits[k] += 1
                     break
 
     # Practical approaches on test set
     print(f"Evaluating practical approaches on {len(test_pairs)} test pairs...")
     results_table = {}
-    results_table["oracle_reconstruct_1†"] = {k: oracle1_hits[k]/total_oracle for k in [1,5,10]}
-    results_table["oracle_reconstruct_5†"] = {k: oracle5_hits[k]/total_oracle for k in [1,5,10]}
-    results_table["oracle_contrastive_1†"] = {k: cr_oracle_hits[k]/total_oracle for k in [1,5,10]}
+    results_table["oracle_reconstruct_1†"] = {k: oracle1_hits[k] / total_oracle for k in [1, 5, 10]}
+    results_table["oracle_reconstruct_5†"] = {k: oracle5_hits[k] / total_oracle for k in [1, 5, 10]}
+    results_table["oracle_contrastive_1†"] = {
+        k: cr_oracle_hits[k] / total_oracle for k in [1, 5, 10]
+    }
 
     m, _ = compute_hits(test_pairs, fn_contrastive_src)
     results_table["contrastive_src"] = m
@@ -178,34 +168,35 @@ def main():
     results_table["classifier_MLP"] = m
 
     # Print table
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"{'Approach':30s}  {'@1':>7s}  {'@5':>7s}  {'@10':>7s}")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     for name, metrics in results_table.items():
         print(f"{name:30s}  {metrics[1]:7.1%}  {metrics[5]:7.1%}  {metrics[10]:7.1%}")
-    print(f"{'='*60}")
-    print(f"† oracle (knows both words — upper bound)")
+    print(f"{'=' * 60}")
+    print("† oracle (knows both words — upper bound)")
 
     # Lambda sweep for contrastive (oracle axis) on subset
-    print(f"\nContrastive lambda sweep (oracle axis, n=200):")
+    print("\nContrastive lambda sweep (oracle axis, n=200):")
     for lam in [0.3, 0.5, 1.0, 2.0, 3.0, 5.0]:
-        h = {1:0,5:0,10:0}
+        h = {1: 0, 5: 0, 10: 0}
         n = 0
         for w1, w2 in sample[:200]:
             s1, s2 = space.score(w1), space.score(w2)
-            k = int(np.argmax(np.abs(s1-s2)/axis_std))
+            k = int(np.argmax(np.abs(s1 - s2) / axis_std))
             n += 1
-            for src, tgt in [(w1,w2),(w2,w1)]:
+            for src, tgt in [(w1, w2), (w2, w1)]:
                 for j, r in enumerate(retriever.search(src, k, top_n=TOP_N, lam=lam)):
                     if r.word == tgt:
-                        for kk in [1,5,10]:
-                            if j+1<=kk: h[kk]+=1
+                        for kk in [1, 5, 10]:
+                            if j + 1 <= kk:
+                                h[kk] += 1
                         break
-        print(f"  lam={lam:.1f}: @1={h[1]/n:.1%}  @5={h[5]/n:.1%}  @10={h[10]/n:.1%}")
+        print(f"  lam={lam:.1f}: @1={h[1] / n:.1%}  @5={h[5] / n:.1%}  @10={h[10] / n:.1%}")
 
     # Classifier: top axes
     axis_to_label = {p.axis_idx: p.label for p in profiles if p.label}
-    print(f"\nTop antonym axes (LR coefficients from |s1-s2| features):")
+    print("\nTop antonym axes (LR coefficients from |s1-s2| features):")
     for k, coef in clf_lr.top_antonym_axes(10):
         label = axis_to_label.get(k, "")
         print(f"  axis {k:3d} ({label:20s}): coef = {coef:+.3f}")
@@ -218,32 +209,48 @@ def main():
         print(f"  {k_str}: {vals['mean']:.3f} ± {vals['std']:.3f}")
 
     # Canonical cases
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("Canonical cases")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     canonical = [
-        ("king","queen"),("boy","girl"),("father","mother"),("husband","wife"),
-        ("happy","sad"),("good","bad"),("love","hate"),
-        ("hot","cold"),("warm","cool"),("big","small"),
-        ("alive","dead"),("up","down"),
+        ("king", "queen"),
+        ("boy", "girl"),
+        ("father", "mother"),
+        ("husband", "wife"),
+        ("happy", "sad"),
+        ("good", "bad"),
+        ("love", "hate"),
+        ("hot", "cold"),
+        ("warm", "cool"),
+        ("big", "small"),
+        ("alive", "dead"),
+        ("up", "down"),
     ]
     print(f"{'pair':15s}  {'attribute':>11s}  {'cr_src':>9s}  {'LR':>11s}  {'MLP':>11s}")
-    print("-"*70)
+    print("-" * 70)
     for w1, w2 in canonical:
-        def top1(fn):
-            ws = fn(w1)
+
+        def top1(fn, _w1=w1):
+            ws = fn(_w1)
             return ws[0] if ws else "?"
-        def m(r): return ("o " if r==w2 else "x ") + r[:9]
-        print(f"{w1+'->'+w2:15s}  {m(top1(fn_attribute)):>11s}  "
-              f"{m(top1(fn_contrastive_src)):>9s}  "
-              f"{m(top1(fn_clf_lr)):>11s}  {m(top1(fn_clf_mlp)):>11s}")
+
+        def m(r, _w2=w2):
+            return ("o " if r == _w2 else "x ") + r[:9]
+
+        print(
+            f"{w1 + '->' + w2:15s}  {m(top1(fn_attribute)):>11s}  "
+            f"{m(top1(fn_contrastive_src)):>9s}  "
+            f"{m(top1(fn_clf_lr)):>11s}  {m(top1(fn_clf_mlp)):>11s}"
+        )
 
     # Save
-    out = {"results": {k: {str(kk):v for kk,v in ms.items()} for k,ms in results_table.items()},
-           "best_lambda": best_lam}
-    with open("results/approach_comparison.json","w") as f:
+    out = {
+        "results": {k: {str(kk): v for kk, v in ms.items()} for k, ms in results_table.items()},
+        "best_lambda": best_lam,
+    }
+    with open("results/approach_comparison.json", "w") as f:
         json.dump(out, f, indent=2)
-    print(f"\nSaved results/approach_comparison.json")
+    print("\nSaved results/approach_comparison.json")
 
 
 if __name__ == "__main__":

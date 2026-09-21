@@ -26,6 +26,7 @@ query word excluded.
 Usage:
     pixi run python scripts/eval_leakfree.py [--folds 5] [--vocab-limit 50000]
 """
+
 import argparse
 import json
 import sys
@@ -39,15 +40,16 @@ from sklearn.decomposition import FastICA
 
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
-from src.counter_fitting import CounterFitter, CounterFitConfig
+from src.counter_fitting import CounterFitConfig, CounterFitter
+from src.eval_utils import unit_rows
 from src.ica_transformer import ICASpace, is_valid_english_word
 from src.semantic_operations import SemanticOperator
 from src.word2vec_loader import Word2VecLoader
 
-
 # --------------------------------------------------------------------------- #
 # Fold-local space construction
 # --------------------------------------------------------------------------- #
+
 
 def fit_fold_space(
     model: KeyedVectors,
@@ -92,10 +94,6 @@ def fit_fold_space(
 # --------------------------------------------------------------------------- #
 # Retrieval methods
 # --------------------------------------------------------------------------- #
-
-def unit_rows(M: np.ndarray) -> np.ndarray:
-    n = np.linalg.norm(M, axis=1, keepdims=True)
-    return M / np.maximum(n, 1e-10)
 
 
 def topn_excluding(scores: np.ndarray, words: list[str], query: str, top_n: int):
@@ -157,6 +155,7 @@ def eval_pairs(pairs, retrieve_fn, top_n=10):
 # Main
 # --------------------------------------------------------------------------- #
 
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--folds", type=int, default=5)
@@ -181,7 +180,11 @@ def main():
     folds = np.array_split(idx, args.folds)
 
     per_fold: dict[str, list[dict]] = {
-        "linear_raw": [], "linear_cf": [], "negcos_cf": [], "oracle_1ax": [], "mlp_ica": [],
+        "linear_raw": [],
+        "linear_cf": [],
+        "negcos_cf": [],
+        "oracle_1ax": [],
+        "mlp_ica": [],
     }
     fold_sizes = []
 
@@ -189,17 +192,26 @@ def main():
         test_idx = set(folds[fi].tolist())
         train_pairs = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
         test_pairs = [all_pairs[i] for i in folds[fi]]
-        print(f"\n{'=' * 60}\nFold {fi + 1}/{args.folds}: "
-              f"{len(train_pairs)} train / {len(test_pairs)} test")
+        print(
+            f"\n{'=' * 60}\nFold {fi + 1}/{args.folds}: "
+            f"{len(train_pairs)} train / {len(test_pairs)} test"
+        )
 
         # Fold-local vectors + ICA (train pairs only in CF constraints)
         space, cf_model = fit_fold_space(
-            model, train_pairs, args.vocab_limit, args.components, args.cf_iters,
+            model,
+            train_pairs,
+            args.vocab_limit,
+            args.components,
+            args.cf_iters,
         )
-        in_vocab = [p for p in test_pairs
-                    if p[0] in space.word_to_idx and p[1] in space.word_to_idx]
-        print(f"  fold vocab: {len(space.words)} words, "
-              f"test pairs in vocab: {len(in_vocab)}/{len(test_pairs)}")
+        in_vocab = [
+            p for p in test_pairs if p[0] in space.word_to_idx and p[1] in space.word_to_idx
+        ]
+        print(
+            f"  fold vocab: {len(space.words)} words, "
+            f"test pairs in vocab: {len(in_vocab)}/{len(test_pairs)}"
+        )
         fold_sizes.append(len(in_vocab))
 
         raw_vec = {w: model[w].astype(np.float64) for w in space.words}
@@ -210,13 +222,19 @@ def main():
         # --- linear_raw ---
         lin_raw = LinearAntonymMap()
         lin_raw.fit(train_pairs, raw_vec.get)
-        fn = lambda q: lin_raw.retrieve(q, raw_vec.get, space.words, cand_u_raw)
+
+        def fn(q, _m=lin_raw, _v=raw_vec.get, _w=space.words, _u=cand_u_raw):
+            return _m.retrieve(q, _v, _w, _u)
+
         per_fold["linear_raw"].append(eval_pairs(in_vocab, fn))
 
         # --- linear_cf ---
         lin_cf = LinearAntonymMap()
         lin_cf.fit(train_pairs, cf_vec.get)
-        fn = lambda q: lin_cf.retrieve(q, cf_vec.get, space.words, cand_u_cf)
+
+        def fn(q, _m=lin_cf, _v=cf_vec.get, _w=space.words, _u=cand_u_cf):
+            return _m.retrieve(q, _v, _w, _u)
+
         per_fold["linear_cf"].append(eval_pairs(in_vocab, fn))
 
         # --- negcos_cf: NN to -v(src) in CF space ---
@@ -226,6 +244,7 @@ def main():
                 return []
             n = v / max(np.linalg.norm(v), 1e-10)
             return topn_excluding(_U @ (-n), _W, q, 10)
+
         per_fold["negcos_cf"].append(eval_pairs(in_vocab, fn_negcos))
 
         # --- oracle_1ax (cheat): best axis from true pair, reconstruct, NN ---
@@ -252,10 +271,14 @@ def main():
 
         # --- mlp_ica: existing classifier, trained on fold train pairs ---
         mlp = AntonymClassifier(space, "mlp")
-        mlp.fit([p for p in train_pairs
-                 if p[0] in space.word_to_idx and p[1] in space.word_to_idx],
-                rng=np.random.RandomState(args.seed + fi))
-        fn = lambda q: [w for w, _ in mlp.retrieve(q, top_n=10)]
+        mlp.fit(
+            [p for p in train_pairs if p[0] in space.word_to_idx and p[1] in space.word_to_idx],
+            rng=np.random.RandomState(args.seed + fi),
+        )
+
+        def fn(q, _m=mlp):
+            return [w for w, _ in _m.retrieve(q, top_n=10)]
+
         per_fold["mlp_ica"].append(eval_pairs(in_vocab, fn))
 
         for name in per_fold:
@@ -263,8 +286,10 @@ def main():
             print(f"  {name:12s} @1={m[1]:.3f} @5={m[5]:.3f} @10={m[10]:.3f}")
 
     # Aggregate
-    print(f"\n{'=' * 60}\nLeak-free {args.folds}-fold summary "
-          f"(CF+ICA refit per fold on train pairs only):")
+    print(
+        f"\n{'=' * 60}\nLeak-free {args.folds}-fold summary "
+        f"(CF+ICA refit per fold on train pairs only):"
+    )
     print(f"{'Method':12s}  {'Hits@1':>13s}  {'Hits@5':>13s}  {'Hits@10':>13s}")
     summary = {}
     for name, ms in per_fold.items():
@@ -273,22 +298,28 @@ def main():
             vals = [m[k] for m in ms]
             row[str(k)] = {"mean": float(np.mean(vals)), "std": float(np.std(vals))}
         summary[name] = row
-        print(f"{name:12s}  "
-              f"{row['1']['mean']:.3f}±{row['1']['std']:.3f}  "
-              f"{row['5']['mean']:.3f}±{row['5']['std']:.3f}  "
-              f"{row['10']['mean']:.3f}±{row['10']['std']:.3f}")
+        print(
+            f"{name:12s}  "
+            f"{row['1']['mean']:.3f}±{row['1']['std']:.3f}  "
+            f"{row['5']['mean']:.3f}±{row['5']['std']:.3f}  "
+            f"{row['10']['mean']:.3f}±{row['10']['std']:.3f}"
+        )
 
     out = {
-        "config": {"folds": args.folds, "vocab_limit": args.vocab_limit,
-                   "components": args.components, "cf_iters": args.cf_iters,
-                   "seed": args.seed},
+        "config": {
+            "folds": args.folds,
+            "vocab_limit": args.vocab_limit,
+            "components": args.components,
+            "cf_iters": args.cf_iters,
+            "seed": args.seed,
+        },
         "fold_test_sizes": fold_sizes,
         "summary": summary,
         "elapsed_s": time.time() - t0,
     }
     with open("results/leakfree_comparison.json", "w") as f:
         json.dump(out, f, indent=2)
-    print(f"\nSaved results/leakfree_comparison.json ({time.time()-t0:.0f}s)")
+    print(f"\nSaved results/leakfree_comparison.json ({time.time() - t0:.0f}s)")
 
 
 if __name__ == "__main__":

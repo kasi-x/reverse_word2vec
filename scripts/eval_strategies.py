@@ -8,13 +8,16 @@ Strategies:
   4. label_group - flip all axes with matching label (practical, needs label)
   5. scan_best  - try all label groups, pick best result (practical, automatic)
 """
-import numpy as np
+
 import sys
+
+import numpy as np
+
 sys.path.insert(0, ".")
 
 from src.antonym_loader import extract_antonym_pairs
 from src.axis_labeler import AxisLabeler
-from src.ica_transformer import load_ica_space, ICATransformer
+from src.ica_transformer import load_ica_space
 from src.semantic_operations import SemanticOperator
 from src.word2vec_loader import Word2VecLoader
 
@@ -27,11 +30,11 @@ def main():
     labeler = AxisLabeler(space)
     profiles = labeler.load_profiles("results/axis_profiles.json")
     operator = SemanticOperator(model, space, profiles)
-    transformer = ICATransformer()
 
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
 
@@ -57,21 +60,21 @@ def main():
     print(f"Evaluating {len(sample)} pairs\n")
 
     strategies = {
-        "oracle_1":     {"hits": {1: 0, 5: 0, 10: 0}},
-        "oracle_3":     {"hits": {1: 0, 5: 0, 10: 0}},
-        "oracle_5":     {"hits": {1: 0, 5: 0, 10: 0}},
-        "source_top3":  {"hits": {1: 0, 5: 0, 10: 0}},
-        "source_top5":  {"hits": {1: 0, 5: 0, 10: 0}},
+        "oracle_1": {"hits": {1: 0, 5: 0, 10: 0}},
+        "oracle_3": {"hits": {1: 0, 5: 0, 10: 0}},
+        "oracle_5": {"hits": {1: 0, 5: 0, 10: 0}},
+        "source_top3": {"hits": {1: 0, 5: 0, 10: 0}},
+        "source_top5": {"hits": {1: 0, 5: 0, 10: 0}},
         "source_top10": {"hits": {1: 0, 5: 0, 10: 0}},
         "label_oracle": {"hits": {1: 0, 5: 0, 10: 0}},
-        "scan_best":    {"hits": {1: 0, 5: 0, 10: 0}},
-        "scan_top3":    {"hits": {1: 0, 5: 0, 10: 0}},
+        "scan_best": {"hits": {1: 0, 5: 0, 10: 0}},
+        "scan_top3": {"hits": {1: 0, 5: 0, 10: 0}},
     }
     total = 0
 
     for i, (w1, w2) in enumerate(sample):
         if (i + 1) % 100 == 0:
-            print(f"  {i+1}/{len(sample)}...")
+            print(f"  {i + 1}/{len(sample)}...")
 
         s1 = space.score(w1)
         s2 = space.score(w2)
@@ -94,12 +97,12 @@ def main():
                     return j + 1
             return None
 
-        def best_rank_bidirectional(axes, k_axes=None):
+        def best_rank_bidirectional(axes, k_axes=None, _w1=w1, _w2=w2):
             """Try inversion in both directions, return best rank."""
             if k_axes is None:
                 k_axes = axes
             best = None
-            for src, tgt in [(w1, w2), (w2, w1)]:
+            for src, tgt in [(_w1, _w2), (_w2, _w1)]:
                 if len(k_axes) == 1:
                     nbrs = operator.axis_invert(src, k_axes[0], top_n=TOP_N)
                 else:
@@ -171,33 +174,40 @@ def main():
                         strategies["scan_top3"]["hits"][kk] += 1
 
     # ── Print results ─────────────────────────────────────────
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"{'Strategy':20s}  {'Hits@1':>8s}  {'Hits@5':>8s}  {'Hits@10':>8s}")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     for name, data in strategies.items():
         h1 = data["hits"][1] / total
         h5 = data["hits"][5] / total
         h10 = data["hits"][10] / total
         marker = " *" if "oracle" not in name else "  "
         print(f"{name:20s}  {h1:8.1%}  {h5:8.1%}  {h10:8.1%}{marker}")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
     print(f"Total pairs: {total}")
-    print(f"  * = practical (no oracle)")
+    print("  * = practical (no oracle)")
 
     # ── Canonical deep dive ───────────────────────────────────
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print("Canonical cases: strategy comparison")
-    print(f"{'='*70}")
+    print(f"{'=' * 70}")
 
     canonical = [
-        ("king", "queen", "gender"), ("boy", "girl", "gender"),
-        ("father", "mother", "gender"), ("husband", "wife", "gender"),
-        ("happy", "sad", "sentiment"), ("good", "bad", "sentiment"),
-        ("hot", "cold", "temperature"), ("big", "small", "size"),
-        ("alive", "dead", "activity"), ("up", "down", "direction"),
+        ("king", "queen", "gender"),
+        ("boy", "girl", "gender"),
+        ("father", "mother", "gender"),
+        ("husband", "wife", "gender"),
+        ("happy", "sad", "sentiment"),
+        ("good", "bad", "sentiment"),
+        ("hot", "cold", "temperature"),
+        ("big", "small", "size"),
+        ("alive", "dead", "activity"),
+        ("up", "down", "direction"),
     ]
 
-    print(f"{'pair':20s}  {'oracle1':>10s}  {'oracle5':>10s}  {'src_top5':>10s}  {'label':>10s}  {'scan':>10s}")
+    print(
+        f"{'pair':20s}  {'oracle1':>10s}  {'oracle5':>10s}  {'src_top5':>10s}  {'label':>10s}  {'scan':>10s}"
+    )
     print("-" * 70)
 
     for w1, w2, expected_label in canonical:
@@ -213,8 +223,8 @@ def main():
         z1 = np.abs(s1) / axis_std
         source_axes = list(np.argsort(z1)[::-1])
 
-        def get_top1(axes_list):
-            for src, tgt in [(w1, w2), (w2, w1)]:
+        def get_top1(axes_list, _w1=w1, _w2=w2):
+            for src, _tgt in [(_w1, _w2), (_w2, _w1)]:
                 if len(axes_list) == 1:
                     nbrs = operator.axis_invert(src, axes_list[0], top_n=5)
                 else:
@@ -248,11 +258,14 @@ def main():
                 r_scan = f"{nbrs[0].word}({label[:4]})"
 
         pair = f"{w1}->{w2}"
+
         def mark(result, target):
             return f"{'o':>1s} {result}" if result == target else f"{'x':>1s} {result}"
 
-        print(f"{pair:20s}  {mark(r_oracle1, w2):>10s}  {mark(r_oracle5, w2):>10s}  "
-              f"{mark(r_src5, w2):>10s}  {mark(r_label, w2):>10s}  {r_scan:>10s}")
+        print(
+            f"{pair:20s}  {mark(r_oracle1, w2):>10s}  {mark(r_oracle5, w2):>10s}  "
+            f"{mark(r_src5, w2):>10s}  {mark(r_label, w2):>10s}  {r_scan:>10s}"
+        )
 
 
 if __name__ == "__main__":

@@ -1,0 +1,17 @@
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["venv", ".pixi", "notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B"]
+# E501: many long string literals (paper text, prompts) — formatting, not a defect
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+# Scripts keep sys.path bootstrapping at the top; import order is intentional
+"scripts/*" = ["E402"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

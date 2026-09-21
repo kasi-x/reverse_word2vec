@@ -1,20 +1,20 @@
 """
 Word2Vec model loader with support for various pre-trained models.
 """
-import os
-from typing import Optional
 
+import os
+
+import gensim.downloader as api
 import numpy as np
 from gensim.models import KeyedVectors
-import gensim.downloader as api
 
 
 class Word2VecLoader:
     """Loader for Word2Vec models."""
 
     def __init__(self):
-        self.model: Optional[KeyedVectors] = None
-        self.model_name: Optional[str] = None
+        self.model: KeyedVectors | None = None
+        self.model_name: str | None = None
 
     def load_google_news(self, use_api: bool = True) -> KeyedVectors:
         """
@@ -30,22 +30,16 @@ class Word2VecLoader:
         print("Loading Google News Word2Vec model (this may take a while)...")
 
         if use_api:
-            self.model = api.load('word2vec-google-news-300')
+            self.model = api.load("word2vec-google-news-300")
         else:
             # Manual loading from file
             model_path = os.path.join(
-                os.path.dirname(__file__),
-                '..',
-                'data',
-                'GoogleNews-vectors-negative300.bin.gz'
+                os.path.dirname(__file__), "..", "data", "GoogleNews-vectors-negative300.bin.gz"
             )
-            self.model = KeyedVectors.load_word2vec_format(
-                model_path, binary=True
-            )
+            self.model = KeyedVectors.load_word2vec_format(model_path, binary=True)
 
-        self.model_name = 'google-news-300'
-        print(f"Loaded model with {len(self.model)} words, "
-              f"dimension={self.model.vector_size}")
+        self.model_name = "google-news-300"
+        print(f"Loaded model with {len(self.model)} words, dimension={self.model.vector_size}")
         return self.model
 
     def load_glove(self, dimensions: int = 100) -> KeyedVectors:
@@ -62,7 +56,7 @@ class Word2VecLoader:
         if dimensions not in valid_dims:
             raise ValueError(f"dimensions must be one of {valid_dims}")
 
-        model_name = f'glove-wiki-gigaword-{dimensions}'
+        model_name = f"glove-wiki-gigaword-{dimensions}"
         print(f"Loading {model_name}...")
         self.model = api.load(model_name)
         self.model_name = model_name
@@ -70,7 +64,8 @@ class Word2VecLoader:
         return self.model
 
     def load_fasttext_ja(
-        self, path: str = os.path.expanduser("~/gensim-data/cc.ja.300.vec.gz"),
+        self,
+        path: str = os.path.expanduser("~/gensim-data/cc.ja.300.vec.gz"),
         limit: int = 200000,
     ) -> KeyedVectors:
         """
@@ -85,15 +80,17 @@ class Word2VecLoader:
         """
         print(f"Loading Japanese fastText model from {path} (limit={limit})...")
         self.model = KeyedVectors.load_word2vec_format(
-            path, binary=False, limit=limit,
+            path,
+            binary=False,
+            limit=limit,
         )
         self.model_name = "cc.ja.300"
-        print(f"Loaded model with {len(self.model)} words, "
-              f"dimension={self.model.vector_size}")
+        print(f"Loaded model with {len(self.model)} words, dimension={self.model.vector_size}")
         return self.model
 
     def load_ja_dict(
-        self, path: str = os.path.expanduser("~/gensim-data/ja-dict-w2v-300.kv"),
+        self,
+        path: str = os.path.expanduser("~/gensim-data/ja-dict-w2v-300.kv"),
     ) -> KeyedVectors:
         """
         Load Japanese Word2Vec model trained on EPWING dictionary text.
@@ -114,8 +111,7 @@ class Word2VecLoader:
         print(f"Loading Japanese dict-trained model from {path}...")
         self.model = KeyedVectors.load(path)
         self.model_name = "ja-dict-w2v-300"
-        print(f"Loaded model with {len(self.model)} words, "
-              f"dimension={self.model.vector_size}")
+        print(f"Loaded model with {len(self.model)} words, dimension={self.model.vector_size}")
         return self.model
 
     def load_from_file(self, filepath: str, binary: bool = True) -> KeyedVectors:
@@ -132,11 +128,10 @@ class Word2VecLoader:
         print(f"Loading model from {filepath}...")
         self.model = KeyedVectors.load_word2vec_format(filepath, binary=binary)
         self.model_name = os.path.basename(filepath)
-        print(f"Loaded model with {len(self.model)} words, "
-              f"dimension={self.model.vector_size}")
+        print(f"Loaded model with {len(self.model)} words, dimension={self.model.vector_size}")
         return self.model
 
-    def get_vector(self, word: str) -> Optional[np.ndarray]:
+    def get_vector(self, word: str) -> np.ndarray | None:
         """Get vector for a word, returning None if not found."""
         if self.model is None:
             raise RuntimeError("No model loaded. Call load_* first.")
@@ -160,7 +155,7 @@ class Word2VecLoader:
 
 def list_available_models() -> list:
     """List available pre-trained models in gensim."""
-    return list(api.info()['models'].keys())
+    return list(api.info()["models"].keys())
 
 
 if __name__ == "__main__":

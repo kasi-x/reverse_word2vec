@@ -8,6 +8,7 @@ NEITHER WordNet nor ConceptNet. Ranks candidates by prediction confidence
 Usage:
     pixi run python scripts/eval_novel.py [--n-query 10000 --top 80]
 """
+
 import argparse
 import csv
 import json
@@ -20,17 +21,26 @@ import numpy as np
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from src.antonym_loader import extract_antonym_pairs
+from src.eval_utils import unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
 
-
-def unit_rows(M):
-    n = np.linalg.norm(M, axis=1, keepdims=True)
-    return M / np.maximum(n, 1e-10)
-
-
-NEG_PREFIXES = ("un", "in", "im", "il", "ir", "dis", "non", "anti", "de",
-                "mis", "over", "under", "counter", "a")
+NEG_PREFIXES = (
+    "un",
+    "in",
+    "im",
+    "il",
+    "ir",
+    "dis",
+    "non",
+    "anti",
+    "de",
+    "mis",
+    "over",
+    "under",
+    "counter",
+    "a",
+)
 
 
 def morph_variant(q, c):
@@ -81,9 +91,9 @@ def main():
     Uu, _, Vt = np.linalg.svd(Xtr.T @ Ytr)
     W = Uu @ Vt
 
-    queries = [w for w in pool
-               if rank[w] < args.n_query and w not in ENGLISH_STOP_WORDS
-               and len(w) >= 3]
+    queries = [
+        w for w in pool if rank[w] < args.n_query and w not in ENGLISH_STOP_WORDS and len(w) >= 3
+    ]
     print(f"queries: {len(queries)}")
     Q = np.array([model[q].astype(np.float64) for q in queries])
     P = unit_rows(Q @ W)
@@ -107,26 +117,34 @@ def main():
             continue
         if c1 in ENGLISH_STOP_WORDS or rank.get(c1, 10**9) >= 20000:
             continue
-        cands.append({
-            "query": q, "q_rank": rank[q],
-            "top1": c1, "cos1": round(s1, 4),
-            "margin": round(s1 - s2, 4),
-            "morph": morph_variant(q, c1),
-            "top3": [{"w": w, "cos": round(s, 4)} for w, s in top],
-        })
-    print(f"queries with known top-1: {known_top1}/{len(queries)} "
-          f"({known_top1 / len(queries):.1%})")
+        cands.append(
+            {
+                "query": q,
+                "q_rank": rank[q],
+                "top1": c1,
+                "cos1": round(s1, 4),
+                "margin": round(s1 - s2, 4),
+                "morph": morph_variant(q, c1),
+                "top3": [{"w": w, "cos": round(s, 4)} for w, s in top],
+            }
+        )
+    print(
+        f"queries with known top-1: {known_top1}/{len(queries)} ({known_top1 / len(queries):.1%})"
+    )
     print(f"novel top-1 candidates: {len(cands)}")
 
     cands.sort(key=lambda d: (-d["cos1"], -d["margin"]))
-    show = cands[:args.top]
+    show = cands[: args.top]
     for d in show:
-        print(f"  {d['query']:16s} -> {d['top1']:16s} "
-              f"cos={d['cos1']:.3f} m={d['margin']:.3f} {d['morph']}")
+        print(
+            f"  {d['query']:16s} -> {d['top1']:16s} "
+            f"cos={d['cos1']:.3f} m={d['margin']:.3f} {d['morph']}"
+        )
 
     with open("results/novel_candidates.json", "w") as f:
-        json.dump({"candidates": show, "n_novel": len(cands),
-                   "elapsed_s": time.time() - t0}, f, indent=2)
+        json.dump(
+            {"candidates": show, "n_novel": len(cands), "elapsed_s": time.time() - t0}, f, indent=2
+        )
     print(f"\nSaved results/novel_candidates.json ({time.time() - t0:.0f}s)")
 
 

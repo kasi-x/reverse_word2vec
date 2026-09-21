@@ -9,6 +9,7 @@ On CN-only directed queries (same set/protocol as eval_discovery.py):
 Usage:
     pixi run python scripts/eval_nn_control.py
 """
+
 import csv
 import json
 import sys
@@ -19,9 +20,9 @@ sys.path.insert(0, ".")
 import numpy as np
 
 from src.antonym_loader import extract_antonym_pairs
+from src.eval_utils import unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
-from scripts.eval_translation import unit_rows
 
 
 def ranks_for(sims_row, cand_words, query, target, top_n=10):
@@ -68,8 +69,7 @@ def main():
             if len(row) < 2:
                 continue
             a, b = row[0].strip(), row[1].strip()
-            if a and b and tuple(sorted((a, b))) not in wn \
-                    and a in w2i and b in w2i:
+            if a and b and tuple(sorted((a, b))) not in wn and a in w2i and b in w2i:
                 cn_only.append((a, b))
     queries = []
     for w1, w2 in cn_only:
@@ -85,10 +85,9 @@ def main():
     nn_hits = {1: 0, 5: 0, 10: 0}
     pr_hits = {1: 0, 5: 0, 10: 0}
     both = {1: 0, 5: 0, 10: 0}
-    pr_only = 0   # pr hit@10 where nn misses@10
+    pr_only = 0  # pr hit@10 where nn misses@10
     nn_only = 0
     same_top1 = 0
-    pr_top1_nn_rank = []  # where does pr-top1 sit in NN ranking?
     for qi, (q, tgt) in enumerate(queries):
         r_nn = ranks_for(S_nn[qi], pool, q, tgt)
         r_pr = ranks_for(S_pr[qi], pool, q, tgt)
@@ -110,22 +109,26 @@ def main():
             same_top1 += 1
 
     n = len(queries)
-    print(f"\nNN         @1={nn_hits[1]/n:.4f} @5={nn_hits[5]/n:.4f} @10={nn_hits[10]/n:.4f}")
-    print(f"Procrustes @1={pr_hits[1]/n:.4f} @5={pr_hits[5]/n:.4f} @10={pr_hits[10]/n:.4f}")
-    print(f"both@{ {k: both[k]/n for k in (1,5,10)} }")
-    print(f"pr-only@10: {pr_only} ({pr_only/n:.3f}), nn-only@10: {nn_only} ({nn_only/n:.3f})")
-    print(f"same top-1: {same_top1}/{n} = {same_top1/n:.1%}")
+    print(f"\nNN         @1={nn_hits[1] / n:.4f} @5={nn_hits[5] / n:.4f} @10={nn_hits[10] / n:.4f}")
+    print(f"Procrustes @1={pr_hits[1] / n:.4f} @5={pr_hits[5] / n:.4f} @10={pr_hits[10] / n:.4f}")
+    print(f"both@{ {k: both[k] / n for k in (1, 5, 10)} }")
+    print(f"pr-only@10: {pr_only} ({pr_only / n:.3f}), nn-only@10: {nn_only} ({nn_only / n:.3f})")
+    print(f"same top-1: {same_top1}/{n} = {same_top1 / n:.1%}")
 
     with open("results/nn_control.json", "w") as f:
-        json.dump({
-            "nn": {str(k): nn_hits[k]/n for k in (1, 5, 10)},
-            "procrustes": {str(k): pr_hits[k]/n for k in (1, 5, 10)},
-            "both": {str(k): both[k]/n for k in (1, 5, 10)},
-            "pr_only_10": pr_only / n,
-            "nn_only_10": nn_only / n,
-            "same_top1": same_top1 / n,
-            "elapsed_s": time.time() - t0,
-        }, f, indent=2)
+        json.dump(
+            {
+                "nn": {str(k): nn_hits[k] / n for k in (1, 5, 10)},
+                "procrustes": {str(k): pr_hits[k] / n for k in (1, 5, 10)},
+                "both": {str(k): both[k] / n for k in (1, 5, 10)},
+                "pr_only_10": pr_only / n,
+                "nn_only_10": nn_only / n,
+                "same_top1": same_top1 / n,
+                "elapsed_s": time.time() - t0,
+            },
+            f,
+            indent=2,
+        )
     print(f"\nSaved results/nn_control.json ({time.time() - t0:.0f}s)")
 
 

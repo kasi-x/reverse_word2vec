@@ -4,6 +4,7 @@ Automatic axis interpretation and labeling for ICA-decomposed embedding spaces.
 Uses kurtosis to identify non-Gaussian (structured) axes, then maps
 WordNet antonym pairs to axes for semantic labeling.
 """
+
 import json
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -84,12 +85,55 @@ class AxisLabeler:
 
         # Predefined semantic categories with seed words
         CATEGORY_SEEDS = {
-            "gender": {"male", "female", "man", "woman", "he", "she", "boy", "girl",
-                        "king", "queen", "father", "mother", "husband", "wife"},
-            "sentiment": {"good", "bad", "happy", "sad", "love", "hate", "nice", "nasty",
-                          "pleasant", "unpleasant", "cheerful", "gloomy", "joy", "sorrow"},
-            "size": {"big", "small", "large", "little", "huge", "tiny", "giant", "dwarf",
-                     "wide", "narrow", "long", "short", "tall", "deep", "shallow"},
+            "gender": {
+                "male",
+                "female",
+                "man",
+                "woman",
+                "he",
+                "she",
+                "boy",
+                "girl",
+                "king",
+                "queen",
+                "father",
+                "mother",
+                "husband",
+                "wife",
+            },
+            "sentiment": {
+                "good",
+                "bad",
+                "happy",
+                "sad",
+                "love",
+                "hate",
+                "nice",
+                "nasty",
+                "pleasant",
+                "unpleasant",
+                "cheerful",
+                "gloomy",
+                "joy",
+                "sorrow",
+            },
+            "size": {
+                "big",
+                "small",
+                "large",
+                "little",
+                "huge",
+                "tiny",
+                "giant",
+                "dwarf",
+                "wide",
+                "narrow",
+                "long",
+                "short",
+                "tall",
+                "deep",
+                "shallow",
+            },
             "temperature": {"hot", "cold", "warm", "cool", "heat", "freeze", "boil", "chill"},
             "speed": {"fast", "slow", "quick", "gradual", "rapid", "sluggish", "swift"},
             "light": {"light", "dark", "bright", "dim", "luminous", "gloomy", "shine"},
@@ -97,15 +141,49 @@ class AxisLabeler:
             "strength": {"strong", "weak", "powerful", "feeble", "mighty", "frail"},
             "wetness": {"wet", "dry", "moist", "arid", "damp", "parched"},
             "formality": {"formal", "informal", "polite", "rude", "casual", "official"},
-            "morality": {"right", "wrong", "moral", "immoral", "virtue", "vice",
-                         "honest", "dishonest", "true", "false"},
+            "morality": {
+                "right",
+                "wrong",
+                "moral",
+                "immoral",
+                "virtue",
+                "vice",
+                "honest",
+                "dishonest",
+                "true",
+                "false",
+            },
             "complexity": {"simple", "complex", "easy", "difficult", "hard", "plain"},
             "quantity": {"many", "few", "more", "less", "much", "little", "abundant", "scarce"},
-            "direction": {"up", "down", "above", "below", "rise", "fall", "ascend", "descend",
-                          "top", "bottom", "high", "low"},
+            "direction": {
+                "up",
+                "down",
+                "above",
+                "below",
+                "rise",
+                "fall",
+                "ascend",
+                "descend",
+                "top",
+                "bottom",
+                "high",
+                "low",
+            },
             "openness": {"open", "closed", "public", "private", "free", "restricted"},
-            "activity": {"active", "passive", "busy", "idle", "alive", "dead",
-                         "awake", "asleep", "start", "stop", "begin", "end"},
+            "activity": {
+                "active",
+                "passive",
+                "busy",
+                "idle",
+                "alive",
+                "dead",
+                "awake",
+                "asleep",
+                "start",
+                "stop",
+                "begin",
+                "end",
+            },
         }
 
         for profile in profiles:
@@ -146,14 +224,16 @@ class AxisLabeler:
         """Print a summary of axes sorted by kurtosis (most structured first)."""
         sorted_profiles = sorted(profiles, key=lambda p: p.kurtosis, reverse=True)
 
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"ICA Axis Summary ({self.space.n_components} components)")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
 
         for p in sorted_profiles[:30]:
             label_str = f"[{p.label}]" if p.label else "[unlabeled]"
-            print(f"\nAxis {p.axis_idx:3d} {label_str:20s} kurtosis={p.kurtosis:7.2f}  "
-                  f"({len(p.antonym_pairs)} antonym pairs)")
+            print(
+                f"\nAxis {p.axis_idx:3d} {label_str:20s} kurtosis={p.kurtosis:7.2f}  "
+                f"({len(p.antonym_pairs)} antonym pairs)"
+            )
             print(f"  (+) {', '.join(p.positive_pole[:top_n])}")
             print(f"  (-) {', '.join(p.negative_pole[:top_n])}")
 
@@ -161,14 +241,16 @@ class AxisLabeler:
         """Save axis profiles to JSON."""
         data = []
         for p in profiles:
-            data.append({
-                "axis_idx": p.axis_idx,
-                "label": p.label,
-                "kurtosis": p.kurtosis,
-                "positive_pole": p.positive_pole,
-                "negative_pole": p.negative_pole,
-                "antonym_pairs": p.antonym_pairs,
-            })
+            data.append(
+                {
+                    "axis_idx": p.axis_idx,
+                    "label": p.label,
+                    "kurtosis": p.kurtosis,
+                    "positive_pole": p.positive_pole,
+                    "negative_pole": p.negative_pole,
+                    "antonym_pairs": p.antonym_pairs,
+                }
+            )
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
@@ -176,16 +258,18 @@ class AxisLabeler:
 
     def load_profiles(self, path: str) -> list[AxisProfile]:
         """Load axis profiles from JSON."""
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             data = json.load(f)
         profiles = []
         for d in data:
-            profiles.append(AxisProfile(
-                axis_idx=d["axis_idx"],
-                label=d["label"],
-                kurtosis=d["kurtosis"],
-                positive_pole=d["positive_pole"],
-                negative_pole=d["negative_pole"],
-                antonym_pairs=[tuple(p) for p in d["antonym_pairs"]],
-            ))
+            profiles.append(
+                AxisProfile(
+                    axis_idx=d["axis_idx"],
+                    label=d["label"],
+                    kurtosis=d["kurtosis"],
+                    positive_pole=d["positive_pole"],
+                    negative_pole=d["negative_pole"],
+                    antonym_pairs=[tuple(p) for p in d["antonym_pairs"]],
+                )
+            )
         return profiles

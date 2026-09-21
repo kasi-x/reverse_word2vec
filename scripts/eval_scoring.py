@@ -3,8 +3,11 @@ Compare scoring criteria for label-group selection in scan strategy.
 
 The question: given a word, how to pick the RIGHT label group to invert?
 """
-import numpy as np
+
 import sys
+
+import numpy as np
+
 sys.path.insert(0, ".")
 
 from src.antonym_loader import extract_antonym_pairs
@@ -33,7 +36,8 @@ def main():
 
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
 
@@ -46,20 +50,26 @@ def main():
 
     # Scoring criteria to compare
     criteria = {
-        "dissimilarity":  {},  # 1 - cos(source, top_neighbor) [current]
-        "source_z_mean":  {},  # mean |z| of source on group's axes
-        "source_z_max":   {},  # max |z| of source on group's axes
-        "score_change":   {},  # L2 of ICA score change from inversion
-        "combined":       {},  # source_z_mean * score_change
+        "dissimilarity": {},  # 1 - cos(source, top_neighbor) [current]
+        "source_z_mean": {},  # mean |z| of source on group's axes
+        "source_z_max": {},  # max |z| of source on group's axes
+        "score_change": {},  # L2 of ICA score change from inversion
+        "combined": {},  # source_z_mean * score_change
     }
     for c in criteria:
-        criteria[c] = {"hits@1": 0, "hits@5": 0, "hits@10": 0,
-                       "top3_hits@1": 0, "top3_hits@5": 0, "top3_hits@10": 0}
+        criteria[c] = {
+            "hits@1": 0,
+            "hits@5": 0,
+            "hits@10": 0,
+            "top3_hits@1": 0,
+            "top3_hits@5": 0,
+            "top3_hits@10": 0,
+        }
     total = 0
 
     for i, (w1, w2) in enumerate(sample):
         if (i + 1) % 100 == 0:
-            print(f"  {i+1}/{len(sample)}...")
+            print(f"  {i + 1}/{len(sample)}...")
 
         total += 1
 
@@ -108,7 +118,7 @@ def main():
                 group_scores["combined"].append((combined, rank, label))
 
             # For each criterion, rank groups and check if best/top-3 hit
-            for c_name, groups in group_scores.items():
+            for _criterion, groups in group_scores.items():
                 if not groups:
                     continue
                 groups.sort(key=lambda x: x[0], reverse=True)
@@ -116,7 +126,7 @@ def main():
                 # Best group
                 _, best_rank, _ = groups[0]
                 if best_rank is not None:
-                    for kk, key in [(1, "hits@1"), (5, "hits@5"), (10, "hits@10")]:
+                    for kk, _key in [(1, "hits@1"), (5, "hits@5"), (10, "hits@10")]:
                         if best_rank <= kk:
                             # Only count the better of the two directions
                             pass  # handled below
@@ -140,7 +150,7 @@ def main():
                 src_norm = src_vec / max(np.linalg.norm(src_vec), 1e-10)
 
                 group_entries = []
-                for label, axes in label_to_axes.items():
+                for _label, axes in label_to_axes.items():
                     nbrs = operator.multi_axis_invert(src, axes, top_n=TOP_N)
                     if not nbrs:
                         continue
@@ -196,18 +206,22 @@ def main():
                     if best_rank_3 <= kk:
                         criteria[c_name][key] += 1
 
-    print(f"\n{'='*80}")
-    print(f"{'Criterion':20s}  {'Best@1':>8s}  {'Best@5':>8s}  {'Best@10':>8s}  "
-          f"{'Top3@1':>8s}  {'Top3@5':>8s}  {'Top3@10':>8s}")
-    print(f"{'='*80}")
+    print(f"\n{'=' * 80}")
+    print(
+        f"{'Criterion':20s}  {'Best@1':>8s}  {'Best@5':>8s}  {'Best@10':>8s}  "
+        f"{'Top3@1':>8s}  {'Top3@5':>8s}  {'Top3@10':>8s}"
+    )
+    print(f"{'=' * 80}")
     for name, data in criteria.items():
-        print(f"{name:20s}  "
-              f"{data['hits@1']/total:8.1%}  {data['hits@5']/total:8.1%}  {data['hits@10']/total:8.1%}  "
-              f"{data['top3_hits@1']/total:8.1%}  {data['top3_hits@5']/total:8.1%}  {data['top3_hits@10']/total:8.1%}")
-    print(f"{'='*80}")
+        print(
+            f"{name:20s}  "
+            f"{data['hits@1'] / total:8.1%}  {data['hits@5'] / total:8.1%}  {data['hits@10'] / total:8.1%}  "
+            f"{data['top3_hits@1'] / total:8.1%}  {data['top3_hits@5'] / total:8.1%}  {data['top3_hits@10'] / total:8.1%}"
+        )
+    print(f"{'=' * 80}")
     print(f"Total: {total}")
-    print(f"\n  Best = pick 1 label group; Top3 = check top-3 label groups")
-    print(f"  For reference: oracle_1 ≈ 22.6% @1, label_oracle ≈ 20.2% @1")
+    print("\n  Best = pick 1 label group; Top3 = check top-3 label groups")
+    print("  For reference: oracle_1 ≈ 22.6% @1, label_oracle ≈ 20.2% @1")
 
 
 if __name__ == "__main__":

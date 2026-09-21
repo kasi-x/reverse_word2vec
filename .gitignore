@@ -16,8 +16,10 @@ build/
 *.model
 data/
 
-# Results
-results/
+# Results: keep small eval JSONs (paper inputs), ignore large caches
+results/*
+!results/*.json
+results/ica_space.json
 
 # Jupyter
 .ipynb_checkpoints/
@@ -34,3 +36,6 @@ Thumbs.db
 
 # NLTK data (downloaded at runtime)
 nltk_data/
+
+# ZCode session artifacts
+.zcode/

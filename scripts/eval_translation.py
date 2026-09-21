@@ -16,6 +16,7 @@ GloVe-100), same candidate pool (top-50k valid-English words). Compares:
 Usage:
     pixi run python scripts/eval_translation.py
 """
+
 import json
 import sys
 import time
@@ -26,17 +27,18 @@ import numpy as np
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from src.antonym_loader import extract_antonym_pairs
+from src.eval_utils import unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
 
 
-def unit_rows(M: np.ndarray) -> np.ndarray:
-    n = np.linalg.norm(M, axis=1, keepdims=True)
-    return M / np.maximum(n, 1e-10)
-
-
-def batched_hits(preds_u: np.ndarray, cand_u: np.ndarray, cand_words: list[str],
-                 queries: list[tuple[str, str, str]], top_n: int = 10) -> dict:
+def batched_hits(
+    preds_u: np.ndarray,
+    cand_u: np.ndarray,
+    cand_words: list[str],
+    queries: list[tuple[str, str, str]],
+    top_n: int = 10,
+) -> dict:
     """preds_u: (n_q, d) unit predictions. queries: (query, target, _) per row."""
     sims = preds_u @ cand_u.T  # (n_q, n_cand)
     order = np.argsort(sims, axis=1)[:, ::-1][:, : top_n + 1]
@@ -77,8 +79,7 @@ def main():
 
     pools = {
         "full": (pool, U),
-        "freq20k": ([w for w in pool if model.key_to_index[w] < 20000],
-                    None),  # filled below
+        "freq20k": ([w for w in pool if model.key_to_index[w] < 20000], None),  # filled below
         "nostop": ([w for w in pool if w not in ENGLISH_STOP_WORDS], None),
     }
     for key in ("freq20k", "nostop"):
@@ -86,9 +87,7 @@ def main():
         pools[key] = (ws, unit_rows(np.array([model[w] for w in ws])))
 
     methods = ["lstsq", "procrustes", "meandiff", "negcos"]
-    results: dict[str, dict[str, list[dict]]] = {
-        m: {p: [] for p in pools} for m in methods
-    }
+    results: dict[str, dict[str, list[dict]]] = {m: {p: [] for p in pools} for m in methods}
 
     for fi in range(5):
         test_idx = set(folds[fi].tolist())
@@ -139,14 +138,20 @@ def main():
         summary[m] = {}
         for pname in pools:
             ms = results[m][pname]
-            row = {str(k): {"mean": float(np.mean([x[k] for x in ms])),
-                            "std": float(np.std([x[k] for x in ms]))}
-                   for k in (1, 5, 10)}
+            row = {
+                str(k): {
+                    "mean": float(np.mean([x[k] for x in ms])),
+                    "std": float(np.std([x[k] for x in ms])),
+                }
+                for k in (1, 5, 10)
+            }
             summary[m][pname] = row
-            print(f"{m:10s}  {pname:7s}  "
-                  f"{row['1']['mean']:.3f}±{row['1']['std']:.3f}  "
-                  f"{row['5']['mean']:.3f}±{row['5']['std']:.3f}  "
-                  f"{row['10']['mean']:.3f}±{row['10']['std']:.3f}")
+            print(
+                f"{m:10s}  {pname:7s}  "
+                f"{row['1']['mean']:.3f}±{row['1']['std']:.3f}  "
+                f"{row['5']['mean']:.3f}±{row['5']['std']:.3f}  "
+                f"{row['10']['mean']:.3f}±{row['10']['std']:.3f}"
+            )
 
     with open("results/translation_comparison.json", "w") as f:
         json.dump({"summary": summary, "elapsed_s": time.time() - t0}, f, indent=2)

@@ -10,6 +10,7 @@ Also includes WordNet synset-based expansion:
   If A antonym B, and C is a near-synonym of A (same synset),
   then (C, B) is also an antonym pair.
 """
+
 from __future__ import annotations
 
 import csv
@@ -18,17 +19,15 @@ import io
 import re
 import urllib.request
 from collections import defaultdict
+from collections.abc import Iterator
 from pathlib import Path
-from typing import Iterator
 
 import nltk
 from nltk.corpus import wordnet as wn
 
-
 # ConceptNet 5.7 full assertions (gzipped CSV, ~1GB)
 CN_ASSERTIONS_URL = (
-    "https://s3.amazonaws.com/conceptnet/downloads/2019/edges/"
-    "conceptnet-assertions-5.7.0.csv.gz"
+    "https://s3.amazonaws.com/conceptnet/downloads/2019/edges/conceptnet-assertions-5.7.0.csv.gz"
 )
 CACHE_PATH = Path("data/conceptnet_antonyms.tsv")
 
@@ -58,8 +57,8 @@ def stream_conceptnet_antonyms() -> Iterator[tuple[str, str]]:
     Filters for /r/Antonym with both ends in /c/en/.
     Does NOT save to disk — use download_conceptnet_antonyms() for caching.
     """
-    print(f"Streaming ConceptNet assertions from S3...")
-    print(f"(Filtering for /r/Antonym — this may take a few minutes)")
+    print("Streaming ConceptNet assertions from S3...")
+    print("(Filtering for /r/Antonym — this may take a few minutes)")
 
     req = urllib.request.Request(
         CN_ASSERTIONS_URL,
@@ -158,7 +157,7 @@ def expand_via_wordnet_synsets(
     print("Building WordNet synset expansion...")
     synset_mates: dict[str, set[str]] = defaultdict(set)
     for synset in wn.all_synsets():
-        lemma_names = [l.name().lower().replace("_", " ") for l in synset.lemmas()]
+        lemma_names = [lemma.name().lower().replace("_", " ") for lemma in synset.lemmas()]
         # Only single-token names
         lemma_names = [w for w in lemma_names if " " not in w and _WORD_RE.match(w)]
         for w in lemma_names:
@@ -182,8 +181,7 @@ def expand_via_wordnet_synsets(
                 expanded.add(candidate)
 
     result = list(expanded)
-    print(f"Synset expansion: {len(pairs)} → {len(result)} pairs "
-          f"(+{len(result) - len(pairs)})")
+    print(f"Synset expansion: {len(pairs)} → {len(result)} pairs (+{len(result) - len(pairs)})")
     return result
 
 

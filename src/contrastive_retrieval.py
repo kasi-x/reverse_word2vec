@@ -10,6 +10,7 @@ We search directly in ICA space for words that are:
 
 score(c) = cos(s_w[other], s_c[other]) - λ · s_w[k] · s_c[k] / std[k]²
 """
+
 from __future__ import annotations
 
 from dataclasses import dataclass
@@ -23,7 +24,7 @@ from src.ica_transformer import ICASpace
 class ContrastiveResult:
     word: str
     score: float
-    cos_other: float   # similarity on non-target axes
+    cos_other: float  # similarity on non-target axes
     axis_align: float  # alignment on target axis (negative = good)
     axis_idx: int
     label: str = ""
@@ -108,13 +109,15 @@ class ContrastiveRetriever:
             w = self.space.words[i]
             if w in excl:
                 continue
-            results.append(ContrastiveResult(
-                word=w,
-                score=float(scores[i]),
-                cos_other=float(cos_other[i]),
-                axis_align=float(axis_align[i]),
-                axis_idx=axis_idx,
-            ))
+            results.append(
+                ContrastiveResult(
+                    word=w,
+                    score=float(scores[i]),
+                    cos_other=float(cos_other[i]),
+                    axis_align=float(axis_align[i]),
+                    axis_idx=axis_idx,
+                )
+            )
         return results
 
     def search_label_group(
@@ -162,13 +165,15 @@ class ContrastiveRetriever:
             w = self.space.words[i]
             if w in excl:
                 continue
-            results.append(ContrastiveResult(
-                word=w,
-                score=float(scores[i]),
-                cos_other=float(cos_other[i]),
-                axis_align=float(group_align[i]),
-                axis_idx=-1,
-            ))
+            results.append(
+                ContrastiveResult(
+                    word=w,
+                    score=float(scores[i]),
+                    cos_other=float(cos_other[i]),
+                    axis_align=float(group_align[i]),
+                    axis_idx=-1,
+                )
+            )
         return results
 
     def tune_lambda(

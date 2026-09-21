@@ -4,11 +4,13 @@ Relevance scoring for word-axis relationships in ICA spaces.
 Computes how strongly each word engages with each ICA axis (z-score),
 enabling confidence-based inversion filtering and bias analysis.
 """
+
 import json
 from dataclasses import dataclass
 from pathlib import Path
 
 import matplotlib
+
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
@@ -77,13 +79,15 @@ class RelevanceScorer:
 
         result = []
         for k in ranked:
-            result.append(WordAxisScore(
-                axis_idx=int(k),
-                label=self._label_map.get(int(k), ""),
-                raw_score=float(scores[k]),
-                z_score=float(z_scores[k]),
-                pole="positive" if scores[k] > 0 else "negative",
-            ))
+            result.append(
+                WordAxisScore(
+                    axis_idx=int(k),
+                    label=self._label_map.get(int(k), ""),
+                    raw_score=float(scores[k]),
+                    z_score=float(z_scores[k]),
+                    pole="positive" if scores[k] > 0 else "negative",
+                )
+            )
         return result
 
     def inversion_confidence(self, word: str, axis_idx: int) -> InversionConfidence | None:
@@ -204,12 +208,14 @@ class RelevanceScorer:
                 continue
             raw = float(self.space.S[idx, axis_idx])
             signed_z = raw / float(self._axis_std[axis_idx])
-            results.append({
-                "word": word,
-                "raw_score": raw,
-                "signed_z": signed_z,
-                "abs_z": abs(signed_z),
-            })
+            results.append(
+                {
+                    "word": word,
+                    "raw_score": raw,
+                    "signed_z": signed_z,
+                    "abs_z": abs(signed_z),
+                }
+            )
         results.sort(key=lambda x: x["signed_z"])
         return results
 
@@ -252,9 +258,7 @@ class RelevanceScorer:
         return {
             "total_pairs": total,
             "by_confidence": by_confidence,
-            "by_confidence_pct": {
-                k: v / total for k, v in by_confidence.items()
-            },
+            "by_confidence_pct": {k: v / total for k, v in by_confidence.items()},
             "z_score_stats": {
                 "mean": float(np.mean(z_arr)),
                 "median": float(np.median(z_arr)),
@@ -284,7 +288,7 @@ class RelevanceScorer:
         valid = [(w, self.space.word_to_idx[w]) for w in words if w in self.space.word_to_idx]
         if not valid:
             return
-        word_labels, word_indices = zip(*valid)
+        word_labels, word_indices = zip(*valid, strict=True)
 
         if axis_indices is None:
             # Pick axes with highest max engagement across these words
@@ -304,7 +308,9 @@ class RelevanceScorer:
             label = self._label_map.get(aidx, "")
             axis_labels.append(f"{aidx}:{label}" if label else str(aidx))
 
-        fig, ax = plt.subplots(figsize=(max(8, len(axis_indices) * 0.7), max(4, len(word_labels) * 0.4)))
+        fig, ax = plt.subplots(
+            figsize=(max(8, len(axis_indices) * 0.7), max(4, len(word_labels) * 0.4))
+        )
         vmax = max(abs(data.min()), abs(data.max()), 1.0)
         im = ax.imshow(data, cmap="RdBu_r", vmin=-vmax, vmax=vmax, aspect="auto")
 
@@ -320,8 +326,7 @@ class RelevanceScorer:
                 val = data[i, j]
                 if abs(val) > 0.5:
                     color = "white" if abs(val) > vmax * 0.6 else "black"
-                    ax.text(j, i, f"{val:.1f}", ha="center", va="center",
-                            fontsize=7, color=color)
+                    ax.text(j, i, f"{val:.1f}", ha="center", va="center", fontsize=7, color=color)
 
         fig.colorbar(im, ax=ax, shrink=0.8, label="signed z-score")
         fig.tight_layout()
@@ -351,8 +356,20 @@ class RelevanceScorer:
         # Left: histogram with confidence bands
         ax = axes[0]
         ax.hist(z_scores, bins=50, color="#78909C", edgecolor="white", alpha=0.8)
-        ax.axvline(self.Z_HIGH, color="#4CAF50", linewidth=2, linestyle="--", label=f"high (z>{self.Z_HIGH})")
-        ax.axvline(self.Z_MEDIUM, color="#FF9800", linewidth=2, linestyle="--", label=f"medium (z>{self.Z_MEDIUM})")
+        ax.axvline(
+            self.Z_HIGH,
+            color="#4CAF50",
+            linewidth=2,
+            linestyle="--",
+            label=f"high (z>{self.Z_HIGH})",
+        )
+        ax.axvline(
+            self.Z_MEDIUM,
+            color="#FF9800",
+            linewidth=2,
+            linestyle="--",
+            label=f"medium (z>{self.Z_MEDIUM})",
+        )
         ax.set_xlabel("Best-axis z-score per antonym pair")
         ax.set_ylabel("Count")
         ax.set_title("Confidence Distribution")
@@ -441,12 +458,30 @@ class RelevanceScorer:
 
         if sample_words is None:
             sample_words = [
-                "king", "queen", "man", "woman",
-                "hot", "cold", "warm", "cool",
-                "good", "bad", "happy", "sad",
-                "big", "small", "huge", "tiny",
-                "doctor", "nurse", "engineer", "teacher",
-                "alive", "dead", "young", "old",
+                "king",
+                "queen",
+                "man",
+                "woman",
+                "hot",
+                "cold",
+                "warm",
+                "cool",
+                "good",
+                "bad",
+                "happy",
+                "sad",
+                "big",
+                "small",
+                "huge",
+                "tiny",
+                "doctor",
+                "nurse",
+                "engineer",
+                "teacher",
+                "alive",
+                "dead",
+                "young",
+                "old",
             ]
 
         # 1. Confidence distribution
@@ -466,12 +501,36 @@ class RelevanceScorer:
         # 3. Bias profiles for labeled axes
         print("3. Bias profiles on labeled axes...")
         professions = [
-            "doctor", "nurse", "engineer", "teacher", "scientist", "artist",
-            "lawyer", "chef", "pilot", "mechanic", "librarian", "programmer",
-            "professor", "athlete", "surgeon", "therapist", "architect",
-            "dentist", "pharmacist", "accountant", "journalist", "musician",
-            "carpenter", "electrician", "plumber", "secretary", "receptionist",
-            "manager", "director", "president",
+            "doctor",
+            "nurse",
+            "engineer",
+            "teacher",
+            "scientist",
+            "artist",
+            "lawyer",
+            "chef",
+            "pilot",
+            "mechanic",
+            "librarian",
+            "programmer",
+            "professor",
+            "athlete",
+            "surgeon",
+            "therapist",
+            "architect",
+            "dentist",
+            "pharmacist",
+            "accountant",
+            "journalist",
+            "musician",
+            "carpenter",
+            "electrician",
+            "plumber",
+            "secretary",
+            "receptionist",
+            "manager",
+            "director",
+            "president",
         ]
         bias_results = {}
         for profile in self.profiles:

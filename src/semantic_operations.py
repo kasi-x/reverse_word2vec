@@ -4,9 +4,10 @@ Semantic operations on ICA-decomposed embedding spaces.
 Provides axis-wise inversion, sliding, and nearest-neighbor search
 for discovering antonyms and performing semantic manipulation.
 """
+
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 from gensim.models import KeyedVectors
@@ -171,7 +172,6 @@ class SemanticOperator:
         original_vec = self.model[word].astype(np.float32)
         original_norm = original_vec / max(np.linalg.norm(original_vec), 1e-10)
 
-        excl = {word} | (exclude or set())
         results = []
 
         # Try each label group
@@ -266,12 +266,14 @@ class SemanticOperator:
             neighbors = self.axis_invert(word, int(k), top_n, exclude)
             if neighbors:
                 label = self._label_to_axes_reverse(int(k))
-                results.append(InversionResult(
-                    neighbors=neighbors,
-                    axes_flipped=[int(k)],
-                    strategy="attribute",
-                    label=label,
-                ))
+                results.append(
+                    InversionResult(
+                        neighbors=neighbors,
+                        axes_flipped=[int(k)],
+                        strategy="attribute",
+                        label=label,
+                    )
+                )
         return results
 
     def axis_slide(
@@ -349,12 +351,14 @@ class SemanticOperator:
 
         diffs = []
         for axis in ranked[:10]:
-            diffs.append({
-                "axis": int(axis),
-                "score_w1": float(s1[axis]),
-                "score_w2": float(s2[axis]),
-                "diff": float(diff[axis]),
-            })
+            diffs.append(
+                {
+                    "axis": int(axis),
+                    "score_w1": float(s1[axis]),
+                    "score_w2": float(s2[axis]),
+                    "diff": float(diff[axis]),
+                }
+            )
 
         v1 = self.model[word1]
         v2 = self.model[word2]
@@ -376,5 +380,9 @@ class SemanticOperator:
         for w in [a, b, c]:
             if w not in self.model:
                 return []
-        vec = self.model[b].astype(np.float64) - self.model[a].astype(np.float64) + self.model[c].astype(np.float64)
+        vec = (
+            self.model[b].astype(np.float64)
+            - self.model[a].astype(np.float64)
+            + self.model[c].astype(np.float64)
+        )
         return self.find_nearest(vec.astype(np.float32), top_n, exclude={a, b, c})

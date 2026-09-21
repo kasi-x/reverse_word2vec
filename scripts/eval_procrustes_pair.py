@@ -8,17 +8,17 @@ with oracle_1ax (0.245 @1) and linear_raw (0.218 @1).
 Usage:
     pixi run python scripts/eval_procrustes_pair.py
 """
+
 import json
 import sys
 import time
 
 sys.path.insert(0, ".")
-sys.path.insert(0, "scripts")
 
 import numpy as np
-from eval_translation import unit_rows
 
 from src.antonym_loader import extract_antonym_pairs
+from src.eval_utils import unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
 
@@ -41,8 +41,9 @@ def main():
     for fi in range(5):
         test_idx = set(folds[fi].tolist())
         train = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
-        test = [all_pairs[i] for i in folds[fi] if all_pairs[i][0] in w2i
-                and all_pairs[i][1] in w2i]
+        test = [
+            all_pairs[i] for i in folds[fi] if all_pairs[i][0] in w2i and all_pairs[i][1] in w2i
+        ]
 
         Xtr, Ytr = [], []
         for w1, w2 in train:
@@ -82,15 +83,20 @@ def main():
                         hits[k] += 1
         m = {k: hits[k] / len(test) for k in (1, 5, 10)}
         fold_metrics.append(m)
-        print(f"Fold {fi + 1}/5 ({len(test)} test): "
-              f"@1={m[1]:.3f} @5={m[5]:.3f} @10={m[10]:.3f}")
+        print(f"Fold {fi + 1}/5 ({len(test)} test): @1={m[1]:.3f} @5={m[5]:.3f} @10={m[10]:.3f}")
 
-    summary = {str(k): {"mean": float(np.mean([m[k] for m in fold_metrics])),
-                        "std": float(np.std([m[k] for m in fold_metrics]))}
-               for k in (1, 5, 10)}
-    print(f"\nprocrustes/pair-level: @1={summary['1']['mean']:.3f}±{summary['1']['std']:.3f}  "
-          f"@5={summary['5']['mean']:.3f}±{summary['5']['std']:.3f}  "
-          f"@10={summary['10']['mean']:.3f}±{summary['10']['std']:.3f}")
+    summary = {
+        str(k): {
+            "mean": float(np.mean([m[k] for m in fold_metrics])),
+            "std": float(np.std([m[k] for m in fold_metrics])),
+        }
+        for k in (1, 5, 10)
+    }
+    print(
+        f"\nprocrustes/pair-level: @1={summary['1']['mean']:.3f}±{summary['1']['std']:.3f}  "
+        f"@5={summary['5']['mean']:.3f}±{summary['5']['std']:.3f}  "
+        f"@10={summary['10']['mean']:.3f}±{summary['10']['std']:.3f}"
+    )
     with open("results/procrustes_pair.json", "w") as f:
         json.dump({"summary": summary, "elapsed_s": time.time() - t0}, f, indent=2)
     print(f"Saved results/procrustes_pair.json ({time.time() - t0:.0f}s)")

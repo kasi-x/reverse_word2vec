@@ -6,15 +6,18 @@ Builds ONE fold (seed 42, fold 0) exactly like eval_leakfree.py, then checks:
   3. Word overlap between train pairs and test queries.
   4. Sample top-5 outputs for a few queries (mlp_ica vs linear_raw).
 """
+
 import sys
+
 sys.path.insert(0, ".")
 sys.path.insert(0, "scripts")
 
 import numpy as np
-from eval_leakfree import fit_fold_space, LinearAntonymMap, unit_rows, topn_excluding
+from eval_leakfree import LinearAntonymMap, fit_fold_space
 
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
+from src.eval_utils import unit_rows
 from src.word2vec_loader import Word2VecLoader
 
 model = Word2VecLoader().load_glove(100)
@@ -29,12 +32,13 @@ train_pairs = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
 test_pairs = [all_pairs[i] for i in folds[0]]
 
 space, cf_model = fit_fold_space(model, train_pairs, 50000, 100, 50)
-in_train = [p for p in train_pairs
-            if p[0] in space.word_to_idx and p[1] in space.word_to_idx]
-in_test = [p for p in test_pairs
-           if p[0] in space.word_to_idx and p[1] in space.word_to_idx]
-print(f"train in vocab: {len(in_train)}/{len(train_pairs)}, "
-      f"test in vocab: {len(in_test)}/{len(test_pairs)}")
+in_train = [p for p in train_pairs if p[0] in space.word_to_idx and p[1] in space.word_to_idx]
+in_test = [p for p in test_pairs if p[0] in space.word_to_idx and p[1] in space.word_to_idx]
+print(
+    f"train in vocab: {len(in_train)}/{len(train_pairs)}, "
+    f"test in vocab: {len(in_test)}/{len(test_pairs)}"
+)
+
 
 # 1. cosine shift in CF space
 def meancos(pairs):
@@ -44,7 +48,10 @@ def meancos(pairs):
         v2 = cf_model[w2].astype(np.float64)
         sims.append(float(v1 @ v2 / (np.linalg.norm(v1) * np.linalg.norm(v2))))
     return float(np.mean(sims))
+
+
 print(f"mean cos in CF space: train={meancos(in_train):+.3f}  test={meancos(in_test):+.3f}")
+
 
 # raw-space cosines for reference
 def meancos_raw(pairs):
@@ -54,18 +61,24 @@ def meancos_raw(pairs):
         v2 = model[w2].astype(np.float64)
         sims.append(float(v1 @ v2 / (np.linalg.norm(v1) * np.linalg.norm(v2))))
     return float(np.mean(sims))
-print(f"mean cos in RAW space: train={meancos_raw(in_train):+.3f}  "
-      f"test={meancos_raw(in_test):+.3f}")
+
+
+print(
+    f"mean cos in RAW space: train={meancos_raw(in_train):+.3f}  test={meancos_raw(in_test):+.3f}"
+)
 
 # 2. word overlap
 train_words = {w for p in train_pairs for w in p}
 overlap = sum(1 for p in in_test for q in p for _ in [0] if q in train_words)
-print(f"test query-slots whose word appears in train pairs: "
-      f"{overlap}/{2 * len(in_test)} = {overlap / (2 * len(in_test)):.1%}")
+print(
+    f"test query-slots whose word appears in train pairs: "
+    f"{overlap}/{2 * len(in_test)} = {overlap / (2 * len(in_test)):.1%}"
+)
 
 # 3. fold-MLP on train (sanity) and test
 mlp = AntonymClassifier(space, "mlp")
 mlp.fit(in_train, rng=np.random.RandomState(42))
+
 
 def hits(pairs, retr):
     h = {1: 0, 5: 0, 10: 0}
@@ -84,7 +97,11 @@ def hits(pairs, retr):
                     h[k] += 1
     return {k: h[k] / len(pairs) for k in (1, 5, 10)}
 
-retr = lambda q: [w for w, _ in mlp.retrieve(q, top_n=10)]
+
+def retr(q):
+    return [w for w, _ in mlp.retrieve(q, top_n=10)]
+
+
 print("mlp_ica on TRAIN:", {k: round(v, 3) for k, v in hits(in_train[:300], retr).items()})
 print("mlp_ica on TEST :", {k: round(v, 3) for k, v in hits(in_test, retr).items()})
 

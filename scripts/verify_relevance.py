@@ -4,13 +4,16 @@ Verify relevance hypotheses:
 2. Does symmetric axis loading predict success?
 3. Does multi-axis inversion help asymmetric cases?
 """
-import numpy as np
+
 import sys
+
+import numpy as np
+
 sys.path.insert(0, ".")
 
 from src.antonym_loader import extract_antonym_pairs
 from src.axis_labeler import AxisLabeler
-from src.ica_transformer import load_ica_space, ICATransformer
+from src.ica_transformer import load_ica_space
 from src.relevance import RelevanceScorer
 from src.semantic_operations import SemanticOperator
 from src.word2vec_loader import Word2VecLoader
@@ -26,11 +29,11 @@ def main():
     profiles = labeler.load_profiles("results/axis_profiles.json")
     operator = SemanticOperator(model, space)
     scorer = RelevanceScorer(space, profiles)
-    transformer = ICATransformer()
 
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
     print(f"Valid antonym pairs: {len(valid_pairs)}")
@@ -147,7 +150,7 @@ def main():
                 results_by_k[k] += 1
 
     for k, hits in results_by_k.items():
-        print(f"  top-{k} axes: {hits}/{total} = {hits/total:.1%}")
+        print(f"  top-{k} axes: {hits}/{total} = {hits / total:.1%}")
 
     # ── Experiment 4: Asymmetric cases - does multi-axis help? ──
     print("\n" + "=" * 60)
@@ -170,7 +173,7 @@ def main():
     print(f"  Asymmetric pairs: {len(asym_pairs)}")
 
     if asym_pairs:
-        asym_sample = asym_pairs[:min(200, len(asym_pairs))]
+        asym_sample = asym_pairs[: min(200, len(asym_pairs))]
         asym_results = {1: 0, 3: 0, 5: 0}
         for w1, w2 in asym_sample:
             s1 = space.score(w1)
@@ -195,7 +198,7 @@ def main():
 
         n = len(asym_sample)
         for k, hits in asym_results.items():
-            print(f"  top-{k} axes: {hits}/{n} = {hits/n:.1%}")
+            print(f"  top-{k} axes: {hits}/{n} = {hits / n:.1%}")
 
     # ── Experiment 5: Canonical cases deep dive ─────────────────
     print("\n" + "=" * 60)
@@ -203,11 +206,21 @@ def main():
     print("=" * 60)
 
     canonical = [
-        ("king", "queen"), ("boy", "girl"), ("father", "mother"),
-        ("husband", "wife"), ("happy", "sad"), ("good", "bad"),
-        ("love", "hate"), ("hot", "cold"), ("warm", "cool"),
-        ("big", "small"), ("huge", "tiny"), ("up", "down"),
-        ("high", "low"), ("alive", "dead"), ("begin", "end"),
+        ("king", "queen"),
+        ("boy", "girl"),
+        ("father", "mother"),
+        ("husband", "wife"),
+        ("happy", "sad"),
+        ("good", "bad"),
+        ("love", "hate"),
+        ("hot", "cold"),
+        ("warm", "cool"),
+        ("big", "small"),
+        ("huge", "tiny"),
+        ("up", "down"),
+        ("high", "low"),
+        ("alive", "dead"),
+        ("begin", "end"),
     ]
 
     for w1, w2 in canonical:
@@ -245,9 +258,11 @@ def main():
         hit1 = "o" if single_result == w2 else "x"
         hit3 = "o" if multi_result == w2 else "x"
 
-        print(f"  {w1:10s}->{w2:10s}  axis={best_axis:2d}({label:12s})  "
-              f"z_diff={best_z:.1f}  z1={z1:.1f} z2={z2:.1f}  {sym:4s}  "
-              f"overlap={overlap}  1ax[{hit1}]={single_result:10s}  3ax[{hit3}]={multi_result:10s}")
+        print(
+            f"  {w1:10s}->{w2:10s}  axis={best_axis:2d}({label:12s})  "
+            f"z_diff={best_z:.1f}  z1={z1:.1f} z2={z2:.1f}  {sym:4s}  "
+            f"overlap={overlap}  1ax[{hit1}]={single_result:10s}  3ax[{hit3}]={multi_result:10s}"
+        )
 
 
 if __name__ == "__main__":

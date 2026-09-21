@@ -16,6 +16,7 @@ Objective:
 
 Only words that appear in constraint pairs are updated.
 """
+
 from __future__ import annotations
 
 import copy
@@ -27,10 +28,10 @@ from gensim.models import KeyedVectors
 
 @dataclass
 class CounterFitConfig:
-    n_iter: int = 100          # optimisation iterations
-    lr: float = 0.05           # learning rate
-    lam: float = 0.1           # VSP regularisation weight (pull-back strength)
-    target_sim: float = -0.3   # push antonyms below this cosine similarity
+    n_iter: int = 100  # optimisation iterations
+    lr: float = 0.05  # learning rate
+    lam: float = 0.1  # VSP regularisation weight (pull-back strength)
+    target_sim: float = -0.3  # push antonyms below this cosine similarity
     verbose: bool = True
 
 
@@ -75,11 +76,12 @@ class CounterFitter:
                 words_to_update.add(w2)
 
         update_indices = sorted(model.key_to_index[w] for w in words_to_update)
-        idx_set = set(update_indices)
 
         if cfg.verbose:
-            print(f"Counter-fitting: {len(valid_pairs)} antonym pairs, "
-                  f"{len(update_indices)} words to update")
+            print(
+                f"Counter-fitting: {len(valid_pairs)} antonym pairs, "
+                f"{len(update_indices)} words to update"
+            )
 
         # --- Working copy of vectors (unit-normalised) -----------------------
         V = model.vectors.astype(np.float64).copy()
@@ -101,24 +103,23 @@ class CounterFitter:
             vj = V[j_idx]
 
             sims = np.sum(vi * vj, axis=1)  # (n_pairs,) cosine (vectors are unit)
-            active = sims > cfg.target_sim   # pairs that still need pushing
+            active = sims > cfg.target_sim  # pairs that still need pushing
 
             if active.any():
-                s = sims[active, None]        # (k, 1)
-                u = vi[active]                # (k, d)
-                w = vj[active]                # (k, d)
+                s = sims[active, None]  # (k, 1)
+                u = vi[active]  # (k, d)
+                w = vj[active]  # (k, d)
 
                 # Gradient of cosine w.r.t. u (normalised): ∂cos/∂u = w - cos·u
-                grad_u = w - s * u            # (k, d)
-                grad_w = u - s * w            # (k, d)
+                grad_u = w - s * u  # (k, d)
+                grad_w = u - s * w  # (k, d)
 
                 # Gradient step to DECREASE cosine (subtract positive grad)
                 np.add.at(V, i_idx[active], -cfg.lr * grad_u)
                 np.add.at(V, j_idx[active], -cfg.lr * grad_w)
 
             # Vector Space Preservation: pull updated words back to original
-            V[update_indices] = ((1 - cfg.lam) * V[update_indices]
-                                 + cfg.lam * V_orig[update_indices])
+            V[update_indices] = (1 - cfg.lam) * V[update_indices] + cfg.lam * V_orig[update_indices]
 
             # Re-normalise updated words
             sub = V[update_indices]
@@ -131,8 +132,10 @@ class CounterFitter:
                 vj2 = V[j_idx]
                 mean_sim = float(np.mean(np.sum(vi2 * vj2, axis=1)))
                 n_still_close = int((np.sum(vi2 * vj2, axis=1) > cfg.target_sim).sum())
-                print(f"  iter {it+1:4d}: mean antonym cos = {mean_sim:.3f}, "
-                      f"pairs still above target = {n_still_close}/{len(valid_pairs)}")
+                print(
+                    f"  iter {it + 1:4d}: mean antonym cos = {mean_sim:.3f}, "
+                    f"pairs still above target = {n_still_close}/{len(valid_pairs)}"
+                )
 
         # --- Build new KeyedVectors ------------------------------------------
         new_model = copy.deepcopy(model)
@@ -145,18 +148,25 @@ class CounterFitter:
             vi_f = V[i_idx]
             vj_f = V[j_idx]
             sims_orig = np.sum(
-                (model.vectors[i_idx] / np.linalg.norm(model.vectors[i_idx], axis=1, keepdims=True)) *
-                (model.vectors[j_idx] / np.linalg.norm(model.vectors[j_idx], axis=1, keepdims=True)),
-                axis=1
+                (model.vectors[i_idx] / np.linalg.norm(model.vectors[i_idx], axis=1, keepdims=True))
+                * (
+                    model.vectors[j_idx]
+                    / np.linalg.norm(model.vectors[j_idx], axis=1, keepdims=True)
+                ),
+                axis=1,
             )
             sims_new = np.sum(vi_f * vj_f, axis=1)
-            print(f"\nAntonym cosine similarity:")
-            print(f"  Before: mean={np.mean(sims_orig):.3f}, "
-                  f"median={np.median(sims_orig):.3f}, "
-                  f"% > 0 = {(sims_orig > 0).mean():.1%}")
-            print(f"  After:  mean={np.mean(sims_new):.3f}, "
-                  f"median={np.median(sims_new):.3f}, "
-                  f"% > 0 = {(sims_new > 0).mean():.1%}")
+            print("\nAntonym cosine similarity:")
+            print(
+                f"  Before: mean={np.mean(sims_orig):.3f}, "
+                f"median={np.median(sims_orig):.3f}, "
+                f"% > 0 = {(sims_orig > 0).mean():.1%}"
+            )
+            print(
+                f"  After:  mean={np.mean(sims_new):.3f}, "
+                f"median={np.median(sims_new):.3f}, "
+                f"% > 0 = {(sims_new > 0).mean():.1%}"
+            )
 
         return new_model
 

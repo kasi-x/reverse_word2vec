@@ -4,6 +4,7 @@ Quantitative evaluation of ICA axis-wise semantic inversion.
 - Antonym retrieval evaluation with 5-fold cross-validation
 - Google Analogy Dataset evaluation comparing ICA inversion vs traditional analogy
 """
+
 import json
 from pathlib import Path
 
@@ -38,9 +39,7 @@ class AntonymRetrievalEval:
         normalized = diff / denom
         return int(np.argmax(normalized))
 
-    def _build_axis_map(
-        self, pairs: list[tuple[str, str]]
-    ) -> dict[int, list[tuple[str, str]]]:
+    def _build_axis_map(self, pairs: list[tuple[str, str]]) -> dict[int, list[tuple[str, str]]]:
         """Map each pair to its best axis."""
         axis_map: dict[int, list[tuple[str, str]]] = {}
         for w1, w2 in pairs:
@@ -105,12 +104,14 @@ class AntonymRetrievalEval:
                 if best_rank is not None and best_rank <= k:
                     hits[k] += 1
 
-            details.append({
-                "w1": w1,
-                "w2": w2,
-                "axis": axis,
-                "best_rank": best_rank,
-            })
+            details.append(
+                {
+                    "w1": w1,
+                    "w2": w2,
+                    "axis": axis,
+                    "best_rank": best_rank,
+                }
+            )
 
         metrics = {}
         for k in [1, 5, 10]:
@@ -136,7 +137,8 @@ class AntonymRetrievalEval:
         """
         # Filter to pairs in vocabulary
         valid_pairs = [
-            (w1, w2) for w1, w2 in pairs
+            (w1, w2)
+            for w1, w2 in pairs
             if self.space.score(w1) is not None and self.space.score(w2) is not None
         ]
 
@@ -154,11 +156,13 @@ class AntonymRetrievalEval:
             train_axis_map = self._build_axis_map(train_pairs)
             result = self.evaluate_pairs(test_pairs, train_axis_map, top_n=top_n)
             fold_results.append(result)
-            print(f"  Fold {fold_idx+1}/{n_folds}: "
-                  f"Hits@1={result['metrics']['hits_at_1']:.3f}, "
-                  f"Hits@5={result['metrics']['hits_at_5']:.3f}, "
-                  f"Hits@10={result['metrics']['hits_at_10']:.3f} "
-                  f"({result['evaluated']} pairs)")
+            print(
+                f"  Fold {fold_idx + 1}/{n_folds}: "
+                f"Hits@1={result['metrics']['hits_at_1']:.3f}, "
+                f"Hits@5={result['metrics']['hits_at_5']:.3f}, "
+                f"Hits@10={result['metrics']['hits_at_10']:.3f} "
+                f"({result['evaluated']} pairs)"
+            )
 
         # Aggregate
         agg_metrics = {}
@@ -195,7 +199,7 @@ class AnalogyEval:
         """
         categories: dict[str, list[tuple[str, str, str, str]]] = {}
         current_cat = ""
-        with open(path, "r") as f:
+        with open(path) as f:
             for line in f:
                 line = line.strip()
                 if line.startswith(":"):
@@ -241,9 +245,7 @@ class AnalogyEval:
                 if s_a is not None and s_b is not None:
                     diff = np.abs(s_a - s_b)
                     best_axis = int(np.argmax(diff))
-                    ica_neighbors = self.operator.axis_invert(
-                        c, best_axis, top_n=5, exclude={a, b}
-                    )
+                    ica_neighbors = self.operator.axis_invert(c, best_axis, top_n=5, exclude={a, b})
                     if ica_neighbors and ica_neighbors[0].word == d:
                         ica_correct += 1
 
@@ -255,10 +257,12 @@ class AnalogyEval:
                     "ica_correct": ica_correct,
                     "traditional_correct": trad_correct,
                 }
-                print(f"  {cat}: ICA={ica_correct}/{evaluated} "
-                      f"({ica_correct/evaluated:.1%}), "
-                      f"Trad={trad_correct}/{evaluated} "
-                      f"({trad_correct/evaluated:.1%})")
+                print(
+                    f"  {cat}: ICA={ica_correct}/{evaluated} "
+                    f"({ica_correct / evaluated:.1%}), "
+                    f"Trad={trad_correct}/{evaluated} "
+                    f"({trad_correct / evaluated:.1%})"
+                )
 
         # Overall
         total_eval = sum(r["evaluated"] for r in results.values())

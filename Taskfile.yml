@@ -28,8 +28,13 @@ tasks:
     cmds:
       - '{{.PYTHON}} run_pipeline.py --phase 1'
 
+  run:relabel:
+    desc: "Re-run axis labeling on the cached ICA space (no refit)"
+    cmds:
+      - '{{.PYTHON}} run_pipeline.py --relabel'
+
   run:qualitative:
-    desc: "Phase 2: Qualitative evaluation (canonical test cases)"
+    desc: "Phase 2: Qualitative evaluation (blind + oracle)"
     cmds:
       - '{{.PYTHON}} run_pipeline.py --phase 2'
 
@@ -49,16 +54,51 @@ tasks:
       - '{{.PYTHON}} run_pipeline.py'
 
   run:cf:
-    desc: "Run full pipeline with counter-fitting"
+    desc: "Run full pipeline with counter-fitting (experimental; leak-sensitive)"
     cmds:
       - '{{.PYTHON}} run_pipeline.py --counter-fit'
 
   run:cf:ica:
-    desc: "Phase 1 with counter-fitting (refit ICA)"
+    desc: "Phase 1 with counter-fitting (refit ICA; experimental)"
     cmds:
       - '{{.PYTHON}} run_pipeline.py --phase 1 --counter-fit'
+
+  eval:reranker:
+    desc: "Eval: MLP + reranker antonym retrieval (CV + holdout)"
+    cmds:
+      - '{{.PYTHON}} scripts/eval_reranker.py'
+
+  eval:leakfree:
+    desc: "Eval: leak-free counter-fitting comparison (fold-local CF)"
+    cmds:
+      - '{{.PYTHON}} scripts/eval_leakfree.py'
+
+  eval:translation:
+    desc: "Eval: translation-baseline refinements (lstsq/procrustes/meandiff/negcos)"
+    cmds:
+      - '{{.PYTHON}} scripts/eval_translation.py'
+
+  eval:discovery:
+    desc: "Eval: train on WordNet, test on ConceptNet-only pairs"
+    cmds:
+      - '{{.PYTHON}} scripts/eval_discovery.py'
 
   paper:generate:
     desc: "Phase 5: Generate academic paper from results"
     cmds:
       - '{{.PYTHON}} run_pipeline.py --phase 5'
+
+  test:
+    desc: Run unit tests (pytest)
+    cmds:
+      - '{{.PYTHON}} -m pytest'
+
+  lint:
+    desc: Lint with ruff
+    cmds:
+      - '{{.PYTHON}} -m ruff check src scripts run_pipeline.py'
+
+  format:
+    desc: Format with ruff
+    cmds:
+      - '{{.PYTHON}} -m ruff format src scripts run_pipeline.py'

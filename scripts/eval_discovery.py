@@ -16,7 +16,7 @@ Also evaluates WordNet-train/WordNet-test 5-fold Procrustes as reference.
 Usage:
     pixi run python scripts/eval_discovery.py
 """
-import csv
+
 import json
 import sys
 import time
@@ -24,28 +24,20 @@ import time
 sys.path.insert(0, ".")
 
 import numpy as np
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
+from src.conceptnet_loader import download_conceptnet_antonyms
+from src.eval_utils import unit_rows
 from src.ica_transformer import is_valid_english_word, load_ica_space
 from src.word2vec_loader import Word2VecLoader
 
 
-def unit_rows(M):
-    n = np.linalg.norm(M, axis=1, keepdims=True)
-    return M / np.maximum(n, 1e-10)
-
-
 def load_conceptnet(path="data/conceptnet_antonyms.tsv"):
     pairs = set()
-    with open(path) as f:
-        for row in csv.reader(f, delimiter="\t"):
-            if len(row) < 2:
-                continue
-            a, b = row[0].strip(), row[1].strip()
-            if a and b and a != b:
-                pairs.add(tuple(sorted((a, b))))
+    for a, b in download_conceptnet_antonyms(cache_path=path):
+        if a and b and a != b:
+            pairs.add(tuple(sorted((a, b))))
     return pairs
 
 
@@ -119,19 +111,18 @@ def main():
     neg_queries = [(q, pool[rng.randint(len(pool))]) for q, _ in queries]
     neg_hits, _ = directed_metrics(preds, U, pool, neg_queries)
 
-    print(f"\nCN-only directed queries: {len(queries)} "
-          f"({len(test_pairs)} pairs)")
+    print(f"\nCN-only directed queries: {len(queries)} ({len(test_pairs)} pairs)")
     for k in (1, 5, 10):
-        print(f"  procrustes @{k}: {hits[k]:.4f}   (random-target control: "
-              f"{neg_hits[k]:.4f})")
+        print(f"  procrustes @{k}: {hits[k]:.4f}   (random-target control: {neg_hits[k]:.4f})")
 
     # --- Legacy ICA+MLP on same queries (reference; train-side only info) ---
     try:
         space = load_ica_space("results/ica_space")
         mlp = AntonymClassifier(space, "mlp")
-        mlp.fit([p for p in wn
-                 if p[0] in space.word_to_idx and p[1] in space.word_to_idx],
-                rng=np.random.RandomState(42))
+        mlp.fit(
+            [p for p in wn if p[0] in space.word_to_idx and p[1] in space.word_to_idx],
+            rng=np.random.RandomState(42),
+        )
         mlp_rows, mlp_q = [], []
         for q, tgt in queries:
             if q not in space.word_to_idx:
@@ -148,14 +139,13 @@ def main():
                             mlp_hits[k] += 1
                     break
         n = len(mlp_q)
-        print("  mlp_ica      : " + "  ".join(
-            f"@{k}: {mlp_hits[k] / n:.4f}" for k in (1, 5, 10)))
+        print("  mlp_ica      : " + "  ".join(f"@{k}: {mlp_hits[k] / n:.4f}" for k in (1, 5, 10)))
     except Exception as e:
         print(f"  mlp_ica skipped: {e}")
 
     # --- Rank dump for showcase mining: hits (rank<=10) + near-miss sample ---
     dump = []
-    for (q, tgt), r in zip(queries, ranks):
+    for (q, tgt), r in zip(queries, ranks, strict=False):
         if r is not None and r <= 10:
             dump.append({"query": q, "target": tgt, "rank": r})
     dump.sort(key=lambda d: (d["rank"], d["query"]))

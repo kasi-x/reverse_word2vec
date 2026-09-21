@@ -7,8 +7,10 @@ Evaluates the full pipeline:
 Usage:
     pixi run python scripts/eval_reranker.py
 """
+
 import json
 import sys
+
 sys.path.insert(0, ".")
 
 import numpy as np
@@ -16,30 +18,10 @@ import numpy as np
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
 from src.axis_labeler import AxisLabeler
+from src.eval_utils import compute_hits
 from src.ica_transformer import load_ica_space
 from src.reranker import Reranker
 from src.word2vec_loader import Word2VecLoader
-
-
-def compute_hits(pairs, retrieve_fn, top_n=10):
-    hits = {1: 0, 5: 0, 10: 0}
-    total = 0
-    for w1, w2 in pairs:
-        total += 1
-        best_rank = None
-        for src, tgt in [(w1, w2), (w2, w1)]:
-            results = retrieve_fn(src)
-            for j, (word, _) in enumerate(results[:top_n]):
-                if word == tgt:
-                    rank = j + 1
-                    if best_rank is None or rank < best_rank:
-                        best_rank = rank
-                    break
-        if best_rank is not None:
-            for k in [1, 5, 10]:
-                if best_rank <= k:
-                    hits[k] += 1
-    return {k: hits[k] / total for k in [1, 5, 10]}, total
 
 
 def main():
@@ -48,12 +30,13 @@ def main():
     model = loader.load_glove(100)
     space = load_ica_space("results/ica_space")
     labeler = AxisLabeler(space)
-    profiles = labeler.load_profiles("results/axis_profiles.json")
+    labeler.load_profiles("results/axis_profiles.json")  # axis metadata (unused here)
     print(f"  Loaded ICA space: {len(space.words)} words, {space.n_components} components")
 
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
     print(f"  Valid WordNet antonym pairs: {len(valid_pairs)}")
@@ -64,11 +47,11 @@ def main():
     rng.shuffle(idx)
     n = len(valid_pairs)
     n_train = int(n * 0.70)
-    n_val   = int(n * 0.15)
+    n_val = int(n * 0.15)
 
     train_pairs = [valid_pairs[i] for i in idx[:n_train]]
-    val_pairs   = [valid_pairs[i] for i in idx[n_train:n_train + n_val]]
-    test_pairs  = [valid_pairs[i] for i in idx[n_train + n_val:]]
+    val_pairs = [valid_pairs[i] for i in idx[n_train : n_train + n_val]]
+    test_pairs = [valid_pairs[i] for i in idx[n_train + n_val :]]
     print(f"  Split: {len(train_pairs)} train / {len(val_pairs)} val / {len(test_pairs)} test")
 
     # ── Train MLP classifier ──────────────────────────────────────────
@@ -101,22 +84,22 @@ def main():
     mlp_hits, _ = compute_hits(test_pairs, fn_mlp)
     rer_hits, _ = compute_hits(test_pairs, fn_reranker)
 
-    print(f"\n{'='*50}")
+    print(f"\n{'=' * 50}")
     print(f"{'Method':20s}  {'@1':>7s}  {'@5':>7s}  {'@10':>7s}")
-    print(f"{'='*50}")
+    print(f"{'=' * 50}")
     print(f"{'MLP only':20s}  {mlp_hits[1]:7.1%}  {mlp_hits[5]:7.1%}  {mlp_hits[10]:7.1%}")
     print(f"{'MLP + reranker':20s}  {rer_hits[1]:7.1%}  {rer_hits[5]:7.1%}  {rer_hits[10]:7.1%}")
-    print(f"{'='*50}")
+    print(f"{'=' * 50}")
 
     # ── Full 5-fold CV of complete pipeline ───────────────────────────
-    print(f"\nRunning 5-fold CV of full pipeline (MLP + reranker)...")
+    print("\nRunning 5-fold CV of full pipeline (MLP + reranker)...")
     cv_reranker = Reranker(space, model)
     cv_results = cv_reranker.cross_validate(valid_pairs, n_folds=5, top_n=10, mlp_top_n=10)
 
-    print(f"\n5-fold CV results:")
-    print(f"{'='*55}")
+    print("\n5-fold CV results:")
+    print(f"{'=' * 55}")
     print(f"{'Method':20s}  {'@1':>14s}  {'@5':>14s}  {'@10':>14s}")
-    print(f"{'='*55}")
+    print(f"{'=' * 55}")
     for method in ["mlp", "reranker"]:
         m = cv_results["metrics"][method]
         print(
@@ -125,19 +108,27 @@ def main():
             f"{m['hits_at_5']['mean']:.3f}±{m['hits_at_5']['std']:.3f}  "
             f"{m['hits_at_10']['mean']:.3f}±{m['hits_at_10']['std']:.3f}"
         )
-    print(f"{'='*55}")
+    print(f"{'=' * 55}")
     print(f"  ({cv_results['total_pairs']} valid pairs, {cv_results['n_folds']} folds)")
 
     # ── Canonical test cases ──────────────────────────────────────────
     canonical = [
-        ("king", "queen"), ("boy", "girl"), ("father", "mother"),
-        ("husband", "wife"), ("happy", "sad"), ("good", "bad"),
-        ("love", "hate"), ("hot", "cold"), ("warm", "cool"),
-        ("big", "small"), ("alive", "dead"), ("up", "down"),
+        ("king", "queen"),
+        ("boy", "girl"),
+        ("father", "mother"),
+        ("husband", "wife"),
+        ("happy", "sad"),
+        ("good", "bad"),
+        ("love", "hate"),
+        ("hot", "cold"),
+        ("warm", "cool"),
+        ("big", "small"),
+        ("alive", "dead"),
+        ("up", "down"),
     ]
-    print(f"\n{'='*55}")
+    print(f"\n{'=' * 55}")
     print("Canonical test cases")
-    print(f"{'='*55}")
+    print(f"{'=' * 55}")
     print(f"{'Pair':16s}  {'MLP top-1':16s}  {'Reranker top-1':16s}")
     print("-" * 55)
     for w1, w2 in canonical:
@@ -145,14 +136,16 @@ def main():
         mlp_pred = mlp_top[0][0] if mlp_top else "?"
         rer_top = fn_reranker(w1)
         rer_pred = rer_top[0][0] if rer_top else "?"
+
         def mark(pred, target):
             return ("✓ " if pred == target else "✗ ") + pred[:12]
-        print(f"{w1+'->'+w2:16s}  {mark(mlp_pred, w2):16s}  {mark(rer_pred, w2):16s}")
+
+        print(f"{w1 + '->' + w2:16s}  {mark(mlp_pred, w2):16s}  {mark(rer_pred, w2):16s}")
 
     # ── Save results ──────────────────────────────────────────────────
     out = {
         "holdout": {
-            "mlp":      {str(k): v for k, v in mlp_hits.items()},
+            "mlp": {str(k): v for k, v in mlp_hits.items()},
             "reranker": {str(k): v for k, v in rer_hits.items()},
         },
         "cv": cv_results,
@@ -160,7 +153,7 @@ def main():
     }
     with open("results/reranker_eval.json", "w") as f:
         json.dump(out, f, indent=2)
-    print(f"\nSaved results/reranker_eval.json")
+    print("\nSaved results/reranker_eval.json")
 
 
 if __name__ == "__main__":

@@ -7,8 +7,11 @@ This tests the "attribute-based inversion" hypothesis:
   2. Invert on each individually
   3. Check if the antonym appears
 """
-import numpy as np
+
 import sys
+
+import numpy as np
+
 sys.path.insert(0, ".")
 
 from src.antonym_loader import extract_antonym_pairs
@@ -32,7 +35,8 @@ def main():
 
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
-        (w1, w2) for w1, w2 in antonym_pairs
+        (w1, w2)
+        for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
     print(f"Valid pairs: {len(valid_pairs)}\n")
@@ -48,11 +52,11 @@ def main():
     print("=" * 60)
 
     bins = {
-        "z<1":   {"attempts": 0, "hits": 0},
+        "z<1": {"attempts": 0, "hits": 0},
         "1<=z<2": {"attempts": 0, "hits": 0},
         "2<=z<3": {"attempts": 0, "hits": 0},
         "3<=z<4": {"attempts": 0, "hits": 0},
-        "z>=4":   {"attempts": 0, "hits": 0},
+        "z>=4": {"attempts": 0, "hits": 0},
     }
 
     for w1, w2 in valid_pairs:
@@ -91,7 +95,7 @@ def main():
     # ── EXP 2: Attribute-based inversion strategy ──────────────
     # For each pair: find source's strong axes (z>2), invert each
     # individually, check if ANY produces the antonym.
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("EXP 2: Attribute-based strategy")
     print("  For each word, try inverting on each axis where |z|>threshold")
     print("=" * 60)
@@ -118,11 +122,13 @@ def main():
                 hits += 1
 
         mean_axes = np.mean(n_axes_tried) if n_axes_tried else 0
-        print(f"  z>={threshold:.1f}: {hits}/{total} = {hits/total:.1%}  "
-              f"(avg {mean_axes:.1f} axes tried per word)")
+        print(
+            f"  z>={threshold:.1f}: {hits}/{total} = {hits / total:.1%}  "
+            f"(avg {mean_axes:.1f} axes tried per word)"
+        )
 
     # ── EXP 3: Bidirectional attribute-based ───────────────────
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("EXP 3: Bidirectional attribute-based (try both directions)")
     print("=" * 60)
 
@@ -153,19 +159,29 @@ def main():
                     if best_rank <= kk:
                         hits_at[kk] += 1
 
-        print(f"  z>={threshold:.1f}: Hits@1={hits_at[1]/total:.1%}  "
-              f"Hits@5={hits_at[5]/total:.1%}  Hits@10={hits_at[10]/total:.1%}")
+        print(
+            f"  z>={threshold:.1f}: Hits@1={hits_at[1] / total:.1%}  "
+            f"Hits@5={hits_at[5] / total:.1%}  Hits@10={hits_at[10] / total:.1%}"
+        )
 
     # ── EXP 4: Canonical cases ─────────────────────────────────
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("EXP 4: Canonical cases - attribute-based inversion (z>=2)")
     print("=" * 60)
 
     canonical = [
-        ("king", "queen"), ("boy", "girl"), ("father", "mother"),
-        ("husband", "wife"), ("happy", "sad"), ("good", "bad"),
-        ("love", "hate"), ("hot", "cold"), ("warm", "cool"),
-        ("big", "small"), ("alive", "dead"), ("up", "down"),
+        ("king", "queen"),
+        ("boy", "girl"),
+        ("father", "mother"),
+        ("husband", "wife"),
+        ("happy", "sad"),
+        ("good", "bad"),
+        ("love", "hate"),
+        ("hot", "cold"),
+        ("warm", "cool"),
+        ("big", "small"),
+        ("alive", "dead"),
+        ("up", "down"),
     ]
 
     axis_to_label = {}
@@ -188,8 +204,7 @@ def main():
             nbrs = operator.axis_invert(w1, int(k), top_n=5)
             top3 = [n.word for n in nbrs[:3]]
             hit = "***" if w2 in [n.word for n in nbrs[:10]] else "   "
-            print(f"    axis {k:2d} ({label:15s}) z={z1[k]:.1f}  "
-                  f"-> {', '.join(top3)} {hit}")
+            print(f"    axis {k:2d} ({label:15s}) z={z1[k]:.1f}  -> {', '.join(top3)} {hit}")
 
 
 if __name__ == "__main__":

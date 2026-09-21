@@ -1,8 +1,8 @@
 """
 Antonym data loader using NLTK's WordNet interface.
 """
+
 import os
-from typing import List, Tuple, Set
 from collections import defaultdict
 
 import nltk
@@ -12,14 +12,14 @@ from nltk.corpus import wordnet as wn
 def ensure_wordnet_downloaded():
     """Download WordNet if not already present."""
     try:
-        wn.synsets('test')
+        wn.synsets("test")
     except LookupError:
         print("Downloading WordNet...")
-        nltk.download('wordnet')
-        nltk.download('omw-1.4')  # Open Multilingual Wordnet
+        nltk.download("wordnet")
+        nltk.download("omw-1.4")  # Open Multilingual Wordnet
 
 
-def extract_antonym_pairs() -> List[Tuple[str, str]]:
+def extract_antonym_pairs() -> list[tuple[str, str]]:
     """
     Extract all antonym pairs from WordNet.
 
@@ -28,15 +28,15 @@ def extract_antonym_pairs() -> List[Tuple[str, str]]:
     """
     ensure_wordnet_downloaded()
 
-    antonym_pairs: Set[Tuple[str, str]] = set()
+    antonym_pairs: set[tuple[str, str]] = set()
 
     for synset in wn.all_synsets():
         for lemma in synset.lemmas():
             antonyms = lemma.antonyms()
             if antonyms:
-                word1 = lemma.name().lower().replace('_', ' ')
+                word1 = lemma.name().lower().replace("_", " ")
                 for ant in antonyms:
-                    word2 = ant.name().lower().replace('_', ' ')
+                    word2 = ant.name().lower().replace("_", " ")
                     # Normalize pair order to avoid duplicates
                     pair = tuple(sorted([word1, word2]))
                     antonym_pairs.add(pair)
@@ -44,7 +44,7 @@ def extract_antonym_pairs() -> List[Tuple[str, str]]:
     return list(antonym_pairs)
 
 
-def extract_antonym_pairs_by_pos(pos: str = None) -> List[Tuple[str, str]]:
+def extract_antonym_pairs_by_pos(pos: str = None) -> list[tuple[str, str]]:
     """
     Extract antonym pairs filtered by part of speech.
 
@@ -57,7 +57,7 @@ def extract_antonym_pairs_by_pos(pos: str = None) -> List[Tuple[str, str]]:
     """
     ensure_wordnet_downloaded()
 
-    antonym_pairs: Set[Tuple[str, str]] = set()
+    antonym_pairs: set[tuple[str, str]] = set()
 
     synsets = wn.all_synsets(pos=pos) if pos else wn.all_synsets()
 
@@ -65,9 +65,9 @@ def extract_antonym_pairs_by_pos(pos: str = None) -> List[Tuple[str, str]]:
         for lemma in synset.lemmas():
             antonyms = lemma.antonyms()
             if antonyms:
-                word1 = lemma.name().lower().replace('_', ' ')
+                word1 = lemma.name().lower().replace("_", " ")
                 for ant in antonyms:
-                    word2 = ant.name().lower().replace('_', ' ')
+                    word2 = ant.name().lower().replace("_", " ")
                     pair = tuple(sorted([word1, word2]))
                     antonym_pairs.add(pair)
 
@@ -89,29 +89,29 @@ def group_antonyms_by_word() -> dict:
         for lemma in synset.lemmas():
             antonyms = lemma.antonyms()
             if antonyms:
-                word = lemma.name().lower().replace('_', ' ')
+                word = lemma.name().lower().replace("_", " ")
                 for ant in antonyms:
-                    ant_word = ant.name().lower().replace('_', ' ')
+                    ant_word = ant.name().lower().replace("_", " ")
                     antonym_map[word].add(ant_word)
                     antonym_map[ant_word].add(word)
 
     return dict(antonym_map)
 
 
-def save_antonym_pairs(pairs: List[Tuple[str, str]], filepath: str):
+def save_antonym_pairs(pairs: list[tuple[str, str]], filepath: str):
     """Save antonym pairs to a file."""
-    os.makedirs(os.path.dirname(filepath) or '.', exist_ok=True)
-    with open(filepath, 'w', encoding='utf-8') as f:
+    os.makedirs(os.path.dirname(filepath) or ".", exist_ok=True)
+    with open(filepath, "w", encoding="utf-8") as f:
         for w1, w2 in pairs:
             f.write(f"{w1}\t{w2}\n")
 
 
-def load_antonym_pairs(filepath: str) -> List[Tuple[str, str]]:
+def load_antonym_pairs(filepath: str) -> list[tuple[str, str]]:
     """Load antonym pairs from a file."""
     pairs = []
-    with open(filepath, 'r', encoding='utf-8') as f:
+    with open(filepath, encoding="utf-8") as f:
         for line in f:
-            parts = line.strip().split('\t')
+            parts = line.strip().split("\t")
             if len(parts) == 2:
                 pairs.append((parts[0], parts[1]))
     return pairs

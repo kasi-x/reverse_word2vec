@@ -18,6 +18,7 @@ achieve high MLP scores and high ICA dissimilarity, but they are rare and
 their ICA cosine with the query is near-random. The freq_ratio signal
 effectively filters them out.
 """
+
 from __future__ import annotations
 
 import numpy as np
@@ -132,7 +133,7 @@ class Reranker:
         antonym_pairs: list[tuple[str, str]],
         classifier: AntonymClassifier,
         top_n: int = 10,
-    ) -> "Reranker":
+    ) -> Reranker:
         """Train the reranker on MLP predictions for antonym_pairs."""
         X, y = self._build_dataset(antonym_pairs, classifier, top_n)
         X_scaled = self.scaler.fit_transform(X)
@@ -184,7 +185,7 @@ class Reranker:
             return {}
         names = ["mlp_score", "ica_cosine", "mlp_rank", "freq_ratio", "interaction", "inv_rank"]
         coefs = self.clf.coef_[0]
-        return dict(zip(names, coefs.tolist()))
+        return dict(zip(names, coefs.tolist(), strict=False))
 
     # ------------------------------------------------------------------ #
     # Cross-validation                                                     #
@@ -205,7 +206,8 @@ class Reranker:
         training (MLP or reranker).
         """
         valid_pairs = [
-            (w1, w2) for w1, w2 in antonym_pairs
+            (w1, w2)
+            for w1, w2 in antonym_pairs
             if self.space.score(w1) is not None and self.space.score(w2) is not None
         ]
 
@@ -235,9 +237,16 @@ class Reranker:
 
             for w1, w2 in test_pairs:
                 evaluated += 1
-                for (hits_dict, retrieve_fn) in [
-                    (mlp_hits, lambda src, tgt: self._eval_mlp(fold_mlp, src, tgt, top_n)),
-                    (rer_hits, lambda src, tgt: self._eval_reranker(fold_mlp, fold_reranker, src, tgt, top_n, mlp_top_n)),
+
+                def fn_mlp(src, tgt, _m=fold_mlp):
+                    return self._eval_mlp(_m, src, tgt, top_n)
+
+                def fn_rer(src, tgt, _m=fold_mlp, _r=fold_reranker):
+                    return self._eval_reranker(_m, _r, src, tgt, top_n, mlp_top_n)
+
+                for hits_dict, retrieve_fn in [
+                    (mlp_hits, fn_mlp),
+                    (rer_hits, fn_rer),
                 ]:
                     best_rank = None
                     for src, tgt in [(w1, w2), (w2, w1)]:
@@ -255,7 +264,7 @@ class Reranker:
             fold_results.append({"mlp": mlp_metrics, "reranker": rer_metrics})
 
             print(
-                f"  Fold {fold_idx+1}/{n_folds}: "
+                f"  Fold {fold_idx + 1}/{n_folds}: "
                 f"MLP @1={mlp_metrics['hits_at_1']:.3f}  "
                 f"Reranker @1={rer_metrics['hits_at_1']:.3f}  "
                 f"({evaluated} pairs)"

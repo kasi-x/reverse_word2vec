@@ -16,6 +16,7 @@ that surprise selects the directed (non-NN) hits.
 Usage:
     pixi run python scripts/eval_surprise.py [--top 100]
 """
+
 import argparse
 import csv
 import json
@@ -28,9 +29,9 @@ import numpy as np
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from src.antonym_loader import extract_antonym_pairs
+from src.eval_utils import unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
-from scripts.eval_translation import unit_rows
 
 
 def main():
@@ -70,8 +71,7 @@ def main():
     Uu, _, Vt = np.linalg.svd(Xtr.T @ Ytr)
     W = Uu @ Vt
 
-    queries = [w for w in pool
-               if rank[w] < 10000 and w not in ENGLISH_STOP_WORDS and len(w) >= 3]
+    queries = [w for w in pool if rank[w] < 10000 and w not in ENGLISH_STOP_WORDS and len(w) >= 3]
     Q = np.array([model[q].astype(np.float64) for q in queries])
     Qu = unit_rows(Q)
     P = unit_rows(Q @ W)
@@ -100,23 +100,28 @@ def main():
         mt = morph(q, c1)
         if mt:
             continue
-        cands.append({
-            "query": q, "top1": c1,
-            "pred_cos": round(sp1, 4), "self_cos": round(ss1, 4),
-            "surprise": round(sp1 - ss1, 4),
-            "margin": round(sp1 - sp2, 4),
-            "top3": [w for w, _, _ in top],
-        })
+        cands.append(
+            {
+                "query": q,
+                "top1": c1,
+                "pred_cos": round(sp1, 4),
+                "self_cos": round(ss1, 4),
+                "surprise": round(sp1 - ss1, 4),
+                "margin": round(sp1 - sp2, 4),
+                "top3": [w for w, _, _ in top],
+            }
+        )
     cands.sort(key=lambda d: (-d["surprise"], -d["pred_cos"]))
     print(f"novel candidates (conf>=0.45, no morph): {len(cands)}")
-    for d in cands[:args.top]:
-        print(f"  {d['query']:16s} -> {d['top1']:16s} "
-              f"surp={d['surprise']:+.3f} pred={d['pred_cos']:.3f} "
-              f"self={d['self_cos']:.3f} m={d['margin']:.3f}  [{', '.join(d['top3'][1:])}]")
+    for d in cands[: args.top]:
+        print(
+            f"  {d['query']:16s} -> {d['top1']:16s} "
+            f"surp={d['surprise']:+.3f} pred={d['pred_cos']:.3f} "
+            f"self={d['self_cos']:.3f} m={d['margin']:.3f}  [{', '.join(d['top3'][1:])}]"
+        )
 
     # surprise vs CN-only recall curve (directed queries)
-    cn_only = [(a, b) for a, b in cn
-               if tuple(sorted((a, b))) not in wn and a in w2i and b in w2i]
+    cn_only = [(a, b) for a, b in cn if tuple(sorted((a, b))) not in wn and a in w2i and b in w2i]
     qs = []
     for w1, w2 in cn_only:
         qs += [(w1, w2), (w2, w1)]
@@ -138,18 +143,36 @@ def main():
             tot += 1
             if tgt in top:
                 hit += 1
-        print(f"  thr={thr:+.1f}: {hit}/{tot} = {hit / tot:.4f}" if tot else
-              f"  thr={thr:+.1f}: n/a")
+        print(
+            f"  thr={thr:+.1f}: {hit}/{tot} = {hit / tot:.4f}" if tot else f"  thr={thr:+.1f}: n/a"
+        )
 
     with open("results/surprise_candidates.json", "w") as f:
-        json.dump({"candidates": cands[:args.top], "n_novel": len(cands),
-                   "elapsed_s": time.time() - t0}, f, indent=2)
+        json.dump(
+            {"candidates": cands[: args.top], "n_novel": len(cands), "elapsed_s": time.time() - t0},
+            f,
+            indent=2,
+        )
     print(f"\nSaved results/surprise_candidates.json ({time.time() - t0:.0f}s)")
 
 
 def morph(q, c):
-    for p in ("un", "in", "im", "il", "ir", "dis", "non", "anti", "de",
-              "mis", "over", "under", "counter", "a"):
+    for p in (
+        "un",
+        "in",
+        "im",
+        "il",
+        "ir",
+        "dis",
+        "non",
+        "anti",
+        "de",
+        "mis",
+        "over",
+        "under",
+        "counter",
+        "a",
+    ):
         if c == p + q or q == p + c:
             return p
     if c.endswith("less") and c[:-4] == q:
