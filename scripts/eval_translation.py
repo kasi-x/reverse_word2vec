@@ -1,7 +1,7 @@
 """Translation-baseline refinements for antonym retrieval (raw GloVe, no CF/ICA).
 
-Same 5-fold split as eval_leakfree.py (seed 42 over pairs with both words in
-GloVe-100), same candidate pool (top-50k valid-English words). Compares:
+Same 5-fold split as eval_leakfree.py via src.eval_utils.make_folds
+(seed 42 over pairs with both words in GloVe-100), same candidate pool
 
   mapping:
     - lstsq      : least-squares W: v(src) -> v(tgt)
@@ -27,7 +27,7 @@ import numpy as np
 from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 
 from src.antonym_loader import extract_antonym_pairs
-from src.eval_utils import unit_rows
+from src.eval_utils import make_folds, train_test_pairs, unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
 
@@ -72,10 +72,7 @@ def main():
     U = unit_rows(V)
     w2i = {w: i for i, w in enumerate(pool)}
 
-    rng = np.random.RandomState(42)
-    idx = np.arange(len(all_pairs))
-    rng.shuffle(idx)
-    folds = np.array_split(idx, 5)
+    folds = make_folds(len(all_pairs), 5, seed=42)
 
     pools = {
         "full": (pool, U),
@@ -90,12 +87,9 @@ def main():
     results: dict[str, dict[str, list[dict]]] = {m: {p: [] for p in pools} for m in methods}
 
     for fi in range(5):
-        test_idx = set(folds[fi].tolist())
-        train = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
-        test = [all_pairs[i] for i in folds[fi]]
+        train, test = train_test_pairs(all_pairs, fi, folds)
         test = [p for p in test if p[0] in w2i and p[1] in w2i]
         print(f"Fold {fi + 1}/5: {len(train)} train / {len(test)} test")
-
         Xtr, Ytr = [], []
         for w1, w2 in train:
             if w1 not in w2i or w2 not in w2i:

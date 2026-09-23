@@ -297,7 +297,8 @@ class AnalysisReport:
         S = self.space.S[indices]  # (n_sample, n_components)
         A = self.space.mixing_matrix  # (d, n_components)
         mean_vec = self.space.mean_vector
-        originals = np.array([self.model[self.space.words[i]] for i in indices], dtype=np.float64)
+        orig_rows = [self.model.key_to_index[self.space.words[i]] for i in indices]
+        originals = self.model.vectors[np.asarray(orig_rows)].astype(np.float64)
         orig_norms = np.maximum(np.linalg.norm(originals, axis=1), 1e-10)
 
         # Energy of each component = mean squared contribution over sampled words

@@ -17,19 +17,14 @@ from eval_leakfree import LinearAntonymMap, fit_fold_space
 
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
-from src.eval_utils import unit_rows
+from src.eval_utils import make_folds, train_test_pairs, unit_rows
 from src.word2vec_loader import Word2VecLoader
 
 model = Word2VecLoader().load_glove(100)
 all_pairs = [(a, b) for a, b in extract_antonym_pairs() if a in model and b in model]
 
-rng = np.random.RandomState(42)
-idx = np.arange(len(all_pairs))
-rng.shuffle(idx)
-folds = np.array_split(idx, 5)
-test_idx = set(folds[0].tolist())
-train_pairs = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
-test_pairs = [all_pairs[i] for i in folds[0]]
+folds = make_folds(len(all_pairs), 5, seed=42)
+train_pairs, test_pairs = train_test_pairs(all_pairs, 0, folds)
 
 space, cf_model = fit_fold_space(model, train_pairs, 50000, 100, 50)
 in_train = [p for p in train_pairs if p[0] in space.word_to_idx and p[1] in space.word_to_idx]

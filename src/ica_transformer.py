@@ -71,13 +71,14 @@ class ICATransformer:
             ICASpace with fitted parameters.
         """
         words = []
-        vectors = []
-        for word in model.index_to_key[:vocab_limit]:
+        indices = []
+        # index_to_key position == row index in model.vectors
+        for pos, word in enumerate(model.index_to_key[:vocab_limit]):
             if is_valid_english_word(word):
                 words.append(word)
-                vectors.append(model[word])
+                indices.append(pos)
 
-        X = np.array(vectors, dtype=np.float64)
+        X = model.vectors[np.asarray(indices)].astype(np.float64)
         mean_vec = X.mean(axis=0)
         X_centered = X - mean_vec
 

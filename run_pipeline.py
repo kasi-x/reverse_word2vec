@@ -195,7 +195,7 @@ def phase2_qualitative(model, space, profiles) -> dict:
 
 
 def phase3_quantitative(model, space, antonym_pairs) -> dict:
-    """Phase 4: Quantitative evaluation."""
+    """Phase 3: Quantitative evaluation."""
     from src.quantitative_eval import (
         AnalogyEval,
         AntonymRetrievalEval,
@@ -263,23 +263,34 @@ def phase5_paper() -> None:
     generate_paper()
 
 
-def relabel_axes() -> None:
-    """Re-run axis labeling on the cached ICA space (no refit, no model load)."""
+def _load_cached_space() -> tuple:
+    """Load cached ICA space + profiles + valid pairs (no refit)."""
     from src.antonym_loader import extract_antonym_pairs
     from src.axis_labeler import AxisLabeler
     from src.ica_transformer import load_ica_space
 
-    print("\n" + "=" * 60)
-    print("RELABEL: axis labeling on cached ICA space")
-    print("=" * 60)
-
+    print("\nLoading cached ICA space...")
     space = load_ica_space("results/ica_space")
+    labeler = AxisLabeler(space)
+    profiles = labeler.load_profiles("results/axis_profiles.json")
     antonym_pairs = extract_antonym_pairs()
     valid_pairs = [
         (w1, w2)
         for w1, w2 in antonym_pairs
         if space.score(w1) is not None and space.score(w2) is not None
     ]
+    return space, profiles, valid_pairs
+
+
+def relabel_axes() -> None:
+    """Re-run axis labeling on the cached ICA space (no refit, no model load)."""
+    from src.axis_labeler import AxisLabeler
+
+    print("\n" + "=" * 60)
+    print("RELABEL: axis labeling on cached ICA space")
+    print("=" * 60)
+
+    space, _, valid_pairs = _load_cached_space()
     print(f"Valid pairs in ICA space: {len(valid_pairs)}")
 
     labeler = AxisLabeler(space)
@@ -305,38 +316,13 @@ def main() -> None:
 
     # Load or fit ICA space
     if args.load_space:
-        from src.antonym_loader import extract_antonym_pairs
-        from src.axis_labeler import AxisLabeler
-        from src.ica_transformer import load_ica_space
-
-        print("\nLoading cached ICA space...")
-        space = load_ica_space("results/ica_space")
-        labeler = AxisLabeler(space)
-        profiles = labeler.load_profiles("results/axis_profiles.json")
-        antonym_pairs = extract_antonym_pairs()
-        valid_pairs = [
-            (w1, w2)
-            for w1, w2 in antonym_pairs
-            if space.score(w1) is not None and space.score(w2) is not None
-        ]
+        space, profiles, valid_pairs = _load_cached_space()
     else:
         if args.phase is None or args.phase == 1:
             space, profiles, valid_pairs = phase1_ica(model, args)
         else:
             # Need ICA space for later phases
-            from src.antonym_loader import extract_antonym_pairs
-            from src.axis_labeler import AxisLabeler
-            from src.ica_transformer import load_ica_space
-
-            space = load_ica_space("results/ica_space")
-            labeler = AxisLabeler(space)
-            profiles = labeler.load_profiles("results/axis_profiles.json")
-            antonym_pairs = extract_antonym_pairs()
-            valid_pairs = [
-                (w1, w2)
-                for w1, w2 in antonym_pairs
-                if space.score(w1) is not None and space.score(w2) is not None
-            ]
+            space, profiles, valid_pairs = _load_cached_space()
 
     if args.phase == 1:
         return

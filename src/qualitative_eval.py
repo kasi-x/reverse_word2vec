@@ -76,6 +76,8 @@ class QualitativeEvaluator:
         self.profiles = profiles
         self.transformer = ICATransformer()
         self._label_to_axes = self._build_label_map()
+        self._profile_by_axis = {p.axis_idx: p for p in profiles}
+        self._axis_std = np.maximum(np.std(space.S, axis=0), 1e-8)
 
     def _build_label_map(self) -> dict[str, list[int]]:
         """Map labels to axis indices."""
@@ -93,9 +95,7 @@ class QualitativeEvaluator:
         best = max(
             axes,
             key=lambda a: len(
-                next((p for p in self.profiles if p.axis_idx == a), None).antonym_pairs
-                if next((p for p in self.profiles if p.axis_idx == a), None)
-                else []
+                self._profile_by_axis[a].antonym_pairs if a in self._profile_by_axis else []
             ),
         )
         return best
@@ -109,9 +109,7 @@ class QualitativeEvaluator:
             return None
         diff = np.abs(s1 - s2)
         # Normalize by axis std to avoid picking axes with naturally large scales
-        axis_std = np.std(self.space.S, axis=0)
-        axis_std = np.maximum(axis_std, 1e-8)
-        normalized_diff = diff / axis_std
+        normalized_diff = diff / self._axis_std
         return int(np.argmax(normalized_diff))
 
     def _find_oracle_top_axes(self, word: str, expected: str, n: int = 5) -> list[int]:
@@ -121,9 +119,7 @@ class QualitativeEvaluator:
         if s1 is None or s2 is None:
             return []
         diff = np.abs(s1 - s2)
-        axis_std = np.std(self.space.S, axis=0)
-        axis_std = np.maximum(axis_std, 1e-8)
-        normalized_diff = diff / axis_std
+        normalized_diff = diff / self._axis_std
         return list(np.argsort(normalized_diff)[-n:][::-1])
 
     def _rank_of(self, neighbors, expected: str) -> int | None:

@@ -41,7 +41,7 @@ from sklearn.decomposition import FastICA
 from src.antonym_classifier import AntonymClassifier
 from src.antonym_loader import extract_antonym_pairs
 from src.counter_fitting import CounterFitConfig, CounterFitter
-from src.eval_utils import unit_rows
+from src.eval_utils import compute_hits, make_folds, topn_excluding, train_test_pairs, unit_rows
 from src.ica_transformer import ICASpace, is_valid_english_word
 from src.semantic_operations import SemanticOperator
 from src.word2vec_loader import Word2VecLoader
@@ -96,18 +96,6 @@ def fit_fold_space(
 # --------------------------------------------------------------------------- #
 
 
-def topn_excluding(scores: np.ndarray, words: list[str], query: str, top_n: int):
-    order = np.argsort(scores)[::-1]
-    out = []
-    for i in order:
-        if words[i] == query:
-            continue
-        out.append(words[i])
-        if len(out) >= top_n:
-            break
-    return out
-
-
 class LinearAntonymMap:
     """Least-squares W: v(src) -> v(tgt) on train pairs; retrieve by cosine."""
 
@@ -133,22 +121,9 @@ class LinearAntonymMap:
 
 
 def eval_pairs(pairs, retrieve_fn, top_n=10):
-    hits = {1: 0, 5: 0, 10: 0}
-    for w1, w2 in pairs:
-        best = None
-        for src, tgt in [(w1, w2), (w2, w1)]:
-            for j, w in enumerate(retrieve_fn(src)[:top_n]):
-                if w == tgt:
-                    r = j + 1
-                    if best is None or r < best:
-                        best = r
-                    break
-        if best is not None:
-            for k in (1, 5, 10):
-                if best <= k:
-                    hits[k] += 1
-    n = len(pairs)
-    return {k: hits[k] / n for k in (1, 5, 10)}
+    """Hits@{1,5,10} over pairs (best rank over both directions)."""
+    hits, _ = compute_hits(pairs, retrieve_fn, top_n=top_n)
+    return hits
 
 
 # --------------------------------------------------------------------------- #
@@ -174,10 +149,7 @@ def main():
 
     # Restrict to words that survive the ICA vocab filter at least potentially:
     # valid-english check is vocab-dependent per fold; filter lazily per fold.
-    rng = np.random.RandomState(args.seed)
-    idx = np.arange(len(all_pairs))
-    rng.shuffle(idx)
-    folds = np.array_split(idx, args.folds)
+    folds = make_folds(len(all_pairs), args.folds, seed=args.seed)
 
     per_fold: dict[str, list[dict]] = {
         "linear_raw": [],
@@ -189,9 +161,7 @@ def main():
     fold_sizes = []
 
     for fi in range(args.folds):
-        test_idx = set(folds[fi].tolist())
-        train_pairs = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
-        test_pairs = [all_pairs[i] for i in folds[fi]]
+        train_pairs, test_pairs = train_test_pairs(all_pairs, fi, folds)
         print(
             f"\n{'=' * 60}\nFold {fi + 1}/{args.folds}: "
             f"{len(train_pairs)} train / {len(test_pairs)} test"

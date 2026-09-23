@@ -76,8 +76,9 @@ task run:relabel       # re-run axis labeling only
 # Headline evaluation (MLP + reranker CV and 70/15/15 holdout)
 task eval:reranker
 
-# Leak-free counter-fitting study (why CF was rejected)
-task eval:leakfree
+# Counter-fitting studies (why CF was rejected)
+task eval:leakfree              # leak-free per-fold CF comparison (~0 Hits@1)
+task eval:counterfit-separation # global CF cosine shift (paper Method numbers)
 ```
 
 Other useful flags: `--model glove-300`, `--components 100`, `--vocab-limit`,
@@ -106,12 +107,12 @@ src/
   quantitative_eval.py # oracle-inversion CV + Google Analogy eval
   analysis_report.py   # figures: kurtosis, per-axis success, bias, recon-k curve
   relevance.py         # confidence scoring + bias profiles
-  eval_utils.py        # shared eval helpers (unit_rows, compute_hits, ...)
+  eval_utils.py        # shared eval helpers (folds, unit_rows, compute_hits, ...)
   generate_paper.py    # data-driven paper.md generation
-scripts/               # 14 standalone eval/diagnostic scripts (research runs)
+scripts/               # 15 standalone eval/diagnostic scripts (research runs)
 paper/                 # generated paper.md + figures
-results/               # eval outputs (JSON) + cached ICA space (gitignored)
-tests/                 # pytest suite (synthetic data)
+results/               # eval outputs (JSON, tracked); large ICA .npz + ica_space.json ignored
+tests/                 # pytest suite (synthetic data, 52 tests)
 ```
 
 ## Reproducibility notes

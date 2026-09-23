@@ -18,7 +18,7 @@ sys.path.insert(0, ".")
 import numpy as np
 
 from src.antonym_loader import extract_antonym_pairs
-from src.eval_utils import unit_rows
+from src.eval_utils import make_folds, train_test_pairs, unit_rows
 from src.ica_transformer import is_valid_english_word
 from src.word2vec_loader import Word2VecLoader
 
@@ -32,18 +32,12 @@ def main():
     w2i = {w: i for i, w in enumerate(pool)}
     print(f"pairs: {len(all_pairs)}, pool: {len(pool)}")
 
-    rng = np.random.RandomState(42)
-    idx = np.arange(len(all_pairs))
-    rng.shuffle(idx)
-    folds = np.array_split(idx, 5)
+    folds = make_folds(len(all_pairs), 5, seed=42)
 
     fold_metrics = []
     for fi in range(5):
-        test_idx = set(folds[fi].tolist())
-        train = [all_pairs[i] for i in range(len(all_pairs)) if i not in test_idx]
-        test = [
-            all_pairs[i] for i in folds[fi] if all_pairs[i][0] in w2i and all_pairs[i][1] in w2i
-        ]
+        train, test = train_test_pairs(all_pairs, fi, folds)
+        test = [p for p in test if p[0] in w2i and p[1] in w2i]
 
         Xtr, Ytr = [], []
         for w1, w2 in train:

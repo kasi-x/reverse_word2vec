@@ -100,8 +100,11 @@ class ContrastiveRetriever:
         # Combined score: similar elsewhere, opposite on target axis
         scores = cos_other - lam * axis_align
 
-        # Sort and collect results
-        ranked = np.argsort(scores)[::-1]
+        # Top-(top_n + |excl|) pool is guaranteed to contain top_n non-excluded
+        n = scores.size
+        k = min(top_n + len(excl), n)
+        ranked = np.argpartition(scores, n - k)[n - k :]
+        ranked = ranked[np.argsort(scores[ranked])[::-1]]
         results = []
         for i in ranked:
             if len(results) >= top_n:
@@ -156,7 +159,10 @@ class ContrastiveRetriever:
             group_align += (self._S[:, k] * s_w[k]) / (self._axis_std[k] ** 2)
 
         scores = cos_other - lam * group_align
-        ranked = np.argsort(scores)[::-1]
+        n = scores.size
+        k = min(top_n + len(excl), n)
+        ranked = np.argpartition(scores, n - k)[n - k :]
+        ranked = ranked[np.argsort(scores[ranked])[::-1]]
 
         results = []
         for i in ranked:

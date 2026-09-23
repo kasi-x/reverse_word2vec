@@ -77,6 +77,11 @@ tasks:
     cmds:
       - '{{.PYTHON}} scripts/eval_leakfree.py'
 
+  eval:counterfit-separation:
+    desc: "Eval: global counter-fit cosine shift (paper Method numbers)"
+    cmds:
+      - '{{.PYTHON}} scripts/eval_counterfit_separation.py'
+
   eval:translation:
     desc: "Eval: translation-baseline refinements (lstsq/procrustes/meandiff/negcos)"
     cmds:

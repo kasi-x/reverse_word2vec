@@ -17,6 +17,8 @@ RESULT_FILES = [
     "analysis_report.json",
     "reranker_eval.json",
     "leakfree_comparison.json",
+    "counterfit_separation.json",
+    "ica_space.json",
 ]
 
 
@@ -31,6 +33,12 @@ def load_json(path: str) -> dict | None:
 
 def _pct(x, nd: int = 1) -> str:
     return f"{x:.{nd}%}" if isinstance(x, (int, float)) else "n/a"
+
+
+def _signed(x, nd: int = 2) -> str:
+    """Format a signed number with Unicode minus (e.g. '+0.47', '−0.23')."""
+    s = f"{x:+.{nd}f}"
+    return "−" + s[2:] if s.startswith("+-") else ("−" + s[1:] if s.startswith("-") else s)
 
 
 def _ms(m, pct: bool = False) -> str:
@@ -75,6 +83,7 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     report = load_json(f"{results_dir}/analysis_report.json")
     reranker = load_json(f"{results_dir}/reranker_eval.json")
     leakfree = load_json(f"{results_dir}/leakfree_comparison.json")
+    separation = load_json(f"{results_dir}/counterfit_separation.json")
     ica_meta = (load_json(f"{results_dir}/ica_space.json") or {}).get("meta", {})
 
     warnings: list[str] = []
@@ -150,8 +159,14 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("we apply FastICA to obtain a score matrix $S \\in \\mathbb{R}^{n \\times k}$ where each")
     w("column represents a statistically independent component. Unlike PCA, which maximizes")
     w("variance, ICA maximizes statistical independence, yielding more interpretable axes.")
-    w("All headline results decompose the **raw GloVe-100** space (top 50k valid English")
-    w("words, FastICA with 100 components, random_state=42).")
+    _model_raw = ica_meta.get("model", "n/a") if ica_meta else "n/a"
+    _model = {"glove-100": "GloVe-100"}.get(_model_raw, _model_raw)
+    _vocab_raw = ica_meta.get("vocab_limit", "n/a") if ica_meta else "n/a"
+    _vocab = "50k" if _vocab_raw == 50000 else _vocab_raw
+    _ncomp = ica_meta.get("n_components", "n/a") if ica_meta else "n/a"
+    _seed = ica_meta.get("random_state", "n/a") if ica_meta else "n/a"
+    w(f"All headline results decompose the **raw {_model}** space (top {_vocab} valid English")
+    w(f"words, FastICA with {_ncomp} components, random_state={_seed}).")
     w()
     w("### Axis Labeling")
     w()
@@ -164,10 +179,34 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("### Counter-fitting (investigated, not used)")
     w()
     w("Raw GloVe vectors encode distributional similarity: antonyms such as *hot* and *cold*")
-    w("appear in identical contexts and therefore cluster together (cosine ≈ +0.47).")
+    _raw_cos = (separation or {}).get("before", {}).get("mean")
+    _cf_cos = (separation or {}).get("after", {}).get("mean")
+    _cf_cfg = (separation or {}).get("config", {})
+    if isinstance(_raw_cos, (int, float)):
+        w(
+            f"appear in identical contexts and therefore cluster together (cosine ≈ {_signed(_raw_cos)})."
+        )
+    else:
+        w(
+            "appear in identical contexts and therefore cluster together (see counterfit_separation.json)."
+        )
     w("Counter-fitting (Mrkšić et al., 2016) pushes antonym pairs below a target cosine")
-    w("(−0.3 in our runs) while a vector-space-preservation term (λ = 0.1) limits drift.")
-    w("In a global fit over all antonym pairs, mean antonym cosine drops from +0.47 to −0.23.")
+    if _cf_cfg:
+        _tgt = _cf_cfg.get("target_sim", "n/a")
+        _tgt_s = _signed(_tgt, nd=1) if isinstance(_tgt, (int, float)) else _tgt
+        w(
+            f"({_tgt_s} in our runs) while a vector-space-preservation term (λ = {_cf_cfg.get('lam', 'n/a')}) limits drift."
+        )
+    else:
+        w("while a vector-space-preservation term limits drift.")
+    if isinstance(_raw_cos, (int, float)) and isinstance(_cf_cos, (int, float)):
+        w(
+            f"In a global fit over all antonym pairs, mean antonym cosine drops from {_signed(_raw_cos)} to {_signed(_cf_cos)}."
+        )
+    else:
+        w(
+            "In a global fit over all antonym pairs, mean antonym cosine drops (n/a — counterfit_separation.json not found)."
+        )
     w()
     w("However, a global counter-fit consumes antonym labels across the whole vocabulary —")
     w("a form of label leakage when those same pairs are used for evaluation. In the")
@@ -207,12 +246,23 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
 
     w("### ICA Feature Classifier")
     w()
-    w("The ICA score matrix S ∈ ℝ^{n×100} turns each word into a vector of 100 axis scores.")
-    w("For each candidate word pair (w1, w2), we form a 200-dimensional feature vector:")
+    _k = ica_meta.get("n_components") if ica_meta else None
+    if isinstance(_k, int):
+        w(
+            f"The ICA score matrix S ∈ ℝ^{{n×{_k}}} turns each word into a vector of {_k} axis scores."
+        )
+        w(f"For each candidate word pair (w1, w2), we form a {2 * _k}-dimensional feature vector:")
+    else:
+        w("The ICA score matrix S ∈ ℝ^{n×k} turns each word into axis scores.")
+        w("For each candidate word pair (w1, w2), we form a feature vector:")
     w()
     w("  φ(w1, w2) = [ |s1 − s2|, s1 ⊙ s2 ]")
     w()
-    w("where s1, s2 ∈ ℝ^100 are the ICA score vectors.")
+    w(
+        f"where s1, s2 ∈ ℝ^{_k} are the ICA score vectors."
+        if isinstance(_k, int)
+        else "where s1, s2 are the ICA score vectors."
+    )
     w("The absolute difference captures axis-wise polarity contrast;")
     w("the element-wise product captures alignment (negative = opposite poles).")
     w("An MLP (128→64 hidden units) is trained with negatives sampled at ratio 3:1.")
@@ -477,7 +527,11 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w()
     w("**Counter-fitting was rejected.** The initial hypothesis was that pushing antonym")
     w("vectors apart (Mrkšić et al., 2016) is a prerequisite for antonym retrieval, since")
-    w("raw GloVe gives antonyms a high cosine (≈ +0.47). The leak-free experiment shows")
+    w(
+        f"raw GloVe gives antonyms a high cosine (≈ {_signed(_raw_cos)}). The leak-free experiment shows"
+        if isinstance(_raw_cos, (int, float))
+        else "raw GloVe gives antonyms a high cosine. The leak-free experiment shows"
+    )
     w("the opposite: when counter-fitting is re-fit per fold without label leakage, all")
     w("CF-based methods collapse to near-zero Hits@1 while raw-GloVe methods keep their")
     w("performance (table in Method). An earlier draft of this report reported stronger")

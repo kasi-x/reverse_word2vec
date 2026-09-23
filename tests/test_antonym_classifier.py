@@ -61,6 +61,44 @@ def test_retrieve_excludes_query(fitted_logistic):
     assert scores == sorted(scores, reverse=True)
 
 
+def test_retrieve_matches_full_ranking(fitted_logistic, toy_space):
+    """Cached top-K retrieve must be a prefix of the full vocabulary ranking."""
+    s_w = toy_space.score("queen")
+    full = fitted_logistic._rank_candidates(s_w, len(toy_space.words))
+    expected = [c for c in full if c[0] != "queen"][:10]
+    assert fitted_logistic.retrieve("queen", top_n=10) == expected
+
+
+def test_retrieve_caches_per_word(fitted_logistic, toy_space, monkeypatch):
+    calls = []
+    orig = fitted_logistic._rank_candidates
+
+    def spy(s_w, k):
+        calls.append(k)
+        return orig(s_w, k)
+
+    monkeypatch.setattr(fitted_logistic, "_rank_candidates", spy)
+    fitted_logistic.retrieve("sad", top_n=10)
+    fitted_logistic.retrieve("sad", top_n=5)
+    assert calls == [fitted_logistic._RETRIEVE_CACHE_K]
+
+
+def test_retrieve_deep_fallback_on_heavy_exclusion(fitted_logistic, toy_space, monkeypatch):
+    """When exclusions empty the cached window, retrieve must rank deeper."""
+    # Toy vocab (32 words) is smaller than _RETRIEVE_CACHE_K (128), so shrink
+    # the cache window to force the deep-ranking fallback.
+    monkeypatch.setattr(fitted_logistic, "_RETRIEVE_CACHE_K", 8)
+    fitted_logistic._candidate_cache.clear()
+
+    s_w = toy_space.score("boy")
+    full = fitted_logistic._rank_candidates(s_w, len(toy_space.words))
+    excl = {w for w, _ in full[:24]}  # covers the whole 8-word cache window
+    got = fitted_logistic.retrieve("boy", top_n=10, exclude=excl)
+    expected = [c for c in full if c[0] not in (excl | {"boy"})][:10]
+    assert got == expected
+    assert len(got) > 0
+
+
 def test_unknown_model_type_raises(toy_space):
     with pytest.raises(ValueError):
         AntonymClassifier(toy_space, "svm")

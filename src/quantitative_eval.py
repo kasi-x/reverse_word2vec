@@ -11,6 +11,7 @@ from pathlib import Path
 import numpy as np
 from gensim.models import KeyedVectors
 
+from src.eval_utils import make_folds
 from src.ica_transformer import ICASpace, ICATransformer
 from src.semantic_operations import SemanticOperator
 
@@ -21,49 +22,36 @@ class AntonymRetrievalEval:
     def __init__(self, operator: SemanticOperator, space: ICASpace):
         self.operator = operator
         self.space = space
+        self._axis_std = np.maximum(np.std(space.S, axis=0), 1e-8)
 
     def select_best_axis(self, w1: str, w2: str) -> int | None:
         """
-        Select the best axis for distinguishing an antonym pair.
+        Oracle axis selection: the axis with the largest std-normalised
+        absolute score difference |S[w1] - S[w2]| / σ.
 
-        Uses normalized absolute difference:
-            argmax_k |S[w1,k] - S[w2,k]| / (|S[w1,k]| + |S[w2,k]| + eps)
+        Requires the target word, so this is a non-deployable upper-bound
+        baseline (same normalisation as QualitativeEvaluator and eval_leakfree).
         """
         s1 = self.space.score(w1)
         s2 = self.space.score(w2)
         if s1 is None or s2 is None:
             return None
-        eps = 1e-8
-        diff = np.abs(s1 - s2)
-        denom = np.abs(s1) + np.abs(s2) + eps
-        normalized = diff / denom
-        return int(np.argmax(normalized))
-
-    def _build_axis_map(self, pairs: list[tuple[str, str]]) -> dict[int, list[tuple[str, str]]]:
-        """Map each pair to its best axis."""
-        axis_map: dict[int, list[tuple[str, str]]] = {}
-        for w1, w2 in pairs:
-            axis = self.select_best_axis(w1, w2)
-            if axis is not None:
-                axis_map.setdefault(axis, []).append((w1, w2))
-        return axis_map
+        return int(np.argmax(np.abs(s1 - s2) / self._axis_std))
 
     def evaluate_pairs(
         self,
         pairs: list[tuple[str, str]],
-        train_axis_map: dict[int, list[tuple[str, str]]] | None = None,
         top_n: int = 10,
     ) -> dict:
         """
-        Evaluate antonym retrieval on a set of pairs.
+        Oracle evaluation of antonym retrieval on a set of pairs.
 
         For each pair (w1, w2):
-          1. Find the best axis (from train set or from the pair itself)
+          1. Select the axis from the pair itself (oracle: knows the target)
           2. Invert w1 on that axis and check if w2 appears in top-k
 
         Args:
             pairs: Pairs to evaluate.
-            train_axis_map: If provided, use axis popularity from training set.
             top_n: Max rank to check.
 
         Returns:
@@ -73,17 +61,11 @@ class AntonymRetrievalEval:
         evaluated = 0
         details = []
 
-        # If train axis map provided, use majority axis per pair category
-        # Otherwise, use self-selected axis
         for w1, w2 in pairs:
             if self.space.score(w1) is None or self.space.score(w2) is None:
                 continue
 
-            # Select axis
-            if train_axis_map is not None:
-                axis = self.select_best_axis(w1, w2)
-            else:
-                axis = self.select_best_axis(w1, w2)
+            axis = self.select_best_axis(w1, w2)
 
             if axis is None:
                 continue
@@ -130,10 +112,11 @@ class AntonymRetrievalEval:
         top_n: int = 10,
     ) -> dict:
         """
-        5-fold cross-validation of antonym retrieval.
+        5-fold cross-validation of antonym retrieval (oracle axis selection).
 
-        Train set: used for axis selection statistics.
-        Test set: evaluated pairs.
+        Splits are shuffled with seed 42; each test pair selects its own
+        axis (knows the target), so this measures axis geometry, not a
+        deployable method.
         """
         # Filter to pairs in vocabulary
         valid_pairs = [
@@ -142,19 +125,13 @@ class AntonymRetrievalEval:
             if self.space.score(w1) is not None and self.space.score(w2) is not None
         ]
 
-        rng = np.random.RandomState(42)
-        indices = np.arange(len(valid_pairs))
-        rng.shuffle(indices)
-        folds = np.array_split(indices, n_folds)
+        folds = make_folds(len(valid_pairs), n_folds, seed=42)
 
         fold_results = []
         for fold_idx in range(n_folds):
-            test_indices = set(folds[fold_idx].tolist())
-            train_pairs = [valid_pairs[i] for i in range(len(valid_pairs)) if i not in test_indices]
             test_pairs = [valid_pairs[i] for i in folds[fold_idx]]
 
-            train_axis_map = self._build_axis_map(train_pairs)
-            result = self.evaluate_pairs(test_pairs, train_axis_map, top_n=top_n)
+            result = self.evaluate_pairs(test_pairs, top_n=top_n)
             fold_results.append(result)
             print(
                 f"  Fold {fold_idx + 1}/{n_folds}: "

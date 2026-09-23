@@ -320,11 +320,17 @@ class SemanticOperator:
         vec_norm = vec / norm
 
         sims = self._normalized @ vec_norm
-        indices = np.argsort(sims)[::-1]
-
         exclude = exclude or set()
+
+        # Only need the top (top_n + |exclude|) candidates; the pool always
+        # contains at least top_n non-excluded words when k <= vocab.
+        n = sims.size
+        k = min(top_n + len(exclude), n)
+        pool = np.argpartition(sims, n - k)[n - k :]
+        pool = pool[np.argsort(sims[pool])[::-1]]
+
         results = []
-        for idx in indices:
+        for idx in pool:
             if len(results) >= top_n:
                 break
             w = self._search_words[idx]

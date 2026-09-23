@@ -128,10 +128,9 @@ class CounterFitter:
 
             if cfg.verbose and (it + 1) % 20 == 0:
                 # Report mean cosine of antonym pairs
-                vi2 = V[i_idx]
-                vj2 = V[j_idx]
-                mean_sim = float(np.mean(np.sum(vi2 * vj2, axis=1)))
-                n_still_close = int((np.sum(vi2 * vj2, axis=1) > cfg.target_sim).sum())
+                sims_now = np.sum(V[i_idx] * V[j_idx], axis=1)
+                mean_sim = float(np.mean(sims_now))
+                n_still_close = int((sims_now > cfg.target_sim).sum())
                 print(
                     f"  iter {it + 1:4d}: mean antonym cos = {mean_sim:.3f}, "
                     f"pairs still above target = {n_still_close}/{len(valid_pairs)}"
@@ -182,8 +181,10 @@ class CounterFitter:
         for w1, w2 in antonym_pairs:
             if w1 not in model or w2 not in model:
                 continue
-            v1 = model[w1] / max(np.linalg.norm(model[w1]), 1e-10)
-            v2 = model[w2] / max(np.linalg.norm(model[w2]), 1e-10)
+            v1 = model[w1]
+            v2 = model[w2]
+            v1 = v1 / max(np.linalg.norm(v1), 1e-10)
+            v2 = v2 / max(np.linalg.norm(v2), 1e-10)
             sims.append(float(v1 @ v2))
 
         sims = np.array(sims)

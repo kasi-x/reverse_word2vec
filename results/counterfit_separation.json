@@ -1,0 +1,21 @@
+{
+  "config": {
+    "n_iter": 100,
+    "target_sim": -0.3,
+    "lam": 0.1
+  },
+  "before": {
+    "n_pairs": 2353,
+    "mean": 0.4658174142652123,
+    "median": 0.4754541516304016,
+    "pct_positive": 0.9753506162345942,
+    "pct_below_minus05": 0.0
+  },
+  "after": {
+    "n_pairs": 2353,
+    "mean": -0.23348391926612885,
+    "median": -0.2668460011482239,
+    "pct_positive": 0.049723756906077346,
+    "pct_below_minus05": 0.0
+  }
+}

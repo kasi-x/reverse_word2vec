@@ -27,7 +27,16 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 from src.antonym_classifier import AntonymClassifier
+from src.eval_utils import make_folds, train_test_pairs
 from src.ica_transformer import ICASpace
+
+
+def _rank_of(candidates: list[tuple[str, float]], target: str) -> int | None:
+    """1-based rank of `target` in a (word, score) list, or None."""
+    for j, (w, _) in enumerate(candidates):
+        if w == target:
+            return j + 1
+    return None
 
 
 class Reranker:
@@ -54,6 +63,10 @@ class Reranker:
         self.scaler = StandardScaler()
         self.clf = LogisticRegression(C=1.0, max_iter=1000, random_state=42)
         self._fitted = False
+        # Set when the training set has a single class (MLP never surfaced the
+        # target): no logistic fit is possible, so rerank() passes candidates
+        # through in MLP order.
+        self._passthrough = False
 
         # Precompute ICA-normalised row vectors for fast batch cosine
         S = space.S.astype(np.float32)
@@ -63,6 +76,7 @@ class Reranker:
 
         # Vocab-rank map: lower index == more frequent (GloVe ordering)
         self._vocab_rank: dict[str, int] = model.key_to_index
+        self._oov_rank = len(model.key_to_index)
 
     # ------------------------------------------------------------------ #
     # Feature extraction                                                   #
@@ -85,8 +99,8 @@ class Reranker:
         ica_cosine = float(self._S_norm[q_idx] @ self._S_norm[c_idx])
 
         # Frequency ratio proxy: vocab index in GloVe (lower = more frequent)
-        q_rank = self._vocab_rank.get(query, 50000) + 1
-        c_rank = self._vocab_rank.get(candidate, 50000) + 1
+        q_rank = self._vocab_rank.get(query, self._oov_rank) + 1
+        c_rank = self._vocab_rank.get(candidate, self._oov_rank) + 1
         freq_ratio = float(c_rank / q_rank)
 
         inv_rank = 1.0 / mlp_rank
@@ -136,6 +150,10 @@ class Reranker:
     ) -> Reranker:
         """Train the reranker on MLP predictions for antonym_pairs."""
         X, y = self._build_dataset(antonym_pairs, classifier, top_n)
+        if len(np.unique(y)) < 2:
+            self._passthrough = True
+            self._fitted = True
+            return self
         X_scaled = self.scaler.fit_transform(X)
         self.clf.fit(X_scaled, y)
         self._fitted = True
@@ -162,6 +180,8 @@ class Reranker:
             raise RuntimeError("Reranker not fitted. Call fit() first.")
         if not candidates:
             return []
+        if self._passthrough:
+            return candidates[:top_n]
 
         feats = np.array(
             [
@@ -181,7 +201,7 @@ class Reranker:
 
     def feature_weights(self) -> dict:
         """Return feature name -> coefficient mapping."""
-        if not self._fitted:
+        if not self._fitted or self._passthrough:
             return {}
         names = ["mlp_score", "ica_cosine", "mlp_rank", "freq_ratio", "interaction", "inv_rank"]
         coefs = self.clf.coef_[0]
@@ -212,15 +232,11 @@ class Reranker:
         ]
 
         rng = np.random.RandomState(42)
-        indices = np.arange(len(valid_pairs))
-        rng.shuffle(indices)
-        folds = np.array_split(indices, n_folds)
+        folds = make_folds(len(valid_pairs), n_folds, seed=42)
 
         fold_results = []
         for fold_idx in range(n_folds):
-            test_idx = set(folds[fold_idx].tolist())
-            train_pairs = [valid_pairs[i] for i in range(len(valid_pairs)) if i not in test_idx]
-            test_pairs = [valid_pairs[i] for i in folds[fold_idx]]
+            train_pairs, test_pairs = train_test_pairs(valid_pairs, fold_idx, folds)
 
             # Train MLP on fold's training set
             fold_mlp = AntonymClassifier(self.space, "mlp")
@@ -234,30 +250,26 @@ class Reranker:
             mlp_hits = {1: 0, 5: 0, 10: 0}
             rer_hits = {1: 0, 5: 0, 10: 0}
             evaluated = 0
+            cand_n = max(top_n, mlp_top_n)
 
             for w1, w2 in test_pairs:
                 evaluated += 1
-
-                def fn_mlp(src, tgt, _m=fold_mlp):
-                    return self._eval_mlp(_m, src, tgt, top_n)
-
-                def fn_rer(src, tgt, _m=fold_mlp, _r=fold_reranker):
-                    return self._eval_reranker(_m, _r, src, tgt, top_n, mlp_top_n)
-
-                for hits_dict, retrieve_fn in [
-                    (mlp_hits, fn_mlp),
-                    (rer_hits, fn_rer),
-                ]:
-                    best_rank = None
-                    for src, tgt in [(w1, w2), (w2, w1)]:
-                        rank = retrieve_fn(src, tgt)
-                        if rank is not None:
-                            if best_rank is None or rank < best_rank:
-                                best_rank = rank
-                    if best_rank is not None:
-                        for k in [1, 5, 10]:
-                            if best_rank <= k:
-                                hits_dict[k] += 1
+                best = {"mlp": None, "rer": None}
+                for src, tgt in [(w1, w2), (w2, w1)]:
+                    # One retrieval per direction feeds both evaluations
+                    cands = fold_mlp.retrieve(src, top_n=cand_n)
+                    rank = _rank_of(cands[:top_n], tgt)
+                    if rank is not None and (best["mlp"] is None or rank < best["mlp"]):
+                        best["mlp"] = rank
+                    reranked = fold_reranker.rerank(src, cands[:mlp_top_n], top_n=top_n)
+                    rank = _rank_of(reranked, tgt)
+                    if rank is not None and (best["rer"] is None or rank < best["rer"]):
+                        best["rer"] = rank
+                for k in [1, 5, 10]:
+                    if best["mlp"] is not None and best["mlp"] <= k:
+                        mlp_hits[k] += 1
+                    if best["rer"] is not None and best["rer"] <= k:
+                        rer_hits[k] += 1
 
             mlp_metrics = {f"hits_at_{k}": mlp_hits[k] / evaluated for k in [1, 5, 10]}
             rer_metrics = {f"hits_at_{k}": rer_hits[k] / evaluated for k in [1, 5, 10]}
@@ -282,18 +294,3 @@ class Reranker:
             "total_pairs": len(valid_pairs),
             "metrics": agg,
         }
-
-    def _eval_mlp(self, mlp, src, tgt, top_n):
-        candidates = mlp.retrieve(src, top_n=top_n)
-        for j, (w, _) in enumerate(candidates):
-            if w == tgt:
-                return j + 1
-        return None
-
-    def _eval_reranker(self, mlp, reranker, src, tgt, top_n, mlp_top_n):
-        candidates = mlp.retrieve(src, top_n=mlp_top_n)
-        reranked = reranker.rerank(src, candidates, top_n=top_n)
-        for j, (w, _) in enumerate(reranked):
-            if w == tgt:
-                return j + 1
-        return None

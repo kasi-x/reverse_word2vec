@@ -2,7 +2,7 @@
 
 import numpy as np
 
-from src.eval_utils import compute_hits, topn_excluding, unit_rows
+from src.eval_utils import compute_hits, make_folds, topn_excluding, train_test_pairs, unit_rows
 
 
 def test_unit_rows_normalises():
@@ -47,3 +47,18 @@ def test_compute_hits_respects_top_n():
     assert hits[5] == 0.0
     hits, _ = compute_hits([("foo", "bar")], retrieve_fn, top_n=10)
     assert hits[10] == 1.0
+
+
+def test_make_folds_deterministic_and_covering():
+    f1 = make_folds(11, 5, seed=42)
+    f2 = make_folds(11, 5, seed=42)
+    assert [list(f) for f in f1] == [list(f) for f in f2]
+    assert sorted(int(i) for f in f1 for i in f) == list(range(11))
+
+
+def test_train_test_pairs_split_without_overlap():
+    pairs = [(f"a{i}", f"b{i}") for i in range(10)]
+    folds = make_folds(len(pairs), 5, seed=42)
+    train, test = train_test_pairs(pairs, 0, folds)
+    assert len(train) + len(test) == len(pairs)
+    assert not set(map(str, train)) & set(map(str, test))

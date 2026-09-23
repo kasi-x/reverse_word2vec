@@ -21,6 +21,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.neural_network import MLPClassifier
 from sklearn.preprocessing import StandardScaler
 
+from src.eval_utils import make_folds, train_test_pairs
 from src.ica_transformer import ICASpace
 
 
@@ -33,12 +34,20 @@ class AntonymClassifier:
       - retrieve(word, top_n): rank all vocabulary words as antonym candidates
     """
 
+    # Number of unexcluded top candidates memoized per query word.
+    # Callers use top_n <= ~20, so this window is ample.
+    _RETRIEVE_CACHE_K = 128
+
     def __init__(self, space: ICASpace, model_type: str = "logistic"):
         self.space = space
         self.model_type = model_type
         self.scaler = StandardScaler()
         self._axis_std = np.std(space.S, axis=0)
         self._axis_std = np.maximum(self._axis_std, 1e-8)
+        # Cached once: retrieve() is called thousands of times during CV.
+        self._S32 = space.S.astype(np.float32)
+        # word -> top-K (word, prob) ranking; cleared on fit (model changes).
+        self._candidate_cache: dict[str, list[tuple[str, float]]] = {}
 
         if model_type == "logistic":
             self.clf = LogisticRegression(C=1.0, max_iter=1000, random_state=42)
@@ -89,8 +98,11 @@ class AntonymClassifier:
             s1 = self.space.score(w1)
             s2 = self.space.score(w2)
             if s1 is not None and s2 is not None:
-                X_pos.append(self._features(s1, s2))
-                X_pos.append(self._features(s2, s1))  # both directions
+                # Features (|s1-s2|, s1*s2) are symmetric in the two directions;
+                # the pair is appended twice to keep the positive weighting.
+                feat = self._features(s1, s2)
+                X_pos.append(feat)
+                X_pos.append(feat)
                 valid_pairs.append((w1, w2))
 
         # Negative samples: random pairs
@@ -126,6 +138,7 @@ class AntonymClassifier:
         X_scaled = self.scaler.fit_transform(X)
         self.clf.fit(X_scaled, y)
         self._fitted = True
+        self._candidate_cache.clear()
         return self
 
     def pair_score(self, w1: str, w2: str) -> float:
@@ -160,26 +173,30 @@ class AntonymClassifier:
 
         excl = {word} | (exclude or set())
 
-        # Batch compute features for all vocabulary words
-        n_features = 2 * self.space.n_components
-        n = len(self.space.words)
-        X = np.zeros((n, n_features), dtype=np.float32)
-        for i, s in enumerate(self.space.S):
-            X[i] = self._features(s_w, s)
+        cand = self._candidate_cache.get(word)
+        if cand is None:
+            cand = self._rank_candidates(s_w, self._RETRIEVE_CACHE_K)
+            self._candidate_cache[word] = cand
 
-        X_scaled = self.scaler.transform(X)
-        probs = self.clf.predict_proba(X_scaled)[:, 1]
-
-        ranked = np.argsort(probs)[::-1]
-        results = []
-        for i in ranked:
-            if len(results) >= top_n:
-                break
-            w = self.space.words[i]
-            if w in excl:
-                continue
-            results.append((w, float(probs[i])))
+        results = [(w, p) for w, p in cand if w not in excl][:top_n]
+        if len(results) < top_n and len(cand) < len(self.space.words):
+            # Exclusions ate into the cached window; rank the full vocabulary.
+            cand = self._rank_candidates(s_w, len(self.space.words))
+            results = [(w, p) for w, p in cand if w not in excl][:top_n]
         return results
+
+    def _rank_candidates(self, s_w: np.ndarray, k: int) -> list[tuple[str, float]]:
+        """Score the whole vocabulary; return the top-k (word, prob) ranking."""
+        # Vectorised pair features for the whole vocabulary at once:
+        # X = [|s_w - S|, s_w * S] with shape (n_vocab, 2 * n_components)
+        X = np.concatenate([np.abs(self._S32 - s_w), self._S32 * s_w], axis=1).astype(np.float32)
+        probs = self.clf.predict_proba(self.scaler.transform(X))[:, 1]
+
+        n = len(probs)
+        k = min(k, n)
+        pool = np.argpartition(probs, n - k)[n - k :]
+        pool = pool[np.argsort(probs[pool])[::-1]]
+        return [(self.space.words[i], float(probs[i])) for i in pool]
 
     def cross_validate(
         self,
@@ -198,17 +215,12 @@ class AntonymClassifier:
             for w1, w2 in antonym_pairs
             if self.space.score(w1) is not None and self.space.score(w2) is not None
         ]
-
         rng = np.random.RandomState(42)
-        indices = np.arange(len(valid_pairs))
-        rng.shuffle(indices)
-        folds = np.array_split(indices, n_folds)
+        folds = make_folds(len(valid_pairs), n_folds, seed=42)
 
         fold_results = []
         for fold_idx in range(n_folds):
-            test_idx = set(folds[fold_idx].tolist())
-            train_pairs = [valid_pairs[i] for i in range(len(valid_pairs)) if i not in test_idx]
-            test_pairs = [valid_pairs[i] for i in folds[fold_idx]]
+            train_pairs, test_pairs = train_test_pairs(valid_pairs, fold_idx, folds)
 
             # Train on this fold
             fold_clf = AntonymClassifier(self.space, self.model_type)

@@ -44,8 +44,8 @@ task run:cf            # Experimental: full pipeline with counter-fitting
 # Evaluations (scripts/)
 task eval:reranker     # MLP + reranker retrieval (CV + 70/15/15 holdout)
 task eval:leakfree     # Leak-free counter-fitting comparison
+task eval:counterfit-separation  # Global CF cosine shift (paper Method numbers)
 task eval:translation  # Translation-baseline refinements
-task eval:discovery    # WordNet -> ConceptNet-only generalization
 
 # Paper
 task paper:generate    # Phase 5: regenerate paper/paper.md from results/*.json
@@ -89,7 +89,7 @@ pixi run python run_pipeline.py --relabel     # relabel axes on cached space
 |--------|-------------|
 | `src/word2vec_loader.py` | GloVe/fastText/Google News model loading via gensim |
 | `src/antonym_loader.py` | WordNet antonym pair extraction (NLTK) |
-| `scripts/` | 14 standalone eval/diagnostic scripts (one-off research runs; each is run manually via `pixi run python scripts/<name>.py`) |
+| `scripts/` | 15 standalone eval/diagnostic scripts (one-off research runs; each is run manually via `pixi run python scripts/<name>.py`) |
 
 ### Key Algorithm
 
@@ -123,6 +123,7 @@ WordNet (NLTK)      -> antonym_loader.py -> antonym pairs
                                             -> results/analogy_eval.json
 scripts/eval_reranker.py -> results/reranker_eval.json
 scripts/eval_leakfree.py -> results/leakfree_comparison.json
+scripts/eval_counterfit_separation.py -> results/counterfit_separation.json
 analysis_report.py + relevance.py -> results/analysis_report.json, relevance_analysis.json
                                  -> paper/figures/*.png
 generate_paper.py (reads ALL of the above JSONs) -> paper/paper.md
