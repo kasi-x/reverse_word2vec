@@ -44,8 +44,6 @@ class AntonymClassifier:
         self.scaler = StandardScaler()
         self._axis_std = np.std(space.S, axis=0)
         self._axis_std = np.maximum(self._axis_std, 1e-8)
-        # Cached once: retrieve() is called thousands of times during CV.
-        self._S32 = space.S.astype(np.float32)
         # word -> top-K (word, prob) ranking; cleared on fit (model changes).
         self._candidate_cache: dict[str, list[tuple[str, float]]] = {}
 
@@ -188,15 +186,19 @@ class AntonymClassifier:
     def _rank_candidates(self, s_w: np.ndarray, k: int) -> list[tuple[str, float]]:
         """Score the whole vocabulary; return the top-k (word, prob) ranking."""
         # Vectorised pair features for the whole vocabulary at once:
-        # X = [|s_w - S|, s_w * S] with shape (n_vocab, 2 * n_components)
-        X = np.concatenate([np.abs(self._S32 - s_w), self._S32 * s_w], axis=1).astype(np.float32)
+        # X = [|s_w - S|, s_w * S] with shape (n_vocab, 2 * n_components).
+        # Computed in float64 then cast — matches _features() numerics exactly.
+        S = self.space.S
+        X = np.concatenate([np.abs(S - s_w), S * s_w], axis=1).astype(np.float32)
         probs = self.clf.predict_proba(self.scaler.transform(X))[:, 1]
 
         n = len(probs)
         k = min(k, n)
-        pool = np.argpartition(probs, n - k)[n - k :]
-        pool = pool[np.argsort(probs[pool])[::-1]]
-        return [(self.space.words[i], float(probs[i])) for i in pool]
+        # Full argsort (not argpartition): MLP probabilities saturate at 1.0,
+        # so hundreds of candidates tie — argsort's deterministic tie order is
+        # what the published numbers were computed with.
+        ranked = np.argsort(probs)[::-1][:k]
+        return [(self.space.words[i], float(probs[i])) for i in ranked]
 
     def cross_validate(
         self,

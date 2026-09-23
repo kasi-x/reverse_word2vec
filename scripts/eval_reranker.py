@@ -74,11 +74,11 @@ def main():
     TOP_N = 10
 
     def fn_mlp(src):
-        return mlp.retrieve(src, top_n=TOP_N)
+        return [w for w, _ in mlp.retrieve(src, top_n=TOP_N)]
 
     def fn_reranker(src):
         cands = mlp.retrieve(src, top_n=TOP_N)
-        return reranker.rerank(src, cands, top_n=TOP_N)
+        return [w for w, _ in reranker.rerank(src, cands, top_n=TOP_N)]
 
     print(f"\nEvaluating on {len(test_pairs)} test pairs...")
     mlp_hits, _ = compute_hits(test_pairs, fn_mlp)
@@ -135,7 +135,7 @@ def main():
         mlp_top = mlp.retrieve(w1, top_n=1)
         mlp_pred = mlp_top[0][0] if mlp_top else "?"
         rer_top = fn_reranker(w1)
-        rer_pred = rer_top[0][0] if rer_top else "?"
+        rer_pred = rer_top[0] if rer_top else "?"
 
         def mark(pred, target):
             return ("✓ " if pred == target else "✗ ") + pred[:12]

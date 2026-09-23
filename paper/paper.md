@@ -9,11 +9,11 @@ retrieves antonym candidates, and a lightweight logistic reranker re-orders them
 ICA cosine, word frequency, and MLP rank signals. The deployed pipeline uses no
 counter-fitting and no label information outside its training split.
 On 1,121 WordNet antonym pairs with 5-fold cross-validation, the full pipeline
-achieves 19.0% Hits@1
-versus 16.7% for the classifier alone;
-an oracle axis-inversion baseline that knows the target word reaches 25.2%.
+achieves 18.9% Hits@1
+versus 13.1% for the classifier alone;
+an oracle axis-inversion baseline that knows the target word reaches 22.9%.
 A leak-free counter-fitting protocol is also evaluated and rejected: per-fold
-counter-fitting collapses retrieval to near zero (21.8% Hits@1 for the
+counter-fitting collapses retrieval to near zero (22.3% Hits@1 for the
 same heuristic on raw GloVe), so counter-fitting is excluded from all headline results.
 
 ## Method
@@ -49,11 +49,11 @@ leak-free protocol (counter-fitting re-fit per fold on training pairs only,
 
 | Method (5-fold, leak-free) | Hits@1 |
 |--------|--------|
-| least-squares map on raw GloVe (no CF) | 0.218±0.033 |
-| least-squares map on per-fold counter-fitted vectors | 0.003±0.002 |
+| least-squares map on raw GloVe (no CF) | 0.223±0.020 |
+| least-squares map on per-fold counter-fitted vectors | 0.002±0.002 |
 | nearest neighbour of −v(src) in CF space | 0.000±0.000 |
 | MLP on per-fold CF+ICA features | 0.000±0.000 |
-| oracle single-axis inversion (knows target) | 0.245±0.042 |
+| oracle single-axis inversion (knows target) | 0.239±0.009 |
 
 (folds=5, vocab=50000, CF iters=50, seed=42)
 
@@ -162,9 +162,9 @@ Cross-validated on 1,121 WordNet antonym pairs:
 
 | Method | Hits@1 | Hits@5 | Hits@10 |
 |--------|--------|--------|---------|
-| Oracle axis inversion† | 0.252±0.028 | 0.391±0.036 | 0.450±0.040 |
-| MLP classifier | 0.167±0.020 | 0.314±0.033 | 0.383±0.035 |
-| MLP + Reranker | 0.190±0.029 | 0.332±0.034 | 0.383±0.035 |
+| Oracle axis inversion† | 0.229±0.017 | 0.335±0.028 | 0.388±0.021 |
+| MLP classifier | 0.131±0.029 | 0.288±0.035 | 0.366±0.032 |
+| MLP + Reranker | 0.189±0.017 | 0.323±0.034 | 0.366±0.032 |
 
 † Oracle: selects the axis using the target word (not deployable; measures axis
   geometry alone).
@@ -174,8 +174,8 @@ validation split; single split, so no ±std):
 
 | Method | Hits@1 | Hits@5 | Hits@10 |
 |--------|--------|--------|---------|
-| MLP classifier | 16.6% | 28.4% | 33.1% |
-| MLP + Reranker | 18.3% | 27.8% | 33.1% |
+| MLP classifier | 16.6% | 30.2% | 39.6% |
+| MLP + Reranker | 20.1% | 36.1% | 39.6% |
 
 ### Google Analogy Dataset
 
@@ -241,14 +241,14 @@ Logistic regression coefficients:
 
 | Feature | Coefficient | Interpretation |
 |---------|-------------|----------------|
-| interaction | -0.404 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
-| ica_cosine | +0.404 | positive: prefers positive ICA cosine (antonyms cluster in raw GloVe) |
-| freq_ratio | -0.338 | negative: penalises candidates much rarer than the query |
-| mlp_rank | -0.191 | higher-ranked MLP candidates preferred |
-| inv_rank | +0.161 | 1/rank bonus |
-| mlp_score | +0.082 | raw MLP probability |
+| ica_cosine | +0.483 | positive: prefers positive ICA cosine (antonyms cluster in raw GloVe) |
+| interaction | -0.483 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
+| freq_ratio | -0.389 | negative: penalises candidates much rarer than the query |
+| inv_rank | +0.255 | 1/rank bonus |
+| mlp_score | +0.020 | raw MLP probability |
+| mlp_rank | -0.006 | higher-ranked MLP candidates preferred |
 
-The dominant signal is `interaction` (-0.40). On the raw space the
+The dominant signal is `ica_cosine` (+0.48). On the raw space the
 strongest reranker signals are the ICA-cosine pair (`ica_cosine` and its
 `interaction` with the MLP score) together with the rarity penalty
 (`freq_ratio`): rare vocabulary items with extreme ICA scores attract high
@@ -257,7 +257,7 @@ that antonyms sit in related regions of the raw embedding space.
 
 ## Discussion
 
-**Informed axis inversion (0.252±0.028) vs the deployable pipeline (0.190±0.029).**
+**Informed axis inversion (0.229±0.017) vs the deployable pipeline (0.189±0.017).**
 The oracle baseline — which knows the target word and flips the single
 most-discriminative ICA axis — remains the strongest retrieval strategy on
 this space, so interpretable axis geometry carries real antonym signal.
@@ -293,7 +293,7 @@ opposites simultaneously.
 **Comparison with LLM-based antonym retrieval.** Large language models
 can reliably retrieve antonyms for most common words. The statistical pipeline
 here reaches
-38.3% Hits@10 on this vocabulary without requiring generation
+36.6% Hits@10 on this vocabulary without requiring generation
 or prompting infrastructure, but remains far from generation-based systems.
 
 ## Reproducibility

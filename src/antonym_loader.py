@@ -41,7 +41,7 @@ def extract_antonym_pairs() -> list[tuple[str, str]]:
                     pair = tuple(sorted([word1, word2]))
                     antonym_pairs.add(pair)
 
-    return list(antonym_pairs)
+    return sorted(antonym_pairs)
 
 
 def extract_antonym_pairs_by_pos(pos: str = None) -> list[tuple[str, str]]:
