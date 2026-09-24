@@ -1561,7 +1561,7 @@
       },
       "50": {
         "mean_relative_error": 0.617536168261098,
-        "median_relative_error": 0.6187087565626674,
+        "median_relative_error": 0.6187087565626673,
         "p95_relative_error": 0.7864159315990342
       },
       "75": {
@@ -1570,9 +1570,9 @@
         "p95_relative_error": 0.5663476256159142
       },
       "100": {
-        "mean_relative_error": 7.79074265850994e-14,
-        "median_relative_error": 7.711695831192841e-14,
-        "p95_relative_error": 9.70972335707205e-14
+        "mean_relative_error": 7.790755361438276e-14,
+        "median_relative_error": 7.710585135343216e-14,
+        "p95_relative_error": 9.709654654037267e-14
       }
     }
   }
