@@ -8,8 +8,10 @@ Usage:
     pixi run python scripts/eval_reranker.py
 """
 
+import csv
 import json
 import sys
+from pathlib import Path
 
 sys.path.insert(0, ".")
 
@@ -54,8 +56,36 @@ def main():
     test_pairs = [valid_pairs[i] for i in idx[n_train + n_val :]]
     print(f"  Split: {len(train_pairs)} train / {len(val_pairs)} val / {len(test_pairs)} test")
 
+    # ── ConceptNet augmentation ───────────────────────────────────────
+    # Extra training pairs from ConceptNet (~6k in-vocab). Noisier than
+    # WordNet but enlarges the reranker's training set. Pairs already in
+    # the WordNet set are excluded: duplicates add nothing and would
+    # leak into CV test folds.
+    cn_pairs = []
+    cn_path = Path("data/conceptnet_antonyms.tsv")
+    if cn_path.exists():
+        wn_set = {tuple(sorted(p)) for p in valid_pairs}
+        seen = set()
+        with open(cn_path) as f:
+            for row in csv.reader(f, delimiter="\t"):
+                if len(row) < 2:
+                    continue
+                a, b = row[0].strip(), row[1].strip()
+                key = tuple(sorted((a, b)))
+                if (
+                    a != b
+                    and key not in seen
+                    and key not in wn_set
+                    and space.score(a) is not None
+                    and space.score(b) is not None
+                ):
+                    seen.add(key)
+                    cn_pairs.append((a, b))
+    print(f"  ConceptNet augmentation pairs: {len(cn_pairs)}")
+    val_aug = val_pairs + cn_pairs[:500]
+
     # ── Train MLP classifier ──────────────────────────────────────────
-    print("\nTraining MLP classifier on train set...")
+    print("\nTraining MLP classifier on train set (WordNet only — CN noise hurts it)...")
     mlp = AntonymClassifier(space, "mlp")
     mlp.fit(train_pairs, neg_ratio=3.0, rng=rng)
     print("  MLP trained.")
@@ -65,12 +95,11 @@ def main():
     # top-20. Sources are fit on train pairs only (leak-free).
     POOL_N = 100
     AUX_N = 20
-    print(f"\nFitting candidate sources on train set (mlp={POOL_N}, aux={AUX_N})...")
     sources = CandidateSources(space, model)
     sources.fit(train_pairs, mlp, mlp_top_n=POOL_N, aux_top_n=AUX_N)
     print("Training reranker on val set (union pool)...")
     reranker = Reranker(space, model)
-    reranker.fit(val_pairs, mlp, top_n=POOL_N, sources=sources)
+    reranker.fit(val_aug, mlp, top_n=POOL_N, sources=sources)
     print("  Reranker trained.")
     weights = reranker.feature_weights()
     print("  Feature weights:")
@@ -101,7 +130,12 @@ def main():
     print("\nRunning 5-fold CV of full pipeline (MLP + reranker)...")
     cv_reranker = Reranker(space, model)
     cv_results = cv_reranker.cross_validate(
-        valid_pairs, n_folds=5, top_n=10, mlp_top_n=POOL_N, aux_top_n=AUX_N
+        valid_pairs,
+        n_folds=5,
+        top_n=10,
+        mlp_top_n=POOL_N,
+        aux_top_n=AUX_N,
+        extra_pairs=cn_pairs,
     )
 
     print("\n5-fold CV results:")

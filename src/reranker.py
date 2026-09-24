@@ -306,12 +306,17 @@ class Reranker:
         mlp_top_n: int = 10,
         neg_ratio: float = 3.0,
         aux_top_n: int = 20,
+        extra_pairs: list[tuple[str, str]] | None = None,
     ) -> dict:
         """
         Full pipeline 5-fold CV: train MLP + reranker on 4/5, eval on 1/5.
 
         This avoids leakage: the reranker never sees test examples during
-        training (MLP or reranker).
+        training (MLP or reranker). `extra_pairs` (e.g. ConceptNet) are
+        appended to the reranker training set only — the MLP and the
+        candidate sources stay on `antonym_pairs` (extra data is noisier
+        and hurts them). Callers must remove any overlap with the
+        evaluation pairs.
         """
         valid_pairs = [
             (w1, w2)
@@ -325,17 +330,18 @@ class Reranker:
         fold_results = []
         for fold_idx in range(n_folds):
             train_pairs, test_pairs = train_test_pairs(valid_pairs, fold_idx, folds)
+            train_aug = train_pairs + extra_pairs if extra_pairs else train_pairs
 
-            # Train MLP on fold's training set
+            # Train MLP on fold's WordNet training set only
             fold_mlp = AntonymClassifier(self.space, "mlp")
             fold_mlp.fit(train_pairs, neg_ratio, rng)
 
-            # Train reranker on same training set using fold's MLP +
-            # fold-local candidate sources (axis predictor + procrustes)
+            # Train reranker on the augmented set; sources stay on the
+            # fold's WordNet pairs (CN noise degrades them too).
             fold_sources = CandidateSources(self.space, self.model)
             fold_sources.fit(train_pairs, fold_mlp, mlp_top_n, aux_top_n)
             fold_reranker = Reranker(self.space, self.model)
-            fold_reranker.fit(train_pairs, fold_mlp, mlp_top_n, fold_sources)
+            fold_reranker.fit(train_aug, fold_mlp, mlp_top_n, fold_sources)
 
             # Evaluate on test pairs: MLP only vs MLP + reranker
             mlp_hits = {1: 0, 5: 0, 10: 0}

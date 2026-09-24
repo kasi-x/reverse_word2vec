@@ -9,7 +9,7 @@ retrieves antonym candidates, and a lightweight logistic reranker re-orders them
 ICA cosine, word frequency, and MLP rank signals. The deployed pipeline uses no
 counter-fitting and no label information outside its training split.
 On 1,121 WordNet antonym pairs with 5-fold cross-validation, the full pipeline
-achieves 32.3% Hits@1
+achieves 31.8% Hits@1
 versus 13.1% for the classifier alone;
 an oracle axis-inversion baseline that knows the target word reaches 22.9%.
 A leak-free counter-fitting protocol is also evaluated and rejected: per-fold
@@ -99,6 +99,11 @@ re-orders the union down to a top-10 list using thirteen signals:
 | in_proc | Candidate came from the procrustes map |
 | in_ica_map | Candidate came from the ICA-score map |
 
+The reranker's training set is augmented with ConceptNet antonym pairs
+(~6k in-vocabulary, deduplicated against WordNet). ConceptNet is noisier,
+so the MLP and candidate sources stay WordNet-only; the extra pairs
+enlarge only the reranker's labelled pool.
+
 Training protocol: in each CV fold, the reranker is trained on the fold's MLP
 predictions over that fold's **training pairs only**; test pairs never enter any
 training stage. Because those MLP predictions are in-sample, we additionally report
@@ -174,7 +179,7 @@ Cross-validated on 1,121 WordNet antonym pairs:
 |--------|--------|--------|---------|
 | Oracle axis inversion† | 0.229±0.017 | 0.335±0.028 | 0.388±0.021 |
 | MLP classifier | 0.131±0.029 | 0.288±0.035 | 0.366±0.032 |
-| MLP + Reranker | 0.323±0.007 | 0.457±0.019 | 0.520±0.028 |
+| MLP + Reranker | 0.318±0.027 | 0.471±0.028 | 0.521±0.021 |
 
 † Oracle: selects the axis using the target word (not deployable; measures axis
   geometry alone).
@@ -185,7 +190,7 @@ validation split; single split, so no ±std):
 | Method | Hits@1 | Hits@5 | Hits@10 |
 |--------|--------|--------|---------|
 | MLP classifier | 16.6% | 30.2% | 39.6% |
-| MLP + Reranker | 31.4% | 46.7% | 52.7% |
+| MLP + Reranker | 30.8% | 47.3% | 55.0% |
 
 ### Predicting the Inversion Axis (deployable blind mode)
 
@@ -268,21 +273,21 @@ Logistic regression coefficients:
 
 | Feature | Coefficient | Interpretation |
 |---------|-------------|----------------|
-| morph_sim | +0.927 | rewards stem-sharing antonyms (unhappy-type); risks inflections |
-| in_ica_map | +0.604 | candidate surfaced by the ICA-score map |
-| max_zdiff | -0.413 | dominant-axis contrast between the pair |
-| in_proc | +0.407 | candidate surfaced by the procrustes map |
-| glove_cos | -0.362 | raw-space cosine; antonyms stay close in GloVe |
-| mlp_rank | -0.339 | higher-ranked MLP candidates preferred |
-| ica_cosine | +0.242 | positive: prefers positive ICA cosine (antonyms cluster in raw GloVe) |
-| interaction | +0.060 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
-| in_mlp | -0.058 | candidate surfaced by the MLP pool |
-| mlp_score | -0.032 | raw MLP probability |
-| freq_ratio | +0.020 | negative: penalises candidates much rarer than the query |
-| inv_rank | +0.003 | 1/rank bonus |
-| in_axis | +0.002 | candidate surfaced by predicted-axis inversion |
+| in_ica_map | +0.454 | candidate surfaced by the ICA-score map |
+| morph_sim | +0.392 | rewards stem-sharing antonyms (unhappy-type); risks inflections |
+| in_proc | +0.331 | candidate surfaced by the procrustes map |
+| ica_cosine | +0.310 | positive: prefers positive ICA cosine (antonyms cluster in raw GloVe) |
+| max_zdiff | -0.167 | dominant-axis contrast between the pair |
+| inv_rank | +0.093 | 1/rank bonus |
+| mlp_rank | -0.092 | higher-ranked MLP candidates preferred |
+| glove_cos | -0.088 | raw-space cosine; antonyms stay close in GloVe |
+| freq_ratio | -0.047 | negative: penalises candidates much rarer than the query |
+| mlp_score | -0.047 | raw MLP probability |
+| in_mlp | -0.039 | candidate surfaced by the MLP pool |
+| in_axis | +0.031 | candidate surfaced by predicted-axis inversion |
+| interaction | +0.016 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
 
-The dominant signal is `morph_sim` (+0.93). The morphological
+The dominant signal is `in_ica_map` (+0.45). The morphological
 similarity feature tops the ranking because many WordNet antonyms share a
 stem (unhappy, illegal, dishonest); its side effect is occasional
 inflectional false positives (king→kings). The ICA-cosine pair
@@ -294,7 +299,7 @@ related regions of the raw embedding space.
 
 ## Discussion
 
-**Informed axis inversion (0.229±0.017) vs the deployable pipeline (0.323±0.007).**
+**Informed axis inversion (0.229±0.017) vs the deployable pipeline (0.318±0.027).**
 The oracle baseline — which knows the target word and flips the single
 most-discriminative ICA axis — remains the strongest retrieval strategy on
 this space, so interpretable axis geometry carries real antonym signal.
@@ -338,6 +343,17 @@ are, not *in which direction* — synonyms and antonyms look alike. The
 pipeline works because uniform negatives are trivially separable; the
 antonym/synonym boundary is carried by the reranker's other signals.
 
+**A non-linear reranker does not help.** Swapping the logistic scorer
+for gradient-boosted trees on the same union pool degrades every
+metric (Hits@1 24.9% vs 31.4% logistic):
+with ~200 positive examples per training pool, the linear model's
+bias is a feature, not a limitation.
+
+**ConceptNet augmentation helps the reranker, not the MLP.** Adding
+~6k ConceptNet pairs to training degrades the MLP (noise) but improves
+the reranker (holdout Hits@5 46.2% → 50.9%), so augmentation is applied only
+to the reranker and candidate-source stages.
+
 
 **Multi-sense limitation.** The retrieval pipeline returns one ranking per query;
 polysemous words (e.g., *light* = weight/brightness/mood) may return the antonym
@@ -348,7 +364,7 @@ opposites simultaneously.
 **Comparison with LLM-based antonym retrieval.** Large language models
 can reliably retrieve antonyms for most common words. The statistical pipeline
 here reaches
-52.0% Hits@10 on this vocabulary without requiring generation
+52.1% Hits@10 on this vocabulary without requiring generation
 or prompting infrastructure, but remains far from generation-based systems.
 
 ## Reproducibility

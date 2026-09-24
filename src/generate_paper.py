@@ -21,6 +21,8 @@ RESULT_FILES = [
     "ica_space.json",
     "exp_axis_prediction.json",
     "exp_hard_negatives.json",
+    "exp_gbdt_reranker.json",
+    "exp_conceptnet_aug.json",
 ]
 
 
@@ -89,6 +91,8 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     ica_meta = (load_json(f"{results_dir}/ica_space.json") or {}).get("meta", {})
     axis_pred = load_json(f"{results_dir}/exp_axis_prediction.json")
     hard_neg = load_json(f"{results_dir}/exp_hard_negatives.json")
+    gbdt = load_json(f"{results_dir}/exp_gbdt_reranker.json")
+    cn_aug = load_json(f"{results_dir}/exp_conceptnet_aug.json")
 
     warnings: list[str] = []
     for name in RESULT_FILES:
@@ -295,6 +299,11 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("| in_axis | Candidate came from predicted-axis inversion |")
     w("| in_proc | Candidate came from the procrustes map |")
     w("| in_ica_map | Candidate came from the ICA-score map |")
+    w()
+    w("The reranker's training set is augmented with ConceptNet antonym pairs")
+    w("(~6k in-vocabulary, deduplicated against WordNet). ConceptNet is noisier,")
+    w("so the MLP and candidate sources stay WordNet-only; the extra pairs")
+    w("enlarge only the reranker's labelled pool.")
     w()
     w("Training protocol: in each CV fold, the reranker is trained on the fold's MLP")
     w("predictions over that fold's **training pairs only**; test pairs never enter any")
@@ -615,6 +624,29 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
         w("are, not *in which direction* — synonyms and antonyms look alike. The")
         w("pipeline works because uniform negatives are trivially separable; the")
         w("antonym/synonym boundary is carried by the reranker's other signals.")
+        w()
+    if gbdt and "results" in gbdt:
+        gr = gbdt["results"]
+        w("**A non-linear reranker does not help.** Swapping the logistic scorer")
+        w("for gradient-boosted trees on the same union pool degrades every")
+        w(
+            f"metric (Hits@1 {_ms((gr.get('gbdt') or {}).get('1'), pct=True)} vs "
+            f"{_ms((gr.get('logistic') or {}).get('1'), pct=True)} logistic):"
+        )
+        w("with ~200 positive examples per training pool, the linear model's")
+        w("bias is a feature, not a limitation.")
+        w()
+    if cn_aug and "results" in cn_aug:
+        ca = cn_aug["results"]
+        wn = (ca.get("wn_only") or {}).get("reranker", {})
+        aug = (ca.get("wn_plus_cn") or {}).get("reranker", {})
+        w("**ConceptNet augmentation helps the reranker, not the MLP.** Adding")
+        w("~6k ConceptNet pairs to training degrades the MLP (noise) but improves")
+        w(
+            f"the reranker (holdout Hits@5 {_ms(wn.get('5'), pct=True)} → "
+            f"{_ms(aug.get('5'), pct=True)}), so augmentation is applied only"
+        )
+        w("to the reranker and candidate-source stages.")
         w()
     w()
     w("**Multi-sense limitation.** The retrieval pipeline returns one ranking per query;")
