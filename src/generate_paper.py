@@ -20,6 +20,7 @@ RESULT_FILES = [
     "counterfit_separation.json",
     "ica_space.json",
     "exp_axis_prediction.json",
+    "exp_hard_negatives.json",
 ]
 
 
@@ -87,6 +88,7 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     separation = load_json(f"{results_dir}/counterfit_separation.json")
     ica_meta = (load_json(f"{results_dir}/ica_space.json") or {}).get("meta", {})
     axis_pred = load_json(f"{results_dir}/exp_axis_prediction.json")
+    hard_neg = load_json(f"{results_dir}/exp_hard_negatives.json")
 
     warnings: list[str] = []
     for name in RESULT_FILES:
@@ -271,9 +273,11 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w()
     w("### Reranker")
     w()
-    w("The MLP retrieves a top-100 candidate pool but ranks noise words (rare vocabulary")
-    w("items with extreme ICA scores) among the true antonyms. A logistic reranker")
-    w("re-orders the pool down to a top-10 list using nine signals:")
+    w("Three complementary retrievers build a union candidate pool:")
+    w("the MLP's top-100, the k-NN predicted-axis inversion's top-20, and a")
+    w("procrustes map's top-20 (W fit on train pairs maps a source vector")
+    w("toward its antonym). A logistic reranker re-orders the union down to")
+    w("a top-10 list using twelve signals:")
     w()
     w("| Feature | Description |")
     w("|---------|-------------|")
@@ -286,6 +290,9 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("| glove_cos | Raw GloVe cosine(query, cand) |")
     w("| morph_sim | String similarity (stem-sharing antonyms; risks inflections) |")
     w("| max_zdiff | Largest normalised axis difference |")
+    w("| in_mlp | Candidate came from the MLP pool |")
+    w("| in_axis | Candidate came from predicted-axis inversion |")
+    w("| in_proc | Candidate came from the procrustes map |")
     w()
     w("Training protocol: in each CV fold, the reranker is trained on the fold's MLP")
     w("predictions over that fold's **training pairs only**; test pairs never enter any")
@@ -513,7 +520,10 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
         w("|---------|-------------|----------------|")
         interpretations = {
             "freq_ratio": "negative: penalises candidates much rarer than the query",
-            "ica_cosine": "positive: prefers positive ICA cosine (antonyms cluster in raw GloVe)",
+            "max_zdiff": "dominant-axis contrast between the pair",
+            "in_mlp": "candidate surfaced by the MLP pool",
+            "in_axis": "candidate surfaced by predicted-axis inversion",
+            "in_proc": "candidate surfaced by the procrustes map",
             "interaction": "mlp_score × (−ica_cosine); sign flips with ica_cosine",
             "mlp_rank": "higher-ranked MLP candidates preferred",
             "inv_rank": "1/rank bonus",
@@ -578,6 +588,31 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("(every found target ranked exactly first). The qualitative table now leads with")
     w("blind protocols; the oracle row remains only as a stated non-deployable")
     w("reference.")
+    w()
+    if hard_neg and "results" in hard_neg:
+        hn = hard_neg["results"]
+        w("**ICA features cannot separate antonyms from synonyms.** Training the")
+        w("MLP with hard negatives (GloVe neighbours of positive words) collapses")
+        w("retrieval:")
+        w()
+        w("| Negative sampling | MLP Hits@1 | Pool-100 recall | Reranker Hits@1 |")
+        w("|-------------------|------------|-----------------|-----------------|")
+        for name, label in [
+            ("random", "uniform (current)"),
+            ("mixed", "50% hard"),
+            ("hard", "all hard"),
+        ]:
+            r = hn.get(name, {})
+            mlp1 = _ms((r.get("mlp") or {}).get("1"), pct=True)
+            rec = _pct(r.get("pool100_recall"))
+            rr1 = _ms((r.get("reranker") or {}).get("1"), pct=True)
+            w(f"| {label} | {mlp1} | {rec} | {rr1} |")
+        w()
+        w("The axis-wise features (|s1−s2|, s1⊙s2) encode *how different* two words")
+        w("are, not *in which direction* — synonyms and antonyms look alike. The")
+        w("pipeline works because uniform negatives are trivially separable; the")
+        w("antonym/synonym boundary is carried by the reranker's other signals.")
+        w()
     w()
     w("**Multi-sense limitation.** The retrieval pipeline returns one ranking per query;")
     w("polysemous words (e.g., *light* = weight/brightness/mood) may return the antonym")

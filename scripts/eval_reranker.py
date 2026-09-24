@@ -20,7 +20,7 @@ from src.antonym_loader import extract_antonym_pairs
 from src.axis_labeler import AxisLabeler
 from src.eval_utils import compute_hits
 from src.ica_transformer import load_ica_space
-from src.reranker import Reranker
+from src.reranker import CandidateSources, Reranker
 from src.word2vec_loader import Word2VecLoader
 
 
@@ -60,14 +60,17 @@ def main():
     mlp.fit(train_pairs, neg_ratio=3.0, rng=rng)
     print("  MLP trained.")
 
-    # ── Train reranker on val set ─────────────────────────────────────
-    # Pool depth 100: MLP top-100 candidates are reranked down to top-10.
-    # Deeper pools raise recall (pool-100 covers ~62% of targets vs ~40%
-    # at top-10) and the extended features recover precision.
+    # ── Candidate sources + reranker ──────────────────────────────────
+    # Union pool: MLP top-100 ∪ k-NN predicted-axis top-20 ∪ procrustes
+    # top-20. Sources are fit on train pairs only (leak-free).
     POOL_N = 100
-    print(f"\nTraining reranker on val set (pool={POOL_N}, using MLP predictions)...")
+    AUX_N = 20
+    print(f"\nFitting candidate sources on train set (mlp={POOL_N}, aux={AUX_N})...")
+    sources = CandidateSources(space, model)
+    sources.fit(train_pairs, mlp, mlp_top_n=POOL_N, aux_top_n=AUX_N)
+    print("Training reranker on val set (union pool)...")
     reranker = Reranker(space, model)
-    reranker.fit(val_pairs, mlp, top_n=POOL_N)
+    reranker.fit(val_pairs, mlp, top_n=POOL_N, sources=sources)
     print("  Reranker trained.")
     weights = reranker.feature_weights()
     print("  Feature weights:")
@@ -81,8 +84,7 @@ def main():
         return [w for w, _ in mlp.retrieve(src, top_n=TOP_N)]
 
     def fn_reranker(src):
-        cands = mlp.retrieve(src, top_n=POOL_N)
-        return [w for w, _ in reranker.rerank(src, cands, top_n=TOP_N)]
+        return [w for w, _ in reranker.rerank(src, sources.pool(src), top_n=TOP_N)]
 
     print(f"\nEvaluating on {len(test_pairs)} test pairs...")
     mlp_hits, _ = compute_hits(test_pairs, fn_mlp)
@@ -98,7 +100,9 @@ def main():
     # ── Full 5-fold CV of complete pipeline ───────────────────────────
     print("\nRunning 5-fold CV of full pipeline (MLP + reranker)...")
     cv_reranker = Reranker(space, model)
-    cv_results = cv_reranker.cross_validate(valid_pairs, n_folds=5, top_n=10, mlp_top_n=POOL_N)
+    cv_results = cv_reranker.cross_validate(
+        valid_pairs, n_folds=5, top_n=10, mlp_top_n=POOL_N, aux_top_n=AUX_N
+    )
 
     print("\n5-fold CV results:")
     print(f"{'=' * 55}")

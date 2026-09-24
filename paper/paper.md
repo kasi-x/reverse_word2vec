@@ -9,7 +9,7 @@ retrieves antonym candidates, and a lightweight logistic reranker re-orders them
 ICA cosine, word frequency, and MLP rank signals. The deployed pipeline uses no
 counter-fitting and no label information outside its training split.
 On 1,121 WordNet antonym pairs with 5-fold cross-validation, the full pipeline
-achieves 26.1% Hits@1
+achieves 31.0% Hits@1
 versus 13.1% for the classifier alone;
 an oracle axis-inversion baseline that knows the target word reaches 22.9%.
 A leak-free counter-fitting protocol is also evaluated and rejected: per-fold
@@ -76,9 +76,11 @@ An MLP (128→64 hidden units) is trained with negatives sampled at ratio 3:1.
 
 ### Reranker
 
-The MLP retrieves a top-100 candidate pool but ranks noise words (rare vocabulary
-items with extreme ICA scores) among the true antonyms. A logistic reranker
-re-orders the pool down to a top-10 list using nine signals:
+Three complementary retrievers build a union candidate pool:
+the MLP's top-100, the k-NN predicted-axis inversion's top-20, and a
+procrustes map's top-20 (W fit on train pairs maps a source vector
+toward its antonym). A logistic reranker re-orders the union down to
+a top-10 list using twelve signals:
 
 | Feature | Description |
 |---------|-------------|
@@ -91,6 +93,9 @@ re-orders the pool down to a top-10 list using nine signals:
 | glove_cos | Raw GloVe cosine(query, cand) |
 | morph_sim | String similarity (stem-sharing antonyms; risks inflections) |
 | max_zdiff | Largest normalised axis difference |
+| in_mlp | Candidate came from the MLP pool |
+| in_axis | Candidate came from predicted-axis inversion |
+| in_proc | Candidate came from the procrustes map |
 
 Training protocol: in each CV fold, the reranker is trained on the fold's MLP
 predictions over that fold's **training pairs only**; test pairs never enter any
@@ -167,7 +172,7 @@ Cross-validated on 1,121 WordNet antonym pairs:
 |--------|--------|--------|---------|
 | Oracle axis inversion† | 0.229±0.017 | 0.335±0.028 | 0.388±0.021 |
 | MLP classifier | 0.131±0.029 | 0.288±0.035 | 0.366±0.032 |
-| MLP + Reranker | 0.261±0.029 | 0.404±0.026 | 0.449±0.025 |
+| MLP + Reranker | 0.310±0.013 | 0.459±0.015 | 0.508±0.023 |
 
 † Oracle: selects the axis using the target word (not deployable; measures axis
   geometry alone).
@@ -178,7 +183,7 @@ validation split; single split, so no ±std):
 | Method | Hits@1 | Hits@5 | Hits@10 |
 |--------|--------|--------|---------|
 | MLP classifier | 16.6% | 30.2% | 39.6% |
-| MLP + Reranker | 20.7% | 41.4% | 45.0% |
+| MLP + Reranker | 31.4% | 45.0% | 52.7% |
 
 ### Predicting the Inversion Axis (deployable blind mode)
 
@@ -261,17 +266,20 @@ Logistic regression coefficients:
 
 | Feature | Coefficient | Interpretation |
 |---------|-------------|----------------|
-| morph_sim | +0.896 | rewards stem-sharing antonyms (unhappy-type); risks inflections |
-| mlp_rank | -0.529 | higher-ranked MLP candidates preferred |
-| max_zdiff | -0.444 | dominant-axis contrast between the pair |
-| glove_cos | -0.277 | raw-space cosine; antonyms stay close in GloVe |
-| interaction | -0.268 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
-| ica_cosine | +0.261 | positive: prefers positive ICA cosine (antonyms cluster in raw GloVe) |
-| freq_ratio | -0.217 | negative: penalises candidates much rarer than the query |
-| inv_rank | +0.028 | 1/rank bonus |
-| mlp_score | +0.027 | raw MLP probability |
+| morph_sim | +0.906 | rewards stem-sharing antonyms (unhappy-type); risks inflections |
+| in_proc | +0.741 | candidate surfaced by the procrustes map |
+| mlp_rank | -0.478 | higher-ranked MLP candidates preferred |
+| ica_cosine | +0.469 |  |
+| glove_cos | -0.464 | raw-space cosine; antonyms stay close in GloVe |
+| max_zdiff | -0.455 | dominant-axis contrast between the pair |
+| interaction | +0.074 | mlp_score × (−ica_cosine); sign flips with ica_cosine |
+| freq_ratio | -0.052 | negative: penalises candidates much rarer than the query |
+| in_mlp | -0.052 | candidate surfaced by the MLP pool |
+| in_axis | +0.042 | candidate surfaced by predicted-axis inversion |
+| mlp_score | -0.026 | raw MLP probability |
+| inv_rank | -0.007 | 1/rank bonus |
 
-The dominant signal is `morph_sim` (+0.90). The morphological
+The dominant signal is `morph_sim` (+0.91). The morphological
 similarity feature tops the ranking because many WordNet antonyms share a
 stem (unhappy, illegal, dishonest); its side effect is occasional
 inflectional false positives (king→kings). The ICA-cosine pair
@@ -283,7 +291,7 @@ related regions of the raw embedding space.
 
 ## Discussion
 
-**Informed axis inversion (0.229±0.017) vs the deployable pipeline (0.261±0.029).**
+**Informed axis inversion (0.229±0.017) vs the deployable pipeline (0.310±0.013).**
 The oracle baseline — which knows the target word and flips the single
 most-discriminative ICA axis — remains the strongest retrieval strategy on
 this space, so interpretable axis geometry carries real antonym signal.
@@ -312,6 +320,22 @@ inversion axes using the expected answer, inflating Hits@k to identical values
 blind protocols; the oracle row remains only as a stated non-deployable
 reference.
 
+**ICA features cannot separate antonyms from synonyms.** Training the
+MLP with hard negatives (GloVe neighbours of positive words) collapses
+retrieval:
+
+| Negative sampling | MLP Hits@1 | Pool-100 recall | Reranker Hits@1 |
+|-------------------|------------|-----------------|-----------------|
+| uniform (current) | 15.4% | 63.3% | 21.3% |
+| 50% hard | 1.8% | 15.4% | 10.1% |
+| all hard | 0.0% | 0.6% | 0.0% |
+
+The axis-wise features (|s1−s2|, s1⊙s2) encode *how different* two words
+are, not *in which direction* — synonyms and antonyms look alike. The
+pipeline works because uniform negatives are trivially separable; the
+antonym/synonym boundary is carried by the reranker's other signals.
+
+
 **Multi-sense limitation.** The retrieval pipeline returns one ranking per query;
 polysemous words (e.g., *light* = weight/brightness/mood) may return the antonym
 for an unintended sense. The per-axis inversion mode
@@ -321,7 +345,7 @@ opposites simultaneously.
 **Comparison with LLM-based antonym retrieval.** Large language models
 can reliably retrieve antonyms for most common words. The statistical pipeline
 here reaches
-44.9% Hits@10 on this vocabulary without requiring generation
+50.8% Hits@10 on this vocabulary without requiring generation
 or prompting infrastructure, but remains far from generation-based systems.
 
 ## Reproducibility

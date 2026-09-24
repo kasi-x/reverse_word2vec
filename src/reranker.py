@@ -16,6 +16,12 @@ Features per candidate:
   8. morph_sim   - difflib string similarity (stem-sharing antonyms like
                    unhappy score high; inflectional confusables too)
   9. max_zdiff   - max_k |s1[k]-s2[k]| / std_k (dominant-axis signature)
+ 10. in_mlp      - candidate came from the MLP pool
+ 11. in_axis     - candidate came from k-NN predicted-axis inversion
+ 12. in_proc     - candidate came from the procrustes translation map
+
+CandidateSources builds the union pool (MLP top-N ∪ axis top-M ∪
+procrustes top-M); the reranker scores every member of the union.
 
 Insight: in GloVe-100 + ICA, noise words like "householder" and "passerine"
 achieve high MLP scores and high ICA dissimilarity, but they are rare and
@@ -33,8 +39,9 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 
 from src.antonym_classifier import AntonymClassifier
-from src.eval_utils import make_folds, train_test_pairs
+from src.eval_utils import make_folds, train_test_pairs, unit_rows
 from src.ica_transformer import ICASpace
+from src.semantic_operations import SemanticOperator
 
 
 def _rank_of(candidates: list[tuple[str, float]], target: str) -> int | None:
@@ -61,7 +68,7 @@ class Reranker:
       - Return candidates sorted by reranker score
     """
 
-    N_FEATURES = 9
+    N_FEATURES = 12
 
     def __init__(self, space: ICASpace, model: KeyedVectors):
         self.space = space
@@ -88,6 +95,21 @@ class Reranker:
         # Lazily filled unit-norm GloVe vectors for the glove_cos feature
         self._glove_unit: dict[str, np.ndarray | None] = {}
 
+    FEATURE_NAMES = [
+        "mlp_score",
+        "ica_cosine",
+        "mlp_rank",
+        "freq_ratio",
+        "interaction",
+        "inv_rank",
+        "glove_cos",
+        "morph_sim",
+        "max_zdiff",
+        "in_mlp",
+        "in_axis",
+        "in_proc",
+    ]
+
     # ------------------------------------------------------------------ #
     # Feature extraction                                                   #
     # ------------------------------------------------------------------ #
@@ -98,8 +120,11 @@ class Reranker:
         candidate: str,
         mlp_rank: int,
         mlp_score: float,
+        in_mlp: int = 1,
+        in_axis: int = 0,
+        in_proc: int = 0,
     ) -> np.ndarray:
-        """Return 9-d feature vector for a (query, candidate) pair."""
+        """Return 12-d feature vector for a (query, candidate) pair."""
         q_idx = self.space.word_to_idx.get(query)
         c_idx = self.space.word_to_idx.get(candidate)
         if q_idx is None or c_idx is None:
@@ -136,6 +161,9 @@ class Reranker:
                 glove_cos,
                 morph,
                 max_zdiff,
+                float(in_mlp),
+                float(in_axis),
+                float(in_proc),
             ],
             dtype=np.float32,
         )
@@ -156,21 +184,30 @@ class Reranker:
         antonym_pairs: list[tuple[str, str]],
         classifier: AntonymClassifier,
         top_n: int = 10,
+        sources: CandidateSources | None = None,
     ) -> tuple[np.ndarray, np.ndarray]:
         """
-        Build (X, y) reranker training set from MLP predictions.
+        Build (X, y) reranker training set from candidate pools.
 
-        For each pair (w1, w2), queries MLP for top-N candidates for both
-        directions and labels the correct antonym as positive.
+        For each pair (w1, w2), builds the candidate pool for both
+        directions and labels the correct antonym as positive. With
+        `sources`, the pool is the union of MLP/axis/procrustes
+        candidates; otherwise it is MLP top-N only.
         """
         X, y = [], []
         for w1, w2 in antonym_pairs:
             for query, target in [(w1, w2), (w2, w1)]:
-                candidates = classifier.retrieve(query, top_n=top_n)
-                if not candidates:
-                    continue
-                for rank_0, (cand, score) in enumerate(candidates):
-                    feat = self._features(query, cand, rank_0 + 1, score)
+                if sources is not None:
+                    pool = sources.pool(query)
+                else:
+                    pool = [
+                        (cand, rank_0 + 1, score, 1, 0, 0)
+                        for rank_0, (cand, score) in enumerate(
+                            classifier.retrieve(query, top_n=top_n)
+                        )
+                    ]
+                for cand, mlp_rank, mlp_score, im, ia, ip in pool:
+                    feat = self._features(query, cand, mlp_rank, mlp_score, im, ia, ip)
                     X.append(feat)
                     y.append(1 if cand == target else 0)
 
@@ -187,9 +224,10 @@ class Reranker:
         antonym_pairs: list[tuple[str, str]],
         classifier: AntonymClassifier,
         top_n: int = 10,
+        sources: CandidateSources | None = None,
     ) -> Reranker:
-        """Train the reranker on MLP predictions for antonym_pairs."""
-        X, y = self._build_dataset(antonym_pairs, classifier, top_n)
+        """Train the reranker on candidate pools for antonym_pairs."""
+        X, y = self._build_dataset(antonym_pairs, classifier, top_n, sources)
         if len(np.unique(y)) < 2:
             self._passthrough = True
             self._fitted = True
@@ -202,15 +240,18 @@ class Reranker:
     def rerank(
         self,
         query: str,
-        candidates: list[tuple[str, float]],
+        candidates: list[tuple],
         top_n: int = 10,
     ) -> list[tuple[str, float]]:
         """
-        Re-rank MLP candidates for a query.
+        Re-rank candidates for a query.
 
         Args:
             query: Query word.
-            candidates: [(word, mlp_score), ...] from AntonymClassifier.retrieve().
+            candidates: either [(word, mlp_score), ...] from
+                AntonymClassifier.retrieve(), or pool rows
+                (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc)
+                from CandidateSources.pool().
             top_n: How many to return.
 
         Returns:
@@ -220,14 +261,18 @@ class Reranker:
             raise RuntimeError("Reranker not fitted. Call fit() first.")
         if not candidates:
             return []
+        rows = []
+        for rank, item in enumerate(candidates):
+            if len(item) == 2:
+                cand, score = item
+                rows.append((cand, rank + 1, score, 1, 0, 0))
+            else:
+                rows.append(item)
         if self._passthrough:
-            return candidates[:top_n]
+            return [(r[0], r[2]) for r in rows[:top_n]]
 
         feats = np.array(
-            [
-                self._features(query, cand, rank + 1, score)
-                for rank, (cand, score) in enumerate(candidates)
-            ],
+            [self._features(query, *row) for row in rows],
             dtype=np.float32,
         )
         feats_scaled = self.scaler.transform(feats)
@@ -236,26 +281,15 @@ class Reranker:
         ranked = np.argsort(scores)[::-1]
         result = []
         for idx in ranked[:top_n]:
-            result.append((candidates[idx][0], float(scores[idx])))
+            result.append((rows[idx][0], float(scores[idx])))
         return result
 
     def feature_weights(self) -> dict:
         """Return feature name -> coefficient mapping."""
         if not self._fitted or self._passthrough:
             return {}
-        names = [
-            "mlp_score",
-            "ica_cosine",
-            "mlp_rank",
-            "freq_ratio",
-            "interaction",
-            "inv_rank",
-            "glove_cos",
-            "morph_sim",
-            "max_zdiff",
-        ]
         coefs = self.clf.coef_[0]
-        return dict(zip(names, coefs.tolist(), strict=False))
+        return dict(zip(self.FEATURE_NAMES, coefs.tolist(), strict=True))
 
     # ------------------------------------------------------------------ #
     # Cross-validation                                                     #
@@ -268,6 +302,7 @@ class Reranker:
         top_n: int = 10,
         mlp_top_n: int = 10,
         neg_ratio: float = 3.0,
+        aux_top_n: int = 20,
     ) -> dict:
         """
         Full pipeline 5-fold CV: train MLP + reranker on 4/5, eval on 1/5.
@@ -292,9 +327,12 @@ class Reranker:
             fold_mlp = AntonymClassifier(self.space, "mlp")
             fold_mlp.fit(train_pairs, neg_ratio, rng)
 
-            # Train reranker on same training set using fold's MLP
+            # Train reranker on same training set using fold's MLP +
+            # fold-local candidate sources (axis predictor + procrustes)
+            fold_sources = CandidateSources(self.space, self.model)
+            fold_sources.fit(train_pairs, fold_mlp, mlp_top_n, aux_top_n)
             fold_reranker = Reranker(self.space, self.model)
-            fold_reranker.fit(train_pairs, fold_mlp, mlp_top_n)
+            fold_reranker.fit(train_pairs, fold_mlp, mlp_top_n, fold_sources)
 
             # Evaluate on test pairs: MLP only vs MLP + reranker
             mlp_hits = {1: 0, 5: 0, 10: 0}
@@ -311,7 +349,8 @@ class Reranker:
                     rank = _rank_of(cands[:top_n], tgt)
                     if rank is not None and (best["mlp"] is None or rank < best["mlp"]):
                         best["mlp"] = rank
-                    reranked = fold_reranker.rerank(src, cands[:mlp_top_n], top_n=top_n)
+                    pool = fold_sources.pool(src)
+                    reranked = fold_reranker.rerank(src, pool, top_n=top_n)
                     rank = _rank_of(reranked, tgt)
                     if rank is not None and (best["rer"] is None or rank < best["rer"]):
                         best["rer"] = rank
@@ -344,3 +383,123 @@ class Reranker:
             "total_pairs": len(valid_pairs),
             "metrics": agg,
         }
+
+
+class CandidateSources:
+    """
+    Builds the union candidate pool for a query:
+
+      MLP top-N  ∪  k-NN predicted-axis inversion top-M  ∪  procrustes top-M
+
+    - Axis predictor: the query's nearest neighbour among TRAIN source
+      words in ICA space votes for the axis (deployable — no target needed).
+    - Procrustes map: W fit by least squares on train pairs maps a source
+      GloVe vector toward its antonym's vector; nearest neighbours of
+      W·v(query) are candidates.
+
+    Both are fit on training pairs only, so CV stays leak-free.
+    """
+
+    def __init__(self, space: ICASpace, model: KeyedVectors):
+        self.space = space
+        self.model = model
+        self._operator = SemanticOperator(model, space)
+        self._axis_std = np.maximum(np.std(space.S, axis=0), 1e-8)
+        S = space.S.astype(np.float64)
+        self._S_norm = S / np.maximum(np.linalg.norm(S, axis=1, keepdims=True), 1e-10)
+        self._fitted = False
+
+    def fit(
+        self,
+        train_pairs: list[tuple[str, str]],
+        classifier: AntonymClassifier,
+        mlp_top_n: int = 100,
+        aux_top_n: int = 20,
+    ) -> CandidateSources:
+        """Fit axis predictor + procrustes map on training pairs."""
+        self.classifier = classifier
+        self.mlp_top_n = mlp_top_n
+        self.aux_top_n = aux_top_n
+
+        # --- k-NN axis predictor (k=1 vote over train source words)
+        src_words, src_axes = [], []
+        for a, b in train_pairs:
+            for src, tgt in [(a, b), (b, a)]:
+                s1, s2 = self.space.score(src), self.space.score(tgt)
+                if s1 is None or s2 is None:
+                    continue
+                src_words.append(src)
+                src_axes.append(int(np.argmax(np.abs(s1 - s2) / self._axis_std)))
+        self._src_axes = src_axes
+        self._src_vecs = self._S_norm[np.array([self.space.word_to_idx[w] for w in src_words])]
+
+        # --- Procrustes map on raw GloVe (both directions)
+        src_v, tgt_v = [], []
+        for a, b in train_pairs:
+            if a in self.model and b in self.model:
+                src_v.append(self.model[a])
+                tgt_v.append(self.model[b])
+                src_v.append(self.model[b])
+                tgt_v.append(self.model[a])
+        X = unit_rows(np.array(src_v, dtype=np.float64))
+        Y = unit_rows(np.array(tgt_v, dtype=np.float64))
+        self._W, *_ = np.linalg.lstsq(X.T @ X, X.T @ Y, rcond=None)
+
+        # Candidate vocabulary: GloVe top-50k ∩ ICA vocab
+        self._glove_pool = [
+            w for w in self.model.index_to_key[:50000] if w in self.space.word_to_idx
+        ]
+        self._G = unit_rows(np.array([self.model[w] for w in self._glove_pool], dtype=np.float64))
+        self._fitted = True
+        return self
+
+    def _predict_axis(self, query: str) -> int:
+        q_idx = self.space.word_to_idx[query]
+        sims = self._src_vecs @ self._S_norm[q_idx]
+        return self._src_axes[int(np.argmax(sims))]
+
+    def axis_candidates(self, query: str) -> list[str]:
+        """Top-M words from inverting the predicted axis."""
+        ax = self._predict_axis(query)
+        return [nb.word for nb in self._operator.axis_invert(query, ax, top_n=self.aux_top_n)]
+
+    def proc_candidates(self, query: str) -> list[str]:
+        """Top-M words nearest to W·v(query) in raw GloVe."""
+        if query not in self.model:
+            return []
+        q = self.model[query].astype(np.float64)
+        q = q / max(np.linalg.norm(q), 1e-10)
+        pred = q @ self._W
+        pred = pred / max(np.linalg.norm(pred), 1e-10)
+        sims = self._G @ pred
+        out = []
+        for i in np.argsort(sims)[::-1]:
+            w = self._glove_pool[i]
+            if w != query:
+                out.append(w)
+            if len(out) >= self.aux_top_n:
+                break
+        return out
+
+    def pool(self, query: str) -> list[tuple[str, int, float, int, int, int]]:
+        """
+        Union pool rows: (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc).
+
+        Non-MLP members get mlp_rank = mlp_top_n + 1 and mlp_score = 0.
+        """
+        if not self._fitted:
+            raise RuntimeError("CandidateSources not fitted. Call fit() first.")
+        pool: dict[str, list] = {}
+        for r, (w, s) in enumerate(self.classifier.retrieve(query, top_n=self.mlp_top_n)):
+            pool[w] = [r + 1, s, 1, 0, 0]
+        for w in self.axis_candidates(query):
+            if w in pool:
+                pool[w][3] = 1
+            else:
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 1, 0]
+        for w in self.proc_candidates(query):
+            if w in pool:
+                pool[w][4] = 1
+            else:
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 1]
+        return [(w, *v) for w, v in pool.items()]
