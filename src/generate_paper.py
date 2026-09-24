@@ -19,6 +19,7 @@ RESULT_FILES = [
     "leakfree_comparison.json",
     "counterfit_separation.json",
     "ica_space.json",
+    "exp_axis_prediction.json",
 ]
 
 
@@ -85,6 +86,7 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     leakfree = load_json(f"{results_dir}/leakfree_comparison.json")
     separation = load_json(f"{results_dir}/counterfit_separation.json")
     ica_meta = (load_json(f"{results_dir}/ica_space.json") or {}).get("meta", {})
+    axis_pred = load_json(f"{results_dir}/exp_axis_prediction.json")
 
     warnings: list[str] = []
     for name in RESULT_FILES:
@@ -269,18 +271,21 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w()
     w("### Reranker")
     w()
-    w("The MLP retrieves a top-10 candidate list but ranks noise words (rare vocabulary")
+    w("The MLP retrieves a top-100 candidate pool but ranks noise words (rare vocabulary")
     w("items with extreme ICA scores) among the true antonyms. A logistic reranker")
-    w("re-orders candidates using six signals:")
+    w("re-orders the pool down to a top-10 list using nine signals:")
     w()
     w("| Feature | Description |")
     w("|---------|-------------|")
     w("| mlp_score | MLP P(antonym) |")
     w("| ica_cosine | Cosine of ICA score vectors |")
-    w("| mlp_rank | Position in MLP list (1–10) |")
+    w("| mlp_rank | Position in MLP list |")
     w("| freq_ratio | cand_rank / query_rank (proxy for rarity) |")
     w("| interaction | mlp_score × (−ica_cosine) |")
     w("| inv_rank | 1 / mlp_rank |")
+    w("| glove_cos | Raw GloVe cosine(query, cand) |")
+    w("| morph_sim | String similarity (stem-sharing antonyms; risks inflections) |")
+    w("| max_zdiff | Largest normalised axis difference |")
     w()
     w("Training protocol: in each CV fold, the reranker is trained on the fold's MLP")
     w("predictions over that fold's **training pairs only**; test pairs never enter any")
@@ -403,6 +408,26 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
             w(_hits_row_flat("MLP + Reranker", holdout.get("reranker")))
             w()
 
+    if axis_pred and "summary" in axis_pred:
+        w("### Predicting the Inversion Axis (deployable blind mode)")
+        w()
+        w("Blind axis inversion needs to choose *which* axis to flip without seeing")
+        w("the target. The naive choice — the source word's highest-|z| axis — is")
+        w("weak. We test a deployable predictor: find the query's nearest neighbours")
+        w("among training source words in ICA space and vote for their oracle axes")
+        w("(similarity-weighted, k=1). 5-fold CV over the same WordNet pairs:")
+        w()
+        w("| Axis selection | Hits@1 | Hits@5 | Hits@10 |")
+        w("|----------------|--------|--------|---------|")
+        ap = axis_pred["summary"]
+        w(_hits_row("Auto (source top-|z| axis)", ap.get("auto")))
+        w(_hits_row("k-NN axis prediction (k=1)", ap.get("knn1")))
+        w(_hits_row("Oracle axis (upper bound)", ap.get("oracle")))
+        w()
+        w("The predicted axis roughly doubles blind Hits@1 and reaches ~75% of the")
+        w("oracle — antonym axes are predictable from a word's ICA neighbourhood.")
+        w()
+
     if analogy:
         w("### Google Analogy Dataset")
         w()
@@ -493,6 +518,9 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
             "mlp_rank": "higher-ranked MLP candidates preferred",
             "inv_rank": "1/rank bonus",
             "mlp_score": "raw MLP probability",
+            "glove_cos": "raw-space cosine; antonyms stay close in GloVe",
+            "morph_sim": "rewards stem-sharing antonyms (unhappy-type); risks inflections",
+            "max_zdiff": "dominant-axis contrast between the pair",
         }
         for feat, coef in sorted(weights.items(), key=lambda x: abs(x[1]), reverse=True):
             interp = interpretations.get(feat, "")
@@ -500,12 +528,15 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
         w()
         if weights:
             dom_feat, dom_coef = max(weights.items(), key=lambda x: abs(x[1]))
-            w(f"The dominant signal is `{dom_feat}` ({dom_coef:+.2f}). On the raw space the")
-            w("strongest reranker signals are the ICA-cosine pair (`ica_cosine` and its")
-            w("`interaction` with the MLP score) together with the rarity penalty")
-            w("(`freq_ratio`): rare vocabulary items with extreme ICA scores attract high")
-            w("MLP scores, and the reranker suppresses them while exploiting the fact")
-            w("that antonyms sit in related regions of the raw embedding space.")
+            w(f"The dominant signal is `{dom_feat}` ({dom_coef:+.2f}). The morphological")
+            w("similarity feature tops the ranking because many WordNet antonyms share a")
+            w("stem (unhappy, illegal, dishonest); its side effect is occasional")
+            w("inflectional false positives (king→kings). The ICA-cosine pair")
+            w("(`ica_cosine` and its `interaction` with the MLP score) together with the")
+            w("rarity penalty (`freq_ratio`) remain the main geometric signals: rare")
+            w("vocabulary items with extreme ICA scores attract high MLP scores, and the")
+            w("reranker suppresses them while exploiting the fact that antonyms sit in")
+            w("related regions of the raw embedding space.")
             w()
 
     # ------------------------------------------------------------------ #
@@ -520,10 +551,12 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("most-discriminative ICA axis — remains the strongest retrieval strategy on")
     w("this space, so interpretable axis geometry carries real antonym signal.")
     w("It is not deployable, however: without the target, blind axis selection")
-    w("performs poorly (qualitative table). The MLP classifier avoids reconstruction")
-    w("and needs no oracle, and the reranker adds a consistent gain over the MLP")
-    w("alone; closing the gap to informed inversion without oracle knowledge is")
-    w("open future work.")
+    w("performs poorly (qualitative table). The k-NN axis predictor recovers much")
+    w("of that gap — voting over the oracle axes of ICA-space neighbours roughly")
+    w("doubles blind Hits@1 — but still trails the oracle. The MLP classifier")
+    w("avoids reconstruction and needs no oracle, and the reranker adds a")
+    w("consistent gain over the MLP alone; closing the remaining gap to informed")
+    w("inversion without oracle knowledge is open future work.")
     w()
     w("**Counter-fitting was rejected.** The initial hypothesis was that pushing antonym")
     w("vectors apart (Mrkšić et al., 2016) is a prerequisite for antonym retrieval, since")

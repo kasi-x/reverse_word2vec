@@ -61,9 +61,13 @@ def main():
     print("  MLP trained.")
 
     # ── Train reranker on val set ─────────────────────────────────────
-    print("\nTraining reranker on val set (using MLP predictions)...")
+    # Pool depth 100: MLP top-100 candidates are reranked down to top-10.
+    # Deeper pools raise recall (pool-100 covers ~62% of targets vs ~40%
+    # at top-10) and the extended features recover precision.
+    POOL_N = 100
+    print(f"\nTraining reranker on val set (pool={POOL_N}, using MLP predictions)...")
     reranker = Reranker(space, model)
-    reranker.fit(val_pairs, mlp, top_n=10)
+    reranker.fit(val_pairs, mlp, top_n=POOL_N)
     print("  Reranker trained.")
     weights = reranker.feature_weights()
     print("  Feature weights:")
@@ -77,7 +81,7 @@ def main():
         return [w for w, _ in mlp.retrieve(src, top_n=TOP_N)]
 
     def fn_reranker(src):
-        cands = mlp.retrieve(src, top_n=TOP_N)
+        cands = mlp.retrieve(src, top_n=POOL_N)
         return [w for w, _ in reranker.rerank(src, cands, top_n=TOP_N)]
 
     print(f"\nEvaluating on {len(test_pairs)} test pairs...")
@@ -94,7 +98,7 @@ def main():
     # ── Full 5-fold CV of complete pipeline ───────────────────────────
     print("\nRunning 5-fold CV of full pipeline (MLP + reranker)...")
     cv_reranker = Reranker(space, model)
-    cv_results = cv_reranker.cross_validate(valid_pairs, n_folds=5, top_n=10, mlp_top_n=10)
+    cv_results = cv_reranker.cross_validate(valid_pairs, n_folds=5, top_n=10, mlp_top_n=POOL_N)
 
     print("\n5-fold CV results:")
     print(f"{'=' * 55}")

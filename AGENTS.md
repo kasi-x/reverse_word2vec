@@ -11,8 +11,8 @@ axes (gender, sentiment, temperature, ...). Two retrieval approaches are studied
 1. **Axis inversion** — negate a word's score on a semantic axis, reconstruct, and
    take the nearest neighbour (weak on its own; see paper).
 2. **MLP + reranker (deployable pipeline)** — an MLP classifier scores antonymy from axis-wise
-   pair features `(|s1−s2| ∥ s1⊙s2)`; a logistic reranker re-orders the top-10
-   using ICA cosine, word frequency, and MLP rank signals.
+   pair features `(|s1−s2| ∥ s1⊙s2)`; a logistic reranker re-orders the MLP's top-100
+   pool down to top-10 using ICA cosine, word frequency, morphology, and MLP rank signals.
 
 Counter-fitting (Mrkšić et al., 2016) was investigated and **rejected**: a global
 fit leaks antonym labels into the space, and a leak-free per-fold fit collapses
@@ -69,9 +69,8 @@ pixi run python run_pipeline.py --relabel     # relabel axes on cached space
 |---|---|
 |`src/ica_transformer.py`|ICA core: fit, transform, reconstruct, save/load with provenance metadata|
 |`src/axis_labeler.py`|Automatic axis labeling using WordNet antonym pairs + category seeds|
-|`src/semantic_operations.py`|Axis inversion (single/multi/label-group/source-topk), NN search, analogy|
+|`src/reranker.py`|Logistic reranker over MLP candidates (9 signals) + full-pipeline CV|
 |`src/antonym_classifier.py`|MLP/logistic antonymy classifier on ICA pair features|
-|`src/reranker.py`|Logistic reranker over MLP candidates (6 signals) + full-pipeline CV|
 |`src/counter_fitting.py`|Mrkšić et al. counter-fitting (experimental; see CF rejection note)|
 |`src/qualitative_eval.py`|Canonical cases (king→queen, ...); blind (primary) + oracle protocols|
 |`src/quantitative_eval.py`|Oracle axis-inversion 5-fold CV + Google Analogy eval|
@@ -107,9 +106,9 @@ Phase 2/3 - Evaluation:
   - Quantitative: oracle axis-inversion 5-fold CV; Google analogy dataset
 
 Retrieval eval (scripts/eval_reranker.py):
-  GloVe-100 -> ICA scores -> MLP on (|s1-s2|, s1*s2) -> top-10 candidates
+  GloVe-100 -> ICA scores -> MLP on (|s1-s2|, s1*s2) -> top-100 candidate pool
   -> logistic reranker (mlp_score, ica_cosine, mlp_rank, freq_ratio,
-     interaction, inv_rank) -> Hits@{1,5,10}
+     interaction, inv_rank, glove_cos, morph_sim, max_zdiff) -> Hits@{1,5,10}
 ```
 
 ### Data Flow

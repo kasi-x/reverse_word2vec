@@ -7,11 +7,15 @@ additional signals that filter out noise (rare/irrelevant words).
 Features per candidate:
   1. mlp_score   - MLP P(antonym) probability
   2. ica_cosine  - cosine similarity in ICA score space
-  3. mlp_rank    - position in MLP ranking (1-10)
+  3. mlp_rank    - position in MLP ranking
   4. freq_ratio  - candidate_vocab_rank / query_vocab_rank
                    (large → candidate is rarer than query → likely noise)
   5. interaction - mlp_score * (-ica_cosine)  (high when prob high AND cosine negative)
   6. inv_rank    - 1 / mlp_rank
+  7. glove_cos   - raw GloVe cosine(query, cand)
+  8. morph_sim   - difflib string similarity (stem-sharing antonyms like
+                   unhappy score high; inflectional confusables too)
+  9. max_zdiff   - max_k |s1[k]-s2[k]| / std_k (dominant-axis signature)
 
 Insight: in GloVe-100 + ICA, noise words like "householder" and "passerine"
 achieve high MLP scores and high ICA dissimilarity, but they are rare and
@@ -20,6 +24,8 @@ effectively filters them out.
 """
 
 from __future__ import annotations
+
+from difflib import SequenceMatcher
 
 import numpy as np
 from gensim.models import KeyedVectors
@@ -47,7 +53,7 @@ class Reranker:
       For each training pair (w1, w2):
         - Get MLP's top-10 candidates for w1 (and w2)
         - Label each candidate as 1 (== correct antonym) or 0
-        - Fit a logistic regression over the 6-dimensional feature vector
+        - Fit a logistic regression over the 9-dimensional feature vector
 
     Inference:
       - Get MLP top-N candidates
@@ -55,7 +61,7 @@ class Reranker:
       - Return candidates sorted by reranker score
     """
 
-    N_FEATURES = 6
+    N_FEATURES = 9
 
     def __init__(self, space: ICASpace, model: KeyedVectors):
         self.space = space
@@ -78,6 +84,10 @@ class Reranker:
         self._vocab_rank: dict[str, int] = model.key_to_index
         self._oov_rank = len(model.key_to_index)
 
+        self._axis_std = np.maximum(np.std(space.S, axis=0), 1e-8)
+        # Lazily filled unit-norm GloVe vectors for the glove_cos feature
+        self._glove_unit: dict[str, np.ndarray | None] = {}
+
     # ------------------------------------------------------------------ #
     # Feature extraction                                                   #
     # ------------------------------------------------------------------ #
@@ -89,7 +99,7 @@ class Reranker:
         mlp_rank: int,
         mlp_score: float,
     ) -> np.ndarray:
-        """Return 6-d feature vector for a (query, candidate) pair."""
+        """Return 9-d feature vector for a (query, candidate) pair."""
         q_idx = self.space.word_to_idx.get(query)
         c_idx = self.space.word_to_idx.get(candidate)
         if q_idx is None or c_idx is None:
@@ -106,10 +116,40 @@ class Reranker:
         inv_rank = 1.0 / mlp_rank
         interaction = mlp_score * (-ica_cosine)
 
+        # Extended signals
+        s1 = self.space.S[q_idx]
+        s2 = self.space.S[c_idx]
+        max_zdiff = float(np.max(np.abs(s1 - s2) / self._axis_std))
+        g1 = self._glove_vec(query)
+        g2 = self._glove_vec(candidate)
+        glove_cos = float(g1 @ g2) if g1 is not None and g2 is not None else 0.0
+        morph = SequenceMatcher(None, query, candidate).ratio()
+
         return np.array(
-            [mlp_score, ica_cosine, float(mlp_rank), freq_ratio, interaction, inv_rank],
+            [
+                mlp_score,
+                ica_cosine,
+                float(mlp_rank),
+                freq_ratio,
+                interaction,
+                inv_rank,
+                glove_cos,
+                morph,
+                max_zdiff,
+            ],
             dtype=np.float32,
         )
+
+    def _glove_vec(self, word: str) -> np.ndarray | None:
+        """Unit-norm raw GloVe vector, cached; None for OOV."""
+        if word not in self._glove_unit:
+            if word not in self.model:
+                self._glove_unit[word] = None
+            else:
+                v = self.model[word].astype(np.float64)
+                n = np.linalg.norm(v)
+                self._glove_unit[word] = v / n if n > 0 else None
+        return self._glove_unit[word]
 
     def _build_dataset(
         self,
@@ -203,7 +243,17 @@ class Reranker:
         """Return feature name -> coefficient mapping."""
         if not self._fitted or self._passthrough:
             return {}
-        names = ["mlp_score", "ica_cosine", "mlp_rank", "freq_ratio", "interaction", "inv_rank"]
+        names = [
+            "mlp_score",
+            "ica_cosine",
+            "mlp_rank",
+            "freq_ratio",
+            "interaction",
+            "inv_rank",
+            "glove_cos",
+            "morph_sim",
+            "max_zdiff",
+        ]
         coefs = self.clf.coef_[0]
         return dict(zip(names, coefs.tolist(), strict=False))
 

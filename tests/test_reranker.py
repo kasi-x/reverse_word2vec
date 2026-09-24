@@ -24,7 +24,7 @@ def fitted_reranker(toy_space, toy_model):
     return reranker, clf
 
 
-def test_fit_exposes_six_feature_weights(fitted_reranker):
+def test_fit_exposes_nine_feature_weights(fitted_reranker):
     reranker, _ = fitted_reranker
     weights = reranker.feature_weights()
     assert set(weights) == {
@@ -34,6 +34,9 @@ def test_fit_exposes_six_feature_weights(fitted_reranker):
         "freq_ratio",
         "interaction",
         "inv_rank",
+        "glove_cos",
+        "morph_sim",
+        "max_zdiff",
     }
 
 
