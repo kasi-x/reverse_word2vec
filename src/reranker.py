@@ -68,7 +68,7 @@ class Reranker:
       - Return candidates sorted by reranker score
     """
 
-    N_FEATURES = 12
+    N_FEATURES = 14
 
     def __init__(self, space: ICASpace, model: KeyedVectors):
         self.space = space
@@ -109,6 +109,7 @@ class Reranker:
         "in_axis",
         "in_proc",
         "in_ica_map",
+        "in_morph",
     ]
 
     # ------------------------------------------------------------------ #
@@ -125,8 +126,9 @@ class Reranker:
         in_axis: int = 0,
         in_proc: int = 0,
         in_ica_map: int = 0,
+        in_morph: int = 0,
     ) -> np.ndarray:
-        """Return 13-d feature vector for a (query, candidate) pair."""
+        """Return 14-d feature vector for a (query, candidate) pair."""
         q_idx = self.space.word_to_idx.get(query)
         c_idx = self.space.word_to_idx.get(candidate)
         if q_idx is None or c_idx is None:
@@ -167,6 +169,7 @@ class Reranker:
                 float(in_axis),
                 float(in_proc),
                 float(in_ica_map),
+                float(in_morph),
             ],
             dtype=np.float32,
         )
@@ -204,13 +207,13 @@ class Reranker:
                     pool = sources.pool(query)
                 else:
                     pool = [
-                        (cand, rank_0 + 1, score, 1, 0, 0, 0)
+                        (cand, rank_0 + 1, score, 1, 0, 0, 0, 0)
                         for rank_0, (cand, score) in enumerate(
                             classifier.retrieve(query, top_n=top_n)
                         )
                     ]
-                for cand, mlp_rank, mlp_score, im, ia, ip, ic in pool:
-                    feat = self._features(query, cand, mlp_rank, mlp_score, im, ia, ip, ic)
+                for cand, mlp_rank, mlp_score, im, ia, ip, ic, imo in pool:
+                    feat = self._features(query, cand, mlp_rank, mlp_score, im, ia, ip, ic, imo)
                     X.append(feat)
                     y.append(1 if cand == target else 0)
 
@@ -253,7 +256,7 @@ class Reranker:
             query: Query word.
             candidates: either [(word, mlp_score), ...] from
                 AntonymClassifier.retrieve(), or pool rows
-                (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc, in_ica_map)
+                (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc, in_ica_map, in_morph)
                 from CandidateSources.pool().
             top_n: How many to return.
 
@@ -268,7 +271,7 @@ class Reranker:
         for rank, item in enumerate(candidates):
             if len(item) == 2:
                 cand, score = item
-                rows.append((cand, rank + 1, score, 1, 0, 0, 0))
+                rows.append((cand, rank + 1, score, 1, 0, 0, 0, 0))
             else:
                 rows.append(item)
         if self._passthrough:
@@ -399,7 +402,7 @@ class CandidateSources:
     Builds the union candidate pool for a query:
 
       MLP top-N  ∪  k-NN predicted-axis inversion top-M  ∪  procrustes top-M
-      ∪  ICA-score translation map top-M
+      ∪  ICA-score translation map top-M  ∪  morphological transforms
 
     - Axis predictor: the query's nearest neighbour among TRAIN source
       words in ICA space votes for the axis (deployable — no target needed).
@@ -410,7 +413,8 @@ class CandidateSources:
       ICA score vector toward its antonym's; nearest neighbours of
       s(query)·W_ica in score space are candidates.
 
-    All three are fit on training pairs only, so CV stays leak-free.
+    - Morphological: prefix transforms (un-/in-/dis-/...) generate
+      vocabulary candidates directly — no model needed.
     """
 
     def __init__(self, space: ICASpace, model: KeyedVectors):
@@ -524,10 +528,40 @@ class CandidateSources:
                 break
         return out
 
-    def pool(self, query: str) -> list[tuple[str, int, float, int, int, int, int]]:
+    # Antonym-forming prefixes; "re-" excluded (re-do ≠ undo antonym).
+    _MORPH_PREFIXES = (
+        "un",
+        "in",
+        "im",
+        "il",
+        "ir",
+        "dis",
+        "non",
+        "anti",
+        "de",
+        "mis",
+        "over",
+        "under",
+        "counter",
+    )
+
+    def morph_candidates(self, query: str) -> list[str]:
+        """Vocabulary words reachable by adding/stripping an antonym prefix."""
+        out: list[str] = []
+        for p in self._MORPH_PREFIXES:
+            if query.startswith(p) and len(query) > len(p) + 2:
+                stem = query[len(p) :]
+                if stem in self.space.word_to_idx:
+                    out.append(stem)
+            cand = p + query
+            if cand in self.space.word_to_idx:
+                out.append(cand)
+        return out
+
+    def pool(self, query: str) -> list[tuple[str, int, float, int, int, int, int, int]]:
         """
         Union pool rows: (word, mlp_rank, mlp_score, in_mlp, in_axis,
-        in_proc, in_ica_map).
+        in_proc, in_ica_map, in_morph).
 
         Non-MLP members get mlp_rank = mlp_top_n + 1 and mlp_score = 0.
         """
@@ -535,20 +569,25 @@ class CandidateSources:
             raise RuntimeError("CandidateSources not fitted. Call fit() first.")
         pool: dict[str, list] = {}
         for r, (w, s) in enumerate(self.classifier.retrieve(query, top_n=self.mlp_top_n)):
-            pool[w] = [r + 1, s, 1, 0, 0, 0]
+            pool[w] = [r + 1, s, 1, 0, 0, 0, 0]
         for w in self.axis_candidates(query):
             if w in pool:
                 pool[w][3] = 1
             else:
-                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 1, 0, 0]
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 1, 0, 0, 0]
         for w in self.proc_candidates(query):
             if w in pool:
                 pool[w][4] = 1
             else:
-                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 1, 0]
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 1, 0, 0]
         for w in self.ica_map_candidates(query):
             if w in pool:
                 pool[w][5] = 1
             else:
-                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 0, 1]
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 0, 1, 0]
+        for w in self.morph_candidates(query):
+            if w in pool:
+                pool[w][6] = 1
+            else:
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 0, 0, 1]
         return [(w, *v) for w, v in pool.items()]
