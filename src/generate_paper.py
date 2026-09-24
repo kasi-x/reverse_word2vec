@@ -273,11 +273,12 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w()
     w("### Reranker")
     w()
-    w("Three complementary retrievers build a union candidate pool:")
-    w("the MLP's top-100, the k-NN predicted-axis inversion's top-20, and a")
-    w("procrustes map's top-20 (W fit on train pairs maps a source vector")
-    w("toward its antonym). A logistic reranker re-orders the union down to")
-    w("a top-10 list using twelve signals:")
+    w("Four complementary retrievers build a union candidate pool:")
+    w("the MLP's top-100, the k-NN predicted-axis inversion's top-20, a")
+    w("procrustes map's top-20 (W fit on train pairs maps a source GloVe")
+    w("vector toward its antonym), and an ICA-score translation map's top-20")
+    w("(W_ica maps s(src) toward s(tgt) in score space). A logistic reranker")
+    w("re-orders the union down to a top-10 list using thirteen signals:")
     w()
     w("| Feature | Description |")
     w("|---------|-------------|")
@@ -293,6 +294,7 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     w("| in_mlp | Candidate came from the MLP pool |")
     w("| in_axis | Candidate came from predicted-axis inversion |")
     w("| in_proc | Candidate came from the procrustes map |")
+    w("| in_ica_map | Candidate came from the ICA-score map |")
     w()
     w("Training protocol: in each CV fold, the reranker is trained on the fold's MLP")
     w("predictions over that fold's **training pairs only**; test pairs never enter any")
@@ -520,10 +522,7 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
         w("|---------|-------------|----------------|")
         interpretations = {
             "freq_ratio": "negative: penalises candidates much rarer than the query",
-            "max_zdiff": "dominant-axis contrast between the pair",
-            "in_mlp": "candidate surfaced by the MLP pool",
-            "in_axis": "candidate surfaced by predicted-axis inversion",
-            "in_proc": "candidate surfaced by the procrustes map",
+            "ica_cosine": "positive: prefers positive ICA cosine (antonyms cluster in raw GloVe)",
             "interaction": "mlp_score × (−ica_cosine); sign flips with ica_cosine",
             "mlp_rank": "higher-ranked MLP candidates preferred",
             "inv_rank": "1/rank bonus",
@@ -531,6 +530,10 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
             "glove_cos": "raw-space cosine; antonyms stay close in GloVe",
             "morph_sim": "rewards stem-sharing antonyms (unhappy-type); risks inflections",
             "max_zdiff": "dominant-axis contrast between the pair",
+            "in_mlp": "candidate surfaced by the MLP pool",
+            "in_axis": "candidate surfaced by predicted-axis inversion",
+            "in_proc": "candidate surfaced by the procrustes map",
+            "in_ica_map": "candidate surfaced by the ICA-score map",
         }
         for feat, coef in sorted(weights.items(), key=lambda x: abs(x[1]), reverse=True):
             interp = interpretations.get(feat, "")

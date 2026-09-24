@@ -108,6 +108,7 @@ class Reranker:
         "in_mlp",
         "in_axis",
         "in_proc",
+        "in_ica_map",
     ]
 
     # ------------------------------------------------------------------ #
@@ -123,8 +124,9 @@ class Reranker:
         in_mlp: int = 1,
         in_axis: int = 0,
         in_proc: int = 0,
+        in_ica_map: int = 0,
     ) -> np.ndarray:
-        """Return 12-d feature vector for a (query, candidate) pair."""
+        """Return 13-d feature vector for a (query, candidate) pair."""
         q_idx = self.space.word_to_idx.get(query)
         c_idx = self.space.word_to_idx.get(candidate)
         if q_idx is None or c_idx is None:
@@ -164,6 +166,7 @@ class Reranker:
                 float(in_mlp),
                 float(in_axis),
                 float(in_proc),
+                float(in_ica_map),
             ],
             dtype=np.float32,
         )
@@ -201,13 +204,13 @@ class Reranker:
                     pool = sources.pool(query)
                 else:
                     pool = [
-                        (cand, rank_0 + 1, score, 1, 0, 0)
+                        (cand, rank_0 + 1, score, 1, 0, 0, 0)
                         for rank_0, (cand, score) in enumerate(
                             classifier.retrieve(query, top_n=top_n)
                         )
                     ]
-                for cand, mlp_rank, mlp_score, im, ia, ip in pool:
-                    feat = self._features(query, cand, mlp_rank, mlp_score, im, ia, ip)
+                for cand, mlp_rank, mlp_score, im, ia, ip, ic in pool:
+                    feat = self._features(query, cand, mlp_rank, mlp_score, im, ia, ip, ic)
                     X.append(feat)
                     y.append(1 if cand == target else 0)
 
@@ -250,7 +253,7 @@ class Reranker:
             query: Query word.
             candidates: either [(word, mlp_score), ...] from
                 AntonymClassifier.retrieve(), or pool rows
-                (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc)
+                (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc, in_ica_map)
                 from CandidateSources.pool().
             top_n: How many to return.
 
@@ -265,7 +268,7 @@ class Reranker:
         for rank, item in enumerate(candidates):
             if len(item) == 2:
                 cand, score = item
-                rows.append((cand, rank + 1, score, 1, 0, 0))
+                rows.append((cand, rank + 1, score, 1, 0, 0, 0))
             else:
                 rows.append(item)
         if self._passthrough:
@@ -390,14 +393,18 @@ class CandidateSources:
     Builds the union candidate pool for a query:
 
       MLP top-N  ∪  k-NN predicted-axis inversion top-M  ∪  procrustes top-M
+      ∪  ICA-score translation map top-M
 
     - Axis predictor: the query's nearest neighbour among TRAIN source
       words in ICA space votes for the axis (deployable — no target needed).
     - Procrustes map: W fit by least squares on train pairs maps a source
       GloVe vector toward its antonym's vector; nearest neighbours of
       W·v(query) are candidates.
+    - ICA map: W_ica fit by least squares on train pairs maps a source
+      ICA score vector toward its antonym's; nearest neighbours of
+      s(query)·W_ica in score space are candidates.
 
-    Both are fit on training pairs only, so CV stays leak-free.
+    All three are fit on training pairs only, so CV stays leak-free.
     """
 
     def __init__(self, space: ICASpace, model: KeyedVectors):
@@ -445,6 +452,19 @@ class CandidateSources:
         Y = unit_rows(np.array(tgt_v, dtype=np.float64))
         self._W, *_ = np.linalg.lstsq(X.T @ X, X.T @ Y, rcond=None)
 
+        # --- ICA-score translation map (both directions)
+        ica_src, ica_tgt = [], []
+        for a, b in train_pairs:
+            s_a, s_b = self.space.score(a), self.space.score(b)
+            if s_a is not None and s_b is not None:
+                ica_src.append(s_a)
+                ica_tgt.append(s_b)
+                ica_src.append(s_b)
+                ica_tgt.append(s_a)
+        Xi = np.array(ica_src, dtype=np.float64)
+        Yi = np.array(ica_tgt, dtype=np.float64)
+        self._W_ica, *_ = np.linalg.lstsq(Xi.T @ Xi, Xi.T @ Yi, rcond=None)
+
         # Candidate vocabulary: GloVe top-50k ∩ ICA vocab
         self._glove_pool = [
             w for w in self.model.index_to_key[:50000] if w in self.space.word_to_idx
@@ -481,9 +501,27 @@ class CandidateSources:
                 break
         return out
 
-    def pool(self, query: str) -> list[tuple[str, int, float, int, int, int]]:
+    def ica_map_candidates(self, query: str) -> list[str]:
+        """Top-M words nearest to s(query)·W_ica in ICA score space."""
+        q = self.space.score(query)
+        if q is None:
+            return []
+        pred = q.astype(np.float64) @ self._W_ica
+        pred = pred / max(np.linalg.norm(pred), 1e-10)
+        sims = self._S_norm @ pred
+        out = []
+        for i in np.argsort(sims)[::-1]:
+            w = self.space.words[i]
+            if w != query:
+                out.append(w)
+            if len(out) >= self.aux_top_n:
+                break
+        return out
+
+    def pool(self, query: str) -> list[tuple[str, int, float, int, int, int, int]]:
         """
-        Union pool rows: (word, mlp_rank, mlp_score, in_mlp, in_axis, in_proc).
+        Union pool rows: (word, mlp_rank, mlp_score, in_mlp, in_axis,
+        in_proc, in_ica_map).
 
         Non-MLP members get mlp_rank = mlp_top_n + 1 and mlp_score = 0.
         """
@@ -491,15 +529,20 @@ class CandidateSources:
             raise RuntimeError("CandidateSources not fitted. Call fit() first.")
         pool: dict[str, list] = {}
         for r, (w, s) in enumerate(self.classifier.retrieve(query, top_n=self.mlp_top_n)):
-            pool[w] = [r + 1, s, 1, 0, 0]
+            pool[w] = [r + 1, s, 1, 0, 0, 0]
         for w in self.axis_candidates(query):
             if w in pool:
                 pool[w][3] = 1
             else:
-                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 1, 0]
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 1, 0, 0]
         for w in self.proc_candidates(query):
             if w in pool:
                 pool[w][4] = 1
             else:
-                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 1]
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 1, 0]
+        for w in self.ica_map_candidates(query):
+            if w in pool:
+                pool[w][5] = 1
+            else:
+                pool[w] = [self.mlp_top_n + 1, 0.0, 0, 0, 0, 1]
         return [(w, *v) for w, v in pool.items()]

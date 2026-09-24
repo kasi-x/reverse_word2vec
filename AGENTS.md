@@ -12,7 +12,7 @@ axes (gender, sentiment, temperature, ...). Two retrieval approaches are studied
    take the nearest neighbour (weak on its own; see paper).
 2. **MLP + reranker (deployable pipeline)** — an MLP classifier scores antonymy from axis-wise
    pair features `(|s1−s2| ∥ s1⊙s2)`; a logistic reranker re-orders a union pool
-   (MLP top-100 ∪ predicted-axis top-20 ∪ procrustes top-20) down to top-10.
+   (MLP top-100 ∪ predicted-axis top-20 ∪ procrustes top-20 ∪ ICA-map top-20) down to top-10.
 
 Counter-fitting (Mrkšić et al., 2016) was investigated and **rejected**: a global
 fit leaks antonym labels into the space, and a leak-free per-fold fit collapses
@@ -69,7 +69,7 @@ pixi run python run_pipeline.py --relabel     # relabel axes on cached space
 |---|---|
 |`src/ica_transformer.py`|ICA core: fit, transform, reconstruct, save/load with provenance metadata|
 |`src/axis_labeler.py`|Automatic axis labeling using WordNet antonym pairs + category seeds|
-|`src/reranker.py`|Logistic reranker (12 signals) + CandidateSources (union pool) + CV|
+|`src/reranker.py`|Logistic reranker (13 signals) + CandidateSources (4-source union pool) + CV|
 |`src/antonym_classifier.py`|MLP/logistic antonymy classifier on ICA pair features|
 |`src/counter_fitting.py`|Mrkšić et al. counter-fitting (experimental; see CF rejection note)|
 |`src/qualitative_eval.py`|Canonical cases (king→queen, ...); blind (primary) + oracle protocols|
@@ -107,8 +107,8 @@ Phase 2/3 - Evaluation:
 
 Retrieval eval (scripts/eval_reranker.py):
   GloVe-100 -> ICA scores -> MLP on (|s1-s2|, s1*s2) -> union pool
-    (MLP top-100 ∪ knn-axis top-20 ∪ procrustes top-20)
-  -> logistic reranker (12 signals incl. source flags) -> Hits@{1,5,10}
+    (MLP top-100 ∪ knn-axis top-20 ∪ procrustes top-20 ∪ ICA-map top-20)
+  -> logistic reranker (13 signals incl. source flags) -> Hits@{1,5,10}
 ```
 
 ### Data Flow
