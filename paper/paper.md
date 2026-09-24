@@ -358,7 +358,16 @@ bias is a feature, not a limitation.
 **ConceptNet augmentation helps the reranker, not the MLP.** Adding
 ~6k ConceptNet pairs to training degrades the MLP (noise) but improves
 the reranker (holdout Hits@5 46.2% → 50.9%), so augmentation is applied only
-to the reranker and candidate-source stages.
+to the reranker stage.
+
+**Feature saturation.** Adding axis-flip features (dominant-axis
+sign opposition, count of flipped axes), k-NN majority voting on the
+axis predictor, or deeper auxiliary pools each move holdout Hits@1
+by less than ±1pt around the 37.6% baseline — the current signal
+set is saturated. Remaining misses are non-morphological pairs where
+the axis-wise features encode *how different* two words are, not
+*in which direction*; closing that gap needs a fundamentally
+different signal (e.g. contextual embeddings).
 
 
 **Multi-sense limitation.** The retrieval pipeline returns one ranking per query;

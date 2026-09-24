@@ -23,6 +23,7 @@ RESULT_FILES = [
     "exp_hard_negatives.json",
     "exp_gbdt_reranker.json",
     "exp_conceptnet_aug.json",
+    "exp_feature_ablation.json",
 ]
 
 
@@ -93,6 +94,7 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
     hard_neg = load_json(f"{results_dir}/exp_hard_negatives.json")
     gbdt = load_json(f"{results_dir}/exp_gbdt_reranker.json")
     cn_aug = load_json(f"{results_dir}/exp_conceptnet_aug.json")
+    feat_abl = load_json(f"{results_dir}/exp_feature_ablation.json")
 
     warnings: list[str] = []
     for name in RESULT_FILES:
@@ -651,7 +653,19 @@ def generate_paper(results_dir: str = "results", output_path: str = "paper/paper
             f"the reranker (holdout Hits@5 {_ms(wn.get('5'), pct=True)} → "
             f"{_ms(aug.get('5'), pct=True)}), so augmentation is applied only"
         )
-        w("to the reranker and candidate-source stages.")
+        w("to the reranker stage.")
+        w()
+    if feat_abl and "results" in feat_abl:
+        fa = feat_abl["results"]
+        base1 = _ms((fa.get("base") or {}).get("1"), pct=True)
+        w("**Feature saturation.** Adding axis-flip features (dominant-axis")
+        w("sign opposition, count of flipped axes), k-NN majority voting on the")
+        w("axis predictor, or deeper auxiliary pools each move holdout Hits@1")
+        w(f"by less than ±1pt around the {base1} baseline — the current signal")
+        w("set is saturated. Remaining misses are non-morphological pairs where")
+        w("the axis-wise features encode *how different* two words are, not")
+        w("*in which direction*; closing that gap needs a fundamentally")
+        w("different signal (e.g. contextual embeddings).")
         w()
     w()
     w("**Multi-sense limitation.** The retrieval pipeline returns one ranking per query;")
